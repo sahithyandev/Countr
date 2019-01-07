@@ -1,8 +1,14 @@
-page-home {
-
-}
-#add-button {
+#add-button-home {
 	position: absolute;
 	right: 0;
 	bottom: 0;
+}
+#credit {
+	color: rgba(2, 1, 0, 0.356);
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	font-size: 15.3px;
+	padding-bottom: 2px;
 }

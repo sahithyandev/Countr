@@ -7,12 +7,37 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>addPage</ion-title>
+    <ion-title>Add Count Down</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+	<ion-list>
+		<ion-item>
+			<ion-label floating>Title</ion-label>
+			<ion-input name='title' [(ngModel)]='title'></ion-input>
+		</ion-item>
+
+		<ion-item>
+			<ion-label>Date</ion-label>
+			<ion-datetime name='date' displayFormat="DD/MM/YYYY" pickerFormat="DD MMMM YYYY" [(ngModel)]="date"></ion-datetime>
+		</ion-item>
+
+		<ion-item>
+			<ion-label>Time</ion-label>
+			<ion-datetime name='time' displayFormat="HH:mm" pickerFormat="HH mm" [(ngModel)]="time"></ion-datetime>
+		</ion-item>
+
+		<ion-item>
+			<ion-label floating>Description</ion-label>
+			<ion-textarea name='description' [(ngModel)]='description'></ion-textarea>
+		</ion-item>
+	</ion-list>
+
+		<div class='center-add'>
+				<button ion-button (click)="saveItem()">Add</button>
+		</div>
 
 </ion-content>

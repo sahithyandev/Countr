@@ -1,0 +1,37 @@
+<!--
+  Generated template for the DetailsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+		<ion-title>Count It</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<h2 align='center'>
+		{{title}} # {{id}}
+	</h2>
+
+	<div id='timer' align='center'>
+
+	</div>
+
+	<div align='center' id='description'>
+		{{description}}<br /><br />
+		{{ex_time}}<br />
+		<br />
+		<button class='button-details' id='edit' (click)='edit(id)' [color]='editColor' ion-button large>
+			Edit
+		</button>
+		<button class='button-details' id='delete' (click)='delete(id)' [color]='deleteColor' ion-button large>
+			Delete
+		</button>
+	</div>
+
+</ion-content>
