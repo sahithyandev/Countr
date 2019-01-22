@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sign Up</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <h2 align='center' class="h-title">Mem<font id='special-header'>Zy</font>
+  </h2>
+  <!-- <ion-list> -->
+  <ion-item>
+    <ion-label position='stacked'>Name</ion-label>
+    <ion-input type='name' class='input-text' [(ngModel)]='user.name'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position='stacked'>Email</ion-label>
+    <ion-input type='email' class='input-text' [(ngModel)]='user.email'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position='stacked'>Password</ion-label>
+    <ion-input type='password' class='input-text' [(ngModel)]='user.password'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position='stacked'>Confirm Password</ion-label>
+    <ion-input type='password' class='input-text' [(ngModel)]='conf_password'></ion-input>
+  </ion-item>
+
+  <div align='center'>
+    <font [color]='color'>{{error_msg}}</font><br /><br />
+    <button *ngIf='!(user.name && user.email && user.password && conf_password && user.dob && user.sex)' id='create'
+      (click)='check()' disabled>Create</button>
+    <button *ngIf='(user.name && user.email && user.password && conf_password && user.dob && user.sex)' id='create'
+      (click)='check()'>Create</button>
+  </div>
+  <!-- </ion-list> -->
+</ion-content>

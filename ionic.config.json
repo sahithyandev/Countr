@@ -1,8 +1,8 @@
 {
-  "name": "countit",
+  "name": "Count It",
   "integrations": {
     "cordova": {}
   },
-  "type": "ionic-angular",
+  "type": "angular",
   "id": "68301b0f"
 }

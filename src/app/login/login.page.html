@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Log In</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <h2 align='center' class='h-title'>Count<font id='special-header'>It</font>
+  </h2>
+  <div align='center'>
+    <ion-item id='input-field'>
+      <ion-label class='label' position='stacked'>Email</ion-label>
+      <ion-input class="input-text" type='email' [(ngModel)]='email'></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position='stacked'>Password</ion-label>
+      <ion-input class='input-text' [(ngModel)]='password' type='password'></ion-input>
+    </ion-item><br />
+
+    <button *ngIf='!(email && password)' ion-button id="login-button" (click)='login()' disabled>Log In</button>
+    <button *ngIf='(email && password)' ion-button id="login-button" (click)='login()'>Log In</button>
+
+
+    <!-- <button ion-button id="login-button" (click)='logout()'>Log Out</button> -->
+
+  </div>
+
+  <div id='signup-content' align='center'>
+    <font>Don't Have an account?</font><br />
+    <font ion-text (click)='signup()'>Sign Up</font>
+  </div>
+</ion-content>

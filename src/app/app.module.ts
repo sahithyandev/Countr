@@ -1,41 +1,40 @@
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
-import { IonicStorageModule } from '@ionic/storage';
+import { RouteReuseStrategy } from '@angular/router';
 
-import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { AddPage } from '../pages/add/add';
-import { DetailsPage } from '../pages/details/details';
-import { EditPage } from '../pages/edit/edit';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+
+import { FIRE_CONFIG } from "./environment-firebase";
+import { AngularFireModule } from "@angular/fire";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { IonicStorageModule } from "@ionic/storage";
+import { SecureStorage } from "@ionic-native/secure-storage";
 
 @NgModule({
-  declarations: [
-    MyApp,
-    HomePage,
-		AddPage,
-		DetailsPage,
-		EditPage
-  ],
+  declarations: [AppComponent],
+  entryComponents: [],
   imports: [
+    IonicModule.forRoot(),
     BrowserModule,
-    IonicModule.forRoot(MyApp),
-		IonicStorageModule.forRoot()
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-		AddPage,
-		DetailsPage,
-		EditPage
+    IonicStorageModule.forRoot(),
+    AppRoutingModule,
+    AngularFireModule.initializeApp(FIRE_CONFIG),
+    AngularFireAuthModule,
+    // Storage,
+    AngularFireDatabaseModule
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
-  ]
+    Storage,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
