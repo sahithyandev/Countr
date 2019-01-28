@@ -15,7 +15,7 @@ export class AddPage implements OnInit {
   time: string;
   description: string;
   uid;
-  max_time: string = new Date().getFullYear() + 10 + "";
+  max_time = (new Date().getFullYear() + 10);
   min_time: string = new Date().toISOString();
   public count_downs;
 
@@ -35,9 +35,13 @@ export class AddPage implements OnInit {
     textArea.style.height = textArea.scrollHeight + 2 + 'px';
   }
 
+  check() {
+    console.log('Checking');
+  }
+
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;
-    console.log(this.min_time);
+    console.log(this.max_time);
   }
 
   saveItem() {
@@ -46,7 +50,6 @@ export class AddPage implements OnInit {
     this.firebase.database.ref(`/reminders/${this.uid}`).push({
       title: this.title,
       date: this.date,
-      time: this.time,
       description: this.description
     });
 
