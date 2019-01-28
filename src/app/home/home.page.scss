@@ -1,15 +1,13 @@
-#add-button-home {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding: 10px;
-    font-size: 20px;
+#logout-button-home {
+    font-size: 16px;
     margin-bottom: 8px;
-    margin-right: 8px;
-    background-color: red;
-    color: green;
+    width: 60%;
 }
-
+#container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
 #credit {
     color: rgba(2, 1, 0, 0.356);
     position: fixed;

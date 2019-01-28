@@ -26,14 +26,27 @@
   <ion-item>
     <ion-label position='stacked'>Confirm Password</ion-label>
     <ion-input type='password' class='input-text' [(ngModel)]='conf_password'></ion-input>
-  </ion-item>
+  </ion-item><br />
 
   <div align='center'>
-    <font [color]='color'>{{error_msg}}</font><br /><br />
-    <button *ngIf='!(user.name && user.email && user.password && conf_password && user.dob && user.sex)' id='create'
-      (click)='check()' disabled>Create</button>
-    <button *ngIf='(user.name && user.email && user.password && conf_password && user.dob && user.sex)' id='create'
-      (click)='check()'>Create</button>
+    <button 
+      *ngIf='!(user.name && user.email && user.password && conf_password)' 
+      id='create'
+      (click)='check()'
+      disabled>
+        Create
+      </button>
+    <button
+      *ngIf='(user.name && user.email && user.password && conf_password)' 
+      id='create'
+      (click)='check()'>
+        Create
+    </button>
+  </div>
+
+  <div id='signup-content' align='center'>
+    <font>Already Have an Account?</font><br />
+    <font ion-text (click)='login()'>Log In</font>
   </div>
   <!-- </ion-list> -->
 </ion-content>

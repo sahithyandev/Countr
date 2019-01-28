@@ -1,0 +1,40 @@
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Add Count Down</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label position='stacked'>Title</ion-label>
+      <ion-input name='title' [(ngModel)]='title'></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Date</ion-label>
+      <ion-datetime name='date' [min]='min_time' [max]='max_time' displayFormat="DD MMM YYYY"  pickerFormat="DD MMMM YYYY" [(ngModel)]="date"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Time</ion-label>
+      <ion-datetime name='time' displayFormat="hh:mm A" pickerFormat="HH mm" [(ngModel)]="time"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position='stacked'>Description : </ion-label>
+      <textarea id="description" (input)='resize()' width='100%' [(ngModel)]='description'></textarea>
+    </ion-item>
+  </ion-list>
+
+  <div align='center' class='center-add'>
+    <ion-button (click)="saveItem()">Add</ion-button>
+  </div>
+
+</ion-content>

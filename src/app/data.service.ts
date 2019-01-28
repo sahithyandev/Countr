@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Storage } from "@ionic/storage";
+import { identifierModuleUrl } from '@angular/compiler';
 
 @Injectable({
   providedIn: "root"
@@ -8,6 +10,7 @@ import { Router } from '@angular/router';
 export class DataService {
 
   count_down_id;
+  edit_id;
   email;
   password;
 
@@ -17,17 +20,5 @@ export class DataService {
     public router: Router
   ) {}
 
-  // login() {
-  //   this.fireauth.auth
-  //     .signInWithEmailAndPassword(this.email, this.password)
-  //     .then(data => {
-  //       this.storage.set("loggedInfo", {
-  //         email: this.email,
-  //         password: this.password,
-  //         isLogged: true
-  //       });
-
-  //       this.router.navigateByUrl("/home");
-  //     });
-  // }
+  
 }

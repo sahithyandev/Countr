@@ -1,42 +1,58 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Storage } from "@ionic/storage";
 import { DataService } from './data.service';
+import { Router } from '@angular/router';
+import { Storage } from "@ionic/storage";
+import { CustomService } from './custom.service';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { async } from 'q';
+import { LoadingService } from './loading.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
+    public router: Router,
+    public loadCtrl: LoadingController,
+    public fireauth: AngularFireAuth,
+    public custom: CustomService,
     public storage: Storage,
-    public parse: DataService
+    public loading: LoadingService
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
+      this.loading.present();
+      // this.statusBar.backgroundColorByName('red');
+      this.statusBar.hide();
       this.splashScreen.hide();
+      this.router.navigateByUrl('/login');
 
-      // try {
-      //   this.storage.get('loggedInfo')
-      //     .then((data) => {
-      //       this.parse.email = data.email;
-      //       this.parse.password = data.password;
-      //       this.parse.login();
-      //     });
-      // } catch (e) {
-      //   console.log('error Found');
-      //   console.log(e);
-      // }
+      try {
+        this.storage.get('loggedInfo')
+          .then((data) => {
+            this.custom.email = data.email;
+            this.custom.password = data.password;
+            console.log(data);
+            this.loading.dismiss();
+            this.custom.login();
+          });
+      } catch (e) {
+        this.loading.dismiss();
+        console.log('error Found');
+        console.log(e);
+      }
     });
   }
 }

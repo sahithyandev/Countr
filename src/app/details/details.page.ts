@@ -3,6 +3,8 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { DataService } from '../data.service';
 import { CountDown } from '../modals/countdown';
+import { Router } from '@angular/router';
+import { CustomService } from '../custom.service';
 
 @Component({
   selector: 'app-details',
@@ -30,14 +32,34 @@ export class DetailsPage implements OnInit {
   constructor(
     public firebase: AngularFireDatabase,
     public fireauth: AngularFireAuth,
+    public router: Router,
+    public custom: CustomService,
     public parse: DataService
   ) { }
 
   ngOnInit() {
-    console.log(this.parse.count_down_id);
+    this.key = this.parse.count_down_id;
+
+    this.uid = this.fireauth.auth.currentUser.uid;
+
+    this.firebase.database
+      .ref(`/reminders/${this.uid}/${this.key}`)
+      .on("value", snapshot => {
+        var result: object = snapshot.toJSON();
+        this.temp.push(result);
+        this.reminder = {
+          title: this.temp[0]["title"],
+          description: this.temp[0]["description"],
+          date: this.temp[0]["date"],
+          time: this.temp[0]["time"]
+        };
+        let next = new Date(this.reminder.date + " " + this.reminder.time);
+        this.ex_time = next;
+        this.counting(next, this);
+      });
   }
 
-  counting(next, page, isStop: Optional) {
+  counting(next, page) {
     // page.ex_time = next;
     var output;
     console.log(next);
@@ -45,7 +67,7 @@ export class DetailsPage implements OnInit {
     var x = window.setInterval(function () {
       var now = new Date().getTime();
       var distance = stop - now;
-      // console.log(distance);
+      // console.log(distance);                     
 
       if (distance <= 0) {
         output = "Count Down Finished";
@@ -62,7 +84,7 @@ export class DetailsPage implements OnInit {
         var mseconds = ('000' + Math.floor(distance % 1000)).substr(-3);
 
         if (hours >= 24) {
-          var days = Math.floor(hours / 24);
+          var days = Math.floor(hours / 24);                      
           hours = hours - (days * 24);
 
           output = days + "D: " + hours + "h : " + minutes + "m : " + seconds + "." + mseconds + "s";
@@ -75,13 +97,7 @@ export class DetailsPage implements OnInit {
       }
 
       try {
-        if (!isStop) {
-          document.getElementById('timer').innerHTML = output;
-        } else {
-          console.log('TRUE');
-          window.clearInterval(x);
-          console.error('HOIHIH');
-        }
+        document.getElementById('timer').innerHTML = output;
       } catch (error) {
         window.clearInterval(x);
         console.log("Stopped because of \n" + error);
@@ -115,20 +131,20 @@ export class DetailsPage implements OnInit {
   //     });
   // }
 
-  delete(key) {
-    this.firebase.database.ref(`/reminders/${this.uid}`)
+  delete() {
+    this.firebase.database.ref(`/reminders/${this.uid}/${this.key}`)
       .remove((e) => {
         console.log(e);
       }).then((after) => {
-        // this.navCtrl.popTo(HomePage);
+        this.router.navigateByUrl('/home');
       });
+
+    this.custom.toast('Deleted', 'top');
   }
 
-  edit(key) {
-    this.counting(new Date(this.reminder.date + 2 + ''), this, true);
-    // this.navCtrl.push(EditPage, {
-    //   id: key
-    // });
+  edit() {
+    this.parse.edit_id = this.key;
+    this.router.navigateByUrl('/edit');
   }
 
 }

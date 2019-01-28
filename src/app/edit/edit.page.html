@@ -7,37 +7,39 @@ Ionic pages and navigation.
 <ion-header>
 
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
     <ion-title>Edit</ion-title>
   </ion-toolbar>
-
+         
 </ion-header>
 
 
 <ion-content padding>
   <ion-list>
     <ion-item>
-      <ion-label>Title</ion-label>
+      <ion-label position='stacked'>Title</ion-label>
       <ion-input [(ngModel)]='reminder.title' id='title' type="text"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Date</ion-label>
-      <ion-datetime [(ngModel)]='reminder.date' id='date' displayFormat="DD/MM/YYYY" pickerFormat="DD MMMM YYYY"></ion-datetime>
+      <ion-datetime [(ngModel)]='reminder.date' id='date' min='{{now}h3 ' [max]='max_time' displayFormat="DD/MM/YYYY" pickerFormat="DD MMMM YYYY"></ion-datetime>
     </ion-item>
 
     <ion-item>
       <ion-label>Time</ion-label>
-      <ion-datetime [(ngModel)]='reminder.time' id='time' displayFormat="HH:mm" pickerFormat="HH mm"></ion-datetime>
+      <ion-datetime [(ngModel)]='reminder.time' id='time' displayFormat="hh:mm A" pickerFormat="HH mm"></ion-datetime>
     </ion-item>
 
-    <div id='description-ele'>
-      <ion-label>Description : </ion-label>
-      <!-- <textarea #description1 [(ngModel)]='description' id="description" rows="1" (keyup)="resize()"></textarea> -->
-      <ion-textarea #description1 id='description' [(ngModel)]='reminder.description' rows='1' (keyup)='resize()'></ion-textarea>
-    </div>
+    <ion-item>
+      <ion-label position='stacked'>Description : </ion-label>
+      <textarea id="description" (input)='resize()' width='100%' [(ngModel)]='reminder.description'></textarea>
+    </ion-item>
 
     <div align='center'>
-      <button ion-button (click)='saveEdits()'>Save</button>
+      <ion-button (click)='saveEdits()'>Save</ion-button>
     </div>
   </ion-list>
 </ion-content>

@@ -5,6 +5,7 @@ import { CustomService } from '../custom.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { DetailsPage } from '../details/details.page';
+import { Storage } from "@ionic/storage";
 
 @Component({
   selector: "app-home",
@@ -21,19 +22,27 @@ export class HomePage implements OnInit {
     public custom: CustomService,
     public router: Router,
     public parse: DataService,
-    public zone: NgZone
+    public zone: NgZone,
+    public storage: Storage
   ) {}
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;
     console.log(this.uid);
-    this.firebase.database
-      .ref(`/reminders/${this.uid}`)
-      .on("value", snapshot => {
-        this.zone.run(() => {
-          this.count_downs = this.custom.snapToArray(snapshot);
+    try {
+      this.firebase.database
+        .ref(`/reminders/${this.uid}`)
+        .on("value", snapshot => {
+          this.zone.run(() => {
+            this.count_downs = this.custom.snapToArray(snapshot);
+            this.storage.set('countdowns', this.count_downs);
+          });
         });
+    } catch (e) {
+      this.storage.get('countdowns').then((data) => {
+        this.count_downs = data;
       });
+    }
   }
 
   add() {
@@ -42,6 +51,17 @@ export class HomePage implements OnInit {
 
   async details(key) {
     this.parse.count_down_id = key;
-    await this.router.navigateByUrl('/details');
+    await this.router.navigate(['/details']);
   }
+
+  logout() {
+    this.fireauth.auth.signOut();
+    this.storage.remove('loggedInfo');
+    this.router.navigateByUrl('/login');
+    this.custom.toast("Successfully Logged Out!", "top");
+  }
+
+	delete(key) {
+		this.firebase.database.ref(`/reminders/${this.uid}/${key}`).remove();
+	}
 }

@@ -14,7 +14,8 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { IonicStorageModule } from "@ionic/storage";
-import { SecureStorage } from "@ionic-native/secure-storage";
+import { Network, NetworkOriginal } from '@ionic-native/network';
+// import { Storage } from "@ionic/storage";
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +33,8 @@ import { SecureStorage } from "@ionic-native/secure-storage";
   providers: [
     StatusBar,
     SplashScreen,
-    Storage,
+    // NetworkOriginal,
+    // Storage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

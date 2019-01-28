@@ -4,6 +4,7 @@ import { User } from "../modals/user";
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { CustomService } from '../custom.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-signup",
@@ -17,6 +18,7 @@ export class SignupPage implements OnInit {
   constructor(
     public fireauth: AngularFireAuth,
     public firebase: AngularFireDatabase,
+    public router: Router,
     public custom: CustomService
   ) {}
 
@@ -45,8 +47,12 @@ export class SignupPage implements OnInit {
             .set({
               info: this.user
             });
-          // this.navCtrl.pop();
         });
+
+        this.custom.alert_dismiss(
+          "Successfully Registered",
+          "You can Log In Now..."
+        );
     } catch (e) {
       console.log(e.code);
       if (e.code == "auth/weak-password") {
@@ -62,5 +68,9 @@ export class SignupPage implements OnInit {
         );
       }
     }
+  }
+
+  login() {
+    this.router.navigateByUrl('/login');
   }
 }

@@ -7,6 +7,14 @@
 <ion-header>
 
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button id='delete' (click)='delete()' color='danger' small>
+        <ion-icon name='trash'></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Count It</ion-title>
   </ion-toolbar>
 
@@ -17,22 +25,19 @@
 
   <h2 align='center'>
     {{reminder.title}}
-  </h2>
+  </h2><br><br>
 
   <div id='timer' align='center'>
 
-  </div>
+  </div><br><br>
 
   <div align='center' id='description'>
-    {{reminder.description}}<br /><br />
+    {{reminder.description}}<br /><br /> 
     {{ex_time}}<br />
     <br />
-    <button id='edit' (click)='edit(key)' ion-button>
+    <ion-button id='edit' (click)='edit()' color='secondary'>
       Edit
-    </button>
-    <button id='delete' (click)='delete(key)' ion-button>
-      Delete
-    </button>
+    </ion-button>
   </div>
 
 </ion-content>
