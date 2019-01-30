@@ -9,6 +9,7 @@ import { Alert } from 'selenium-webdriver';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { LoadingService } from '../loading.service';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -16,8 +17,8 @@ import { LoadingService } from '../loading.service';
 })
 export class LoginPage implements OnInit {
 
-  email = 'sahithyan2701@gmail.com';
-  password = 'Sahithyan';
+  email;
+  password;
   email_wrong = false;
 
   constructor(
@@ -72,13 +73,18 @@ export class LoginPage implements OnInit {
         this.custom.toast('Successfully Logged In!', 'top');
 
       }).catch(e => {
+        console.log(e);
         this.loading.dismiss();
         if (e.code == 'auth/invalid-email') {
           this.email_wrong = true;
+          this.custom.alert_dismiss('Invalid Email', 'Type your email fully..<br>(example: john@gmail.com)');
         }
         if (e.code == 'auth/wrong-password') {
           this.alert_password_reset('Password Wrong',
           "Check your password before trying again. <br> You can change your password");
+        }
+        if (e.code == 'auth/user-not-found') {
+          this.custom.alert_dismiss('Wrong Email Address', 'It seems like as you are not signed up yet<br> <b>Sign In before Log In again</b>');
         }
       });
 

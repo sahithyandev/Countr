@@ -39,20 +39,17 @@ export class AppComponent {
       this.splashScreen.hide();
       this.router.navigateByUrl('/login');
 
-      try {
-        this.storage.get('loggedInfo')
-          .then((data) => {
-            this.custom.email = data.email;
-            this.custom.password = data.password;
-            console.log(data);
-            this.loading.dismiss();
-            this.custom.login();
-          });
-      } catch (e) {
-        this.loading.dismiss();
-        console.log('error Found');
-        console.log(e);
-      }
+      this.storage.get('loggedInfo')
+        .then((data) => {
+          console.log(data);
+          this.custom.email = data.email;
+          this.custom.password = data.password;
+          this.custom.login();
+          this.loading.dismiss();
+        }).catch(e => {
+          console.log('Error');
+          this.loading.dismiss();
+        });
     });
   }
 }

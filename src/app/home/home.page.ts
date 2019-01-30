@@ -33,10 +33,10 @@ export class HomePage implements OnInit {
       this.firebase.database
         .ref(`/reminders/${this.uid}`)
         .on("value", snapshot => {
-          this.zone.run(() => {
+          // this.zone.run(() => {
             this.count_downs = this.custom.snapToArray(snapshot);
             this.storage.set('countdowns', this.count_downs);
-          });
+          // });
         });
     } catch (e) {
       this.storage.get('countdowns').then((data) => {

@@ -5,6 +5,8 @@ import { DataService } from '../data.service';
 import { CountDown } from '../modals/countdown';
 import { Router } from '@angular/router';
 import { CustomService } from '../custom.service';
+import { TextToSpeech } from "@ionic-native/text-to-speech";
+import { LocalNotifications } from "@ionic-native/local-notifications";
 
 @Component({
   selector: 'app-details',
@@ -12,12 +14,6 @@ import { CustomService } from '../custom.service';
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
-
-  item;
-	title;
-	description;
-	date;
-	time;
 
 	timer;
 	ex_time;
@@ -28,6 +24,7 @@ export class DetailsPage implements OnInit {
 	key;
 
 	temp: Array<object> = [];
+	user_temp: Array<object> = [];
 
   constructor(
     public firebase: AngularFireDatabase,
@@ -50,10 +47,9 @@ export class DetailsPage implements OnInit {
         this.reminder = {
           title: this.temp[0]["title"],
           description: this.temp[0]["description"],
-          date: this.temp[0]["date"],
-          time: this.temp[0]["time"]
+          datetime: this.temp[0]["datetime"]
         };
-        let next = new Date(this.reminder.date + " " + this.reminder.time);
+        let next = new Date(this.reminder.datetime);
         this.ex_time = next;
         this.counting(next, this);
       });
@@ -62,7 +58,6 @@ export class DetailsPage implements OnInit {
   counting(next, page) {
     // page.ex_time = next;
     var output;
-    console.log(next);
     var stop = next.getTime();
     var x = window.setInterval(function () {
       var now = new Date().getTime();
@@ -70,12 +65,11 @@ export class DetailsPage implements OnInit {
       // console.log(distance);                     
 
       if (distance <= 0) {
-        output = "Count Down Finished";
+        output = "Finished";
         console.log("Stopped");
-        page.editColor = 'light';
-        page.deleteColor = 'dark';
-
         window.clearInterval(x);
+        document.getElementById('timer').innerHTML = output;
+        page.finished();
       } else {
 
         var hours = Math.floor(distance / (1000 * 60 * 60));
@@ -88,16 +82,27 @@ export class DetailsPage implements OnInit {
           hours = hours - (days * 24);
 
           output = days + "D: " + hours + "h : " + minutes + "m : " + seconds + "." + mseconds + "s";
-        }
-        if (hours <= 0) {
-          output = minutes + "m : " + seconds + "." + mseconds + "s";
-        } else if (minutes <= 0) {
-          output = seconds + "." + mseconds + "s";
+        } else {
+          if (hours <= 0) {
+            if (minutes <= 0) {
+              output = seconds + "." + mseconds + "s";
+            } else {
+              output = minutes + "m : " + seconds + "." + mseconds + "s";
+            }
+          } else if (minutes <= 0) {
+            output = seconds + "." + mseconds + "s";
+          } else {
+            console.log('test');
+            output = hours + "h : " + minutes + "m : " + seconds + "." + mseconds + "s";
+          }
         }
       }
 
       try {
         document.getElementById('timer').innerHTML = output;
+        if (output == undefined) {
+          console.log(hours + " : " + minutes + " : " + seconds + " : " + mseconds);
+        }
       } catch (error) {
         window.clearInterval(x);
         console.log("Stopped because of \n" + error);
@@ -105,31 +110,30 @@ export class DetailsPage implements OnInit {
     }, 1);
   }
 
-  // ionViewWillEnter() {
-  //   console.log('hi');
-  //   // this.key = this.navParams.get('id');
-  //   this.uid = this.fireauth.auth.currentUser.uid;
+  finished() {
+    let user_info;
+    let text;
 
-  //   this.firebase.database
-  //     .ref(`/reminders/${this.uid}/${this.key}`)
-  //     .on("value", snapshot => {
-  //       var result: object = snapshot.toJSON();
-  //       this.temp.push(result);
-  //       this.reminder = {
-  //         title: this.temp[0]["title"],
-  //         description: this.temp[0]["description"],
-  //         date: this.temp[0]["date"],
-  //         time: this.temp[0]["time"]
-  //       };
-  //       console.log(this.temp[0]);
+    this.firebase.database.ref(`/users/${this.uid}/info/`).on('value', (data) => {
+      var result: object = data.toJSON();
+      console.log(result);
+      this.user_temp.push(result);
+      user_info = {
+        name: this.user_temp[0]["name"],
+      };
+      console.log(user_info);
+    });
+    // IDEA: Notification Pushing
+    LocalNotifications.schedule({
+      title: 'Count Down Finished',
+      led: 'FF0000',
 
-  //       console.log(this.reminder);
-  //       console.log("HIHIHI");
-  //       // document.getElementById('timer').innerHTML = '';
-  //       let next = new Date(this.reminder.date + " " + this.reminder.time);
-  //       this.counting(next, this, false);
-  //     });
-  // }
+    });
+ 
+    text = user_info.name + ", Your countdown " + this.reminder.title + " is Finished";
+    TextToSpeech.speak(text);
+    
+  }
 
   delete() {
     this.firebase.database.ref(`/reminders/${this.uid}/${this.key}`)

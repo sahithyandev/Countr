@@ -18,11 +18,11 @@ export class EditPage implements OnInit {
   reminder = {
     title: "",
     description: "",
-    date: "",
-    time: ""
+    datetime: ""
   } as CountDown;
 
-  now = new Date();
+  min_time = moment().format();
+  max_time = moment().years(moment().years() + 10).format();
 
   temp: Array<object> = [];
 
@@ -56,8 +56,7 @@ export class EditPage implements OnInit {
         this.reminder = {
           title: this.temp[0]["title"],
           description: this.temp[0]["description"],
-          date: this.temp[0]["date"],
-          time: this.temp[0]["time"]
+          datetime: this.temp[0]["datetime"],
         };
       });
   }
@@ -67,8 +66,7 @@ export class EditPage implements OnInit {
     this.firebase.database.ref(`/reminders/${this.uid}/${this.id}`).update({
       title: this.reminder.title,
       description: this.reminder.description,
-      date: this.reminder.date,
-      time: this.reminder.time
+      datetime: this.reminder.datetime,
     });
 
     this.firebase.database

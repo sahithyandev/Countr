@@ -25,13 +25,13 @@ Ionic pages and navigation.
 
     <ion-item>
       <ion-label>Date</ion-label>
-      <ion-datetime [(ngModel)]='reminder.date' id='date' min='{{now}h3 ' [max]='max_time' displayFormat="DD/MM/YYYY" pickerFormat="DD MMMM YYYY"></ion-datetime>
+      <ion-datetime [(ngModel)]='reminder.datetime' id='date' [min]='min_time' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A" pickerFormat="DD MM YYYY HH mm"></ion-datetime>
     </ion-item>
 
-    <ion-item>
+    <!-- <ion-item>
       <ion-label>Time</ion-label>
       <ion-datetime [(ngModel)]='reminder.time' id='time' displayFormat="hh:mm A" pickerFormat="HH mm"></ion-datetime>
-    </ion-item>
+    </ion-item> -->
 
     <ion-item>
       <ion-label position='stacked'>Description : </ion-label>

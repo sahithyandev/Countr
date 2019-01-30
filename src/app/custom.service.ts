@@ -44,6 +44,15 @@ export class CustomService {
     al.present();
   }
 
+  async alert_signup(title, message) {
+    const al = await this.alertCtrl.create({
+      header: title,
+      message: message,
+      buttons: ['OK']
+    });
+    al.present();
+  }
+
   snapToArray(snapshot) {
     var Arr = [];
 

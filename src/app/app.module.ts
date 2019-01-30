@@ -15,6 +15,7 @@ import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { IonicStorageModule } from "@ionic/storage";
 import { Network, NetworkOriginal } from '@ionic-native/network';
+import { TextToSpeech } from '@ionic-native/text-to-speech';
 // import { Storage } from "@ionic/storage";
 
 @NgModule({
@@ -33,6 +34,7 @@ import { Network, NetworkOriginal } from '@ionic-native/network';
   providers: [
     StatusBar,
     SplashScreen,
+    // TextToSpeechOriginal,
     // NetworkOriginal,
     // Storage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
