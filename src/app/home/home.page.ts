@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { DetailsPage } from '../details/details.page';
 import { Storage } from "@ionic/storage";
-import { ToastController } from '@ionic/angular';
+import { ToastController, PopoverController } from '@ionic/angular';
 import { tap } from "rxjs/operators";
 import { Observable } from "rxjs";
 
@@ -26,6 +26,7 @@ export class HomePage implements OnInit {
     public router: Router,
     public parse: DataService,
     public toastCtrl: ToastController,
+    public popCtrl: PopoverController,
     public storage: Storage
   ) {}
 
@@ -66,5 +67,17 @@ export class HomePage implements OnInit {
 
 	delete(key) {
 		this.firebase.database.ref(`/reminders/${this.uid}/${key}`).remove();
-	}
+  }
+
+  async pop2(p) {
+    return await p.present();
+  }
+  
+  pop() {
+    const popover = this.popCtrl.create({
+      component: 'app-pop'
+    }).then(output => {
+      this.pop2(output);
+    });
+  }
 }

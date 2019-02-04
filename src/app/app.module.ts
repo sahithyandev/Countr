@@ -17,11 +17,12 @@ import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { IonicStorageModule } from "@ionic/storage";
 import { Network, NetworkOriginal } from '@ionic-native/network';
 import { TextToSpeech } from '@ionic-native/text-to-speech';
+import { PopComponent } from './pop/pop.component';
 // import { Storage } from "@ionic/storage";
 // import { FacebookOriginal } from "@ionic-native/facebook";
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, PopComponent],
   entryComponents: [],
   imports: [
     IonicModule.forRoot(),
