@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { DetailsPage } from '../details/details.page';
 import { Storage } from "@ionic/storage";
+import { ToastController } from '@ionic/angular';
+import { tap } from "rxjs/operators";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-home",
@@ -22,13 +25,13 @@ export class HomePage implements OnInit {
     public custom: CustomService,
     public router: Router,
     public parse: DataService,
-    public zone: NgZone,
+    public toastCtrl: ToastController,
     public storage: Storage
   ) {}
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;
-    console.log(this.uid);
+
     try {
       this.firebase.database
         .ref(`/reminders/${this.uid}`)

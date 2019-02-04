@@ -11,15 +11,28 @@ import { CustomService } from '../custom.service';
   styleUrls: ["./add.page.scss"]
 })
 export class AddPage implements OnInit {
+  uid: string;
   title: string;
-  datetime: string = moment().milliseconds(0).format();
   description: string;
-  uid;
   false_time: boolean = false;
-  max_time = moment()
-    .years(moment().years() + 10)
+
+  datetime: string = moment()
+    .minute(moment().minute() + 1)
+    .seconds(0)
+    .milliseconds(0)
     .format();
-  min_time = moment().milliseconds(0).format();
+
+  max_time: string = moment()
+    .years(moment().years() + 10)
+    .millisecond(0)
+    .seconds(0)
+    .format();
+
+  min_time: string = moment()
+    .minute(moment().minute() + 1)
+    .seconds(0)
+    .milliseconds(0)
+    .format();
 
   public count_downs;
 

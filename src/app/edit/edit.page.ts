@@ -21,8 +21,17 @@ export class EditPage implements OnInit {
     datetime: ""
   } as CountDown;
 
-  min_time = moment().format();
-  max_time = moment().years(moment().years() + 10).format();
+  min_time = moment()
+    .minute(moment().minute() + 1)
+    .second(0)
+    .millisecond(0)
+    .format();
+
+  max_time = moment()
+    .years(moment().years() + 10)
+    .second(0)
+    .millisecond(0)
+    .format();
 
   temp: Array<object> = [];
 

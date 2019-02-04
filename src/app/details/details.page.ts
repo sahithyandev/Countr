@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { DataService } from '../data.service';
@@ -6,7 +6,6 @@ import { CountDown } from '../modals/countdown';
 import { Router } from '@angular/router';
 import { CustomService } from '../custom.service';
 import { TextToSpeech } from "@ionic-native/text-to-speech";
-import { LocalNotifications } from "@ionic-native/local-notifications";
 
 @Component({
   selector: 'app-details',
@@ -124,11 +123,12 @@ export class DetailsPage implements OnInit {
       console.log(user_info);
     });
     // IDEA: Notification Pushing
-    LocalNotifications.schedule({
-      title: 'Count Down Finished',
-      led: 'FF0000',
+    // LocalNotifications.schedule({
+    //   title: 'Count Down Finished',
+    //   led: 'FF0000'
+    // });
 
-    });
+
  
     text = user_info.name + ", Your countdown " + this.reminder.title + " is Finished";
     TextToSpeech.speak(text);

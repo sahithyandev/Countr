@@ -89,6 +89,6 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^2.0.0" />
     <allow-navigation href="http://192.168.1.4:8100" sessionid="8af4c6ec" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <engine name="android" spec="7.1.4" />
     <plugin name="cordova-plugin-local-notification" spec="0.9.0-beta.2" />
+    <engine name="android" spec="7.1.4" />
 </widget>
