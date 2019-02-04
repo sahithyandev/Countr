@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
   { path: 'details', loadChildren: './details/details.module#DetailsPageModule' },
   { path: 'add', loadChildren: './add/add.module#AddPageModule' },
+  { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
 ];
 
 @NgModule({

@@ -1,3 +1,14 @@
-<p>
-  pop works!
-</p>
+
+<ion-item (click)='settings()'>
+  Settings
+  <ion-buttons slot='end'>
+    <ion-icon name='settings' right></ion-icon>
+  </ion-buttons>
+</ion-item>
+
+<ion-item (click)='logout()'>
+  Logout
+  <ion-buttons slot='end'>
+    <ion-icon name='log-out' right></ion-icon>
+  </ion-buttons>
+</ion-item>

@@ -9,6 +9,7 @@ import { Storage } from "@ionic/storage";
 import { ToastController, PopoverController } from '@ionic/angular';
 import { tap } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { PopComponent } from '../pop/pop.component';
 
 @Component({
   selector: "app-home",
@@ -73,11 +74,15 @@ export class HomePage implements OnInit {
     return await p.present();
   }
   
-  pop() {
-    const popover = this.popCtrl.create({
-      component: 'app-pop'
-    }).then(output => {
-      this.pop2(output);
-    });
+  pop(pop_event) {
+    const popover = this.popCtrl
+      .create({
+        component: PopComponent,
+        mode: 'ios',
+        event: pop_event
+      })
+      .then(output => {
+        this.pop2(output);
+      });
   }
 }

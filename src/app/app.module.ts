@@ -23,7 +23,7 @@ import { PopComponent } from './pop/pop.component';
 
 @NgModule({
   declarations: [AppComponent, PopComponent],
-  entryComponents: [],
+  entryComponents: [PopComponent],
   imports: [
     IonicModule.forRoot(),
     BrowserModule,
@@ -31,6 +31,7 @@ import { PopComponent } from './pop/pop.component';
     AppRoutingModule,
     AngularFireModule.initializeApp(FIRE_CONFIG),
     AngularFireAuthModule,
+    // PopComponent,
     // Storage,
     AngularFireDatabaseModule
   ],

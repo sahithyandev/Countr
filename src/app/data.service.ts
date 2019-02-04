@@ -14,6 +14,8 @@ export class DataService {
   email;
   password;
 
+  available_offline: boolean;
+
   constructor(
     public fireauth: AngularFireAuth,
     public storage: Storage,

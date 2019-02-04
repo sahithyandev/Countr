@@ -22,6 +22,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public router: Router,
+    public DataService: DataService,
     public loadCtrl: LoadingController,
     public fireauth: AngularFireAuth,
     public custom: CustomService,
@@ -37,7 +38,12 @@ export class AppComponent {
       // this.statusBar.backgroundColorByName('red');
       this.statusBar.hide();
       this.splashScreen.hide();
-      this.router.navigateByUrl('/login');
+
+      this.storage.get('AvailableOffline').then(avail_offl => {
+        this.DataService.available_offline = avail_offl;
+      }).catch(e => {
+        console.log(e);
+      });
 
       this.storage.get('loggedInfo')
         .then((data) => {
@@ -47,6 +53,7 @@ export class AppComponent {
           this.custom.login();
           this.loading.dismiss();
         }).catch(e => {
+          this.router.navigateByUrl('/login');
           console.log('Error');
           this.loading.dismiss();
         });
