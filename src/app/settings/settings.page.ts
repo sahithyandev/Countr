@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from "@ionic/storage";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -11,7 +12,8 @@ export class SettingsPage implements OnInit {
   new_password: string;
 
   constructor(
-    public storage: Storage
+    public storage: Storage,
+    public router: Router
   ) { }
 
   ngOnInit() {
@@ -19,5 +21,9 @@ export class SettingsPage implements OnInit {
 
   check() {
     this.storage.set('AvailableOffline', this.available_offline);
+  }
+
+  feedback() {
+    this.router.navigateByUrl('/feedback');
   }
 }
