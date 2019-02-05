@@ -25,13 +25,18 @@ export class PopComponent implements OnInit {
     this.fireauth.auth.signOut();
     this.storage.remove('loggedInfo');
     this.router.navigateByUrl('/login');
-    console.log('Signing Out...');
+    console.log('Signing Out');
   }
 
   settings() {
     this.router.navigateByUrl('/settings');
     this.popCtrl.dismiss();
-    console.log('Going to Settings...');
+  }
+
+  feedback() {
+    this.popCtrl.dismiss().then(() => {
+      this.router.navigateByUrl('/feedback');
+    });
   }
 
 }

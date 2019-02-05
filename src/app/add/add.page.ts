@@ -46,7 +46,6 @@ export class AddPage implements OnInit {
   ) {}
 
   resize() {
-    console.log("Increase Height");
     const textArea = this.element.nativeElement.getElementsByTagName(
       "textarea"
     )[0];
@@ -66,11 +65,9 @@ export class AddPage implements OnInit {
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;
-    console.log(this.max_time);
   }
 
   saveItem() {
-    console.log(this.datetime);
     this.firebase.database.ref(`/reminders/${this.uid}`).push({
       title: this.title,
       datetime: this.datetime,

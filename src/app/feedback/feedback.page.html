@@ -11,7 +11,27 @@
 
   <ion-item>
     <ion-label position='stacked'>Title</ion-label>
-    <ion-input [(ngModel)]='title'></ion-input>
+    <ion-input [(ngModel)]='feedback.title'></ion-input>
   </ion-item>
+
+  <ion-item>
+    <ion-label position='stacked' placeholder='Optional'>Description</ion-label>
+    <textarea [(ngModel)]='feedback.description' (input)='resize()' width='100%'></textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position='stacked'>Category</ion-label>
+    <!-- make it a beautiful selectrion -->
+    <ion-select placeholder="Select Category" [(ngModel)]='feedback.category'>
+      <ion-select-option value="error">Error</ion-select-option>
+      <ion-select-option value="improve">Improve Idea</ion-select-option>
+      <ion-select-option value="other">Other</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <div align='center' class='send-feedback-button-container'>
+    <ion-button *ngIf='feedback.title && feedback.category' class='send-feedback-button' (click)='send_feedback()'>Send Feedback</ion-button>
+    <ion-button *ngIf='!(feedback.title && feedback.category)' class='send-feedback-button' disabled>Send Feedback</ion-button>
+  </div>
 
 </ion-content>

@@ -91,7 +91,6 @@ export class DetailsPage implements OnInit {
           } else if (minutes <= 0) {
             output = seconds + "." + mseconds + "s";
           } else {
-            console.log('test');
             output = hours + "h : " + minutes + "m : " + seconds + "." + mseconds + "s";
           }
         }
@@ -99,9 +98,6 @@ export class DetailsPage implements OnInit {
 
       try {
         document.getElementById('timer').innerHTML = output;
-        if (output == undefined) {
-          console.log(hours + " : " + minutes + " : " + seconds + " : " + mseconds);
-        }
       } catch (error) {
         window.clearInterval(x);
         console.log("Stopped because of \n" + error);

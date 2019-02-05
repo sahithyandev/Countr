@@ -22,11 +22,6 @@
       <ion-datetime name='datetime' [min]='min_time' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A"  pickerFormat="DD MM YYYY HH mm" [(ngModel)]="datetime" (ngModelChange)='check()'></ion-datetime>
     </ion-item>
 
-    <!-- <ion-item>
-      <ion-label>Time</ion-label>
-      <ion-datetime name='time' displayFormat="hh:mm A" pickerFormat="HH mm" [(ngModel)]="time"></ion-datetime>
-    </ion-item> -->
-
     <ion-item>
       <ion-label position='stacked'>Description : </ion-label>
       <textarea id="description" (input)='resize()' width='100%' [(ngModel)]='description'></textarea>

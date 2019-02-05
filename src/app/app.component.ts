@@ -35,26 +35,20 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.loading.present();
-      // this.statusBar.backgroundColorByName('red');
       this.statusBar.hide();
       this.splashScreen.hide();
-
-      this.storage.get('AvailableOffline').then(avail_offl => {
-        this.DataService.available_offline = avail_offl;
-      }).catch(e => {
-        console.log(e);
-      });
+      this.router.navigateByUrl('/login');
 
       this.storage.get('loggedInfo')
         .then((data) => {
-          console.log(data);
-          this.custom.email = data.email;
-          this.custom.password = data.password;
-          this.custom.login();
+          if (data.isLogged) {
+            this.custom.email = data.email;
+            this.custom.password = data.password;
+            this.custom.login();
+          }
           this.loading.dismiss();
         }).catch(e => {
-          this.router.navigateByUrl('/login');
-          console.log('Error');
+          console.log('Error : ' + e);
           this.loading.dismiss();
         });
     });
