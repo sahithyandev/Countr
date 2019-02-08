@@ -5,8 +5,8 @@ import * as functions from 'firebase-functions';
 //     var emailjs = require('emailjs/email');
 
 //     var server = emailjs.server.connect({
-//         user: "levo21548@gmail.com",
-//         password: "Sahithyan27012004",
+//         user: "feed.sahithyan@gmail.com",
+//         password: "SahithyanSupport",
 //         host: "smtp.gmail.com",
 //         port: 465,
 //         ssl: true

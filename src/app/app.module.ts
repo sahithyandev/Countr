@@ -15,11 +15,8 @@ import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 
 import { IonicStorageModule } from "@ionic/storage";
-import { Network, NetworkOriginal } from '@ionic-native/network';
-import { TextToSpeech } from '@ionic-native/text-to-speech';
 import { PopComponent } from './pop/pop.component';
-// import { Storage } from "@ionic/storage";
-// import { FacebookOriginal } from "@ionic-native/facebook";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [AppComponent, PopComponent],
@@ -31,6 +28,7 @@ import { PopComponent } from './pop/pop.component';
     AppRoutingModule,
     AngularFireModule.initializeApp(FIRE_CONFIG),
     AngularFireAuthModule,
+    HttpClientModule,
     // PopComponent,
     // Storage,
     AngularFireDatabaseModule

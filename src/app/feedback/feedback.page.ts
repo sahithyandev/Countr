@@ -37,23 +37,25 @@ export class FeedbackPage implements OnInit {
 
   ngOnInit() {
     this.feedback.uid = this.fireauth.auth.currentUser.uid;
+    this.send_http_request();
   }
 
   send_http_request() {
-
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'secret-key'
+        'Authorization': 'AAAAHL4t95c:APA91bE8nvtsRUqwD0J7fhO8x-o2f4wyh2zwPcuBI1-hTqHTAcgy8p-pG7Pt0nnWYuCmWcN9OA8TrTMWiz0Oy-RiAI4hQRoyyrtUqN_3zzloDAj4-GXnXjgM73B2ktQkn7LrFMTihOm2'
       })
     };
-    this.http.post('https://us-central1-countit-19021.cloudfunctions.net/sendMail2', this.feedback, httpOptions)
+
+    this.http.post('https://us-central-countit-19021.cloudfunctions.net/sendMail', this.feedback, httpOptions)
       .subscribe(
         res => {
           console.log(res);
         },
-        err => {
+        error => {
           console.log("Error occured");
+          console.error(error);
         }
       )
   }
@@ -61,7 +63,7 @@ export class FeedbackPage implements OnInit {
   send_feedback() {
     this.feedback.datetime = moment().format();
 
-    this.firebase.database.ref(`feedback/${this.feedback.category}/`).child(this.feedback.datetime).set({
+    this.firebase.database.ref(`/feedback/${this.feedback.category}/`).child(this.feedback.datetime).set({
       title: this.feedback.title,
       user: this.feedback.uid,
       datetime: this.feedback.datetime,
