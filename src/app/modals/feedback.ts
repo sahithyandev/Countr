@@ -3,5 +3,6 @@ export interface Feedback {
     description: string;
     category: string;
     uid: string;
+    username: string;
     datetime: string;
 }

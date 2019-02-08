@@ -10,6 +10,7 @@ import { CustomService } from './custom.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { async } from 'q';
 import { LoadingService } from './loading.service';
+import { createEmptyStateSnapshot } from '@angular/router/src/router_state';
 
 @Component({
   selector: 'app-root',

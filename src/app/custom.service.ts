@@ -3,8 +3,8 @@ import { AlertController, ToastController, LoadingController } from '@ionic/angu
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Storage } from "@ionic/storage";
 import { Router } from '@angular/router';
-import { FormGroupDirective } from '@angular/forms';
 import { LoadingService } from './loading.service';
+// import * as email_send from "emailjs/email";
 
 @Injectable({
   providedIn: "root"

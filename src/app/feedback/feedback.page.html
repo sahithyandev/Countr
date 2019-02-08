@@ -16,14 +16,14 @@
 
   <ion-item>
     <ion-label position='stacked' placeholder='Optional'>Description</ion-label>
-    <textarea [(ngModel)]='feedback.description' (input)='resize()' width='100%'></textarea>
+    <textarea id='descrition-input' [(ngModel)]='feedback.description' (input)='resize()' width='100%'></textarea>
   </ion-item>
 
   <ion-item>
     <ion-label position='stacked'>Category</ion-label>
     <!-- make it a beautiful selectrion -->
     <ion-select placeholder="Select Category" [(ngModel)]='feedback.category'>
-      <ion-select-option value="error">Error</ion-select-option>
+      <ion-select-option value="error_bug">Error or Bug</ion-select-option>
       <ion-select-option value="improve">Improve Idea</ion-select-option>
       <ion-select-option value="other">Other</ion-select-option>
     </ion-select>

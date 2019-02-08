@@ -1,10 +1,12 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
+
 import * as moment from "moment";
+
 import { Feedback } from "./../modals/feedback";
 import { CustomService } from '../custom.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-feedback',
@@ -37,15 +39,15 @@ export class FeedbackPage implements OnInit {
 
   send_feedback() {
     this.feedback.datetime = moment().format();
-    this.firebase.database.ref(`feedback`).child(this.feedback.title).set({
+
+    this.firebase.database.ref(`feedback/${this.feedback.category}/`).child(this.feedback.datetime).set({
+      title: this.feedback.title,
       user: this.feedback.uid,
       datetime: this.feedback.datetime,
-      description: this.feedback.description,
-      category: this.feedback.category
+      description: this.feedback.description
     }).then(() => {
-      this.custom.alert_dismiss('Feedback Sent', 'Thank you for your feedback!.<br>Your feedback will be helpful to improve our app.<br>Automatically You will be taken to Home Page');
+      this.custom.alert_dismiss('Feedback Sent', 'Thank you for your feedback!.<br>Your feedback will be helpful to improve our app.');
       this.router.navigateByUrl('/home');
-      // email sending to me, if error
     });
   }
 
