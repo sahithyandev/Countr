@@ -7,6 +7,7 @@ import * as moment from "moment";
 
 import { Feedback } from "./../modals/feedback";
 import { CustomService } from '../custom.service';
+import { HttpHeaders, HttpClient } from "@angular/common/http";
 
 @Component({
   selector: 'app-feedback',
@@ -19,6 +20,7 @@ export class FeedbackPage implements OnInit {
   constructor(
     public fireauth: AngularFireAuth,
     public custom: CustomService,
+    public http: HttpClient,
     public router: Router,
     public element: ElementRef,
     public firebase: AngularFireDatabase
@@ -35,6 +37,25 @@ export class FeedbackPage implements OnInit {
 
   ngOnInit() {
     this.feedback.uid = this.fireauth.auth.currentUser.uid;
+  }
+
+  send_http_request() {
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'secret-key'
+      })
+    };
+    this.http.post('https://us-central1-countit-19021.cloudfunctions.net/sendMail2', this.feedback, httpOptions)
+      .subscribe(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.log("Error occured");
+        }
+      )
   }
 
   send_feedback() {

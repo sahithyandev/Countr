@@ -22,6 +22,7 @@
     "@angular/router": "~7.1.4",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/firebase": "^5.0.0-beta.14",
+    "@ionic-native/http": "^5.0.0",
     "@ionic-native/keyboard": "^5.0.0",
     "@ionic-native/local-notifications": "^5.0.0",
     "@ionic-native/native-storage": "^4.20.0",
