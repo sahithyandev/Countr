@@ -5,7 +5,7 @@ import { DataService } from '../data.service';
 import { CountDown } from '../modals/countdown';
 import { Router } from '@angular/router';
 import { CustomService } from '../custom.service';
-import { TextToSpeech } from "@ionic-native/text-to-speech";
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @Component({
   selector: 'app-details',
@@ -20,7 +20,7 @@ export class DetailsPage implements OnInit {
 	// reminder = {};
 
 	uid;
-	key;
+	countDownId;
 
 	temp: Array<object> = [];
 	user_temp: Array<object> = [];
@@ -30,20 +30,22 @@ export class DetailsPage implements OnInit {
     public fireauth: AngularFireAuth,
     public router: Router,
     public custom: CustomService,
+    public localNotification: LocalNotifications,
     public parse: DataService
   ) { }
 
   ngOnInit() {
-    this.key = this.parse.count_down_id;
+    this.countDownId = this.parse.countDownId;
 
     this.uid = this.fireauth.auth.currentUser.uid;
 
     this.firebase.database
-      .ref(`/reminders/${this.uid}/${this.key}`)
+      .ref(`/reminders/${this.uid}/${this.countDownId}`)
       .on("value", snapshot => {
         var result: object = snapshot.toJSON();
         this.temp.push(result);
         this.reminder = {
+          id: this.temp[0]['id'],
           title: this.temp[0]["title"],
           description: this.temp[0]["description"],
           datetime: this.temp[0]["datetime"]
@@ -107,7 +109,6 @@ export class DetailsPage implements OnInit {
 
   finished() {
     let user_info;
-    let text;
 
     this.firebase.database.ref(`/users/${this.uid}/info/`).on('value', (data) => {
       var result: object = data.toJSON();
@@ -118,21 +119,16 @@ export class DetailsPage implements OnInit {
       };
       console.log(user_info);
     });
-    // IDEA: Notification Pushing
-    // LocalNotifications.schedule({
-    //   title: 'Count Down Finished',
-    //   led: 'FF0000'
-    // });
-
-
- 
-    text = user_info.name + ", Your countdown " + this.reminder.title + " is Finished";
-    TextToSpeech.speak(text);
     
   }
 
+  removeNotification() {
+    this.localNotification.cancel(this.countDownId);
+  }
+
   delete() {
-    this.firebase.database.ref(`/reminders/${this.uid}/${this.key}`)
+    this.removeNotification();
+    this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`)
       .remove((e) => {
         console.log(e);
       }).then((after) => {
@@ -143,7 +139,7 @@ export class DetailsPage implements OnInit {
   }
 
   edit() {
-    this.parse.edit_id = this.key;
+    this.parse.edit_id = this.countDownId;
     this.router.navigateByUrl('/edit');
   }
 

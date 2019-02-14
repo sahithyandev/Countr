@@ -1,15 +1,14 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { CustomService } from '../custom.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
-import { DetailsPage } from '../details/details.page';
 import { Storage } from "@ionic/storage";
 import { ToastController, PopoverController } from '@ionic/angular';
-import { tap } from "rxjs/operators";
-import { Observable } from "rxjs";
 import { PopComponent } from '../pop/pop.component';
+import { LoadingService } from '../loading.service';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @Component({
   selector: "app-home",
@@ -24,9 +23,11 @@ export class HomePage implements OnInit {
     public firebase: AngularFireDatabase,
     public fireauth: AngularFireAuth,
     public custom: CustomService,
+    public localNotification: LocalNotifications,
     public router: Router,
     public parse: DataService,
     public toastCtrl: ToastController,
+    public loading: LoadingService,
     public popCtrl: PopoverController,
     public storage: Storage
   ) {}
@@ -38,13 +39,13 @@ export class HomePage implements OnInit {
       this.firebase.database
         .ref(`/reminders/${this.uid}`)
         .on("value", snapshot => {
-          // this.zone.run(() => {
-            this.count_downs = this.custom.snapToArray(snapshot);
-            this.storage.set('countdowns', this.count_downs);
-          // });
+          this.loading.dismiss();
+          this.count_downs = this.custom.snapToArray(snapshot);
+          this.storage.set('countdowns', this.count_downs);
         });
     } catch (e) {
       this.storage.get('countdowns').then((data) => {
+        this.loading.dismiss();
         this.count_downs = data;
       });
     }
@@ -54,8 +55,8 @@ export class HomePage implements OnInit {
     this.router.navigateByUrl('/add');
   }
 
-  async details(key) {
-    this.parse.count_down_id = key;
+  async details(countDownId) {
+    this.parse.countDownId = countDownId;
     await this.router.navigate(['/details']);
   }
 
@@ -66,12 +67,17 @@ export class HomePage implements OnInit {
     this.custom.toast("Successfully Logged Out!", "top");
   }
 
-	delete(key) {
-		this.firebase.database.ref(`/reminders/${this.uid}/${key}`).remove();
+  removeNotification(countDownId) {
+    this.localNotification.cancel(countDownId);
   }
 
-  async pop2(p) {
-    return await p.present();
+	delete(countDownId) {
+    this.removeNotification(countDownId);
+    this.firebase.database.ref(`/reminders/${this.uid}/${countDownId}`).remove();
+  }
+
+  async pop2(poper) {
+    return await poper.present();
   }
   
   pop(pop_event) {

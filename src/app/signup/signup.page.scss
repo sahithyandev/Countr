@@ -1,21 +1,22 @@
 .h-title {
-    color: #44cc13;
+    color: hsl(164, 83%, 43.7%);
 }
 
 #create {
     padding: 12px;
     font-size: 18px;
     border-radius: 20px;
-    color: #feeefe;
-    background-color: #44cc13;
+    color: hsl(300, 89%, 96%);
+    background-color: hsl(164, 83%, 43.7%);
 }
 
 #special-header {
-    color: #cc1344;
+    color: hsl(344, 83%, 43.7%);
+    ;
 }
 
 .input-text {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: hsla(0, 0%, 0%, 0.20);
     border-radius: 12px;
     --padding-start: 11px;
 }
@@ -37,7 +38,7 @@
 }
 
 #eror {
-    background-color: red;
+    background-color: hsl(360, 100%, 50%);
     position: absolute;
     bottom: 0;
     right: 0;

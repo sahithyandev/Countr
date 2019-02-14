@@ -17,6 +17,7 @@ import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { IonicStorageModule } from "@ionic/storage";
 import { PopComponent } from './pop/pop.component';
 import { HttpClientModule } from "@angular/common/http";
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @NgModule({
   declarations: [AppComponent, PopComponent],
@@ -37,7 +38,7 @@ import { HttpClientModule } from "@angular/common/http";
     StatusBar,
     SplashScreen,
     // TextToSpeechOriginal,
-    // NetworkOriginal,
+    LocalNotifications,
     // Storage,
     // FacebookOriginal,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

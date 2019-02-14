@@ -69,7 +69,6 @@ export class LoginPage implements OnInit {
         });
 
         this.router.navigateByUrl('/home');
-        this.loading.dismiss();
         this.custom.toast('Successfully Logged In!', 'top');
 
       }).catch(e => {

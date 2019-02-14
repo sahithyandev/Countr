@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Storage } from "@ionic/storage";
+import { CountDown } from './modals/countdown';
 
 @Injectable({
   providedIn: "root"
 })
 export class DataService {
 
-  count_down_id;
+  countDownId;
   edit_id;
   public email;
   password;

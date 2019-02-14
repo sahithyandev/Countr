@@ -8,9 +8,8 @@ import { Router } from '@angular/router';
 import { Storage } from "@ionic/storage";
 import { CustomService } from './custom.service';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { async } from 'q';
 import { LoadingService } from './loading.service';
-import { createEmptyStateSnapshot } from '@angular/router/src/router_state';
+import { Push, PushOptions, PushObject } from "@ionic-native/push";
 
 @Component({
   selector: 'app-root',
@@ -38,6 +37,7 @@ export class AppComponent {
       this.loading.present();
       this.statusBar.hide();
       this.splashScreen.hide();
+      this.pushSetup();
       this.router.navigateByUrl('/login');
 
       this.storage.get('loggedInfo')
@@ -53,5 +53,30 @@ export class AppComponent {
           this.loading.dismiss();
         });
     });
+  }
+
+  pushSetup() {
+    const options: PushOptions = {
+      android: {
+        senderID: '123449767831'
+      },
+      ios: {
+        alert: 'true',
+        badge: true,
+        sound: 'false'
+      },
+      browser: {
+        pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+      }
+    }
+
+    const pushObject: PushObject = Push.init(options);
+
+
+    pushObject.on('notification').subscribe((notification: any) => console.log('Received a notification', notification));
+
+    pushObject.on('registration').subscribe((registration: any) => console.log('Device registered', registration));
+
+    pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
   }
 }

@@ -36,19 +36,23 @@ export class FeedbackPage implements OnInit {
   }
 
   ngOnInit() {
+    this.feedback.category = 'error_bug';
     this.feedback.uid = this.fireauth.auth.currentUser.uid;
-    this.send_http_request();
+    this.firebase.database.ref(`/users/${this.feedback.uid}`).on('value', snapshot => {
+      var data: object = snapshot.toJSON();
+      this.feedback.username = data['info']['name'];
+    });
   }
 
   send_http_request() {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'AAAAHL4t95c:APA91bE8nvtsRUqwD0J7fhO8x-o2f4wyh2zwPcuBI1-hTqHTAcgy8p-pG7Pt0nnWYuCmWcN9OA8TrTMWiz0Oy-RiAI4hQRoyyrtUqN_3zzloDAj4-GXnXjgM73B2ktQkn7LrFMTihOm2'
+        'Authorization': 'AIzaSyDmcWmLEdKEzGhuQ6d-peH81uHR4iGcT8M'
       })
     };
 
-    this.http.post('https://us-central-countit-19021.cloudfunctions.net/sendMail', this.feedback, httpOptions)
+    this.http.post('https://us-central1-countit-19021.cloudfunctions.net/sendMail', this.feedback, httpOptions)
       .subscribe(
         res => {
           console.log(res);
@@ -69,6 +73,7 @@ export class FeedbackPage implements OnInit {
       datetime: this.feedback.datetime,
       description: this.feedback.description
     }).then(() => {
+      this.send_http_request();
       this.custom.alert_dismiss('Feedback Sent', 'Thank you for your feedback!.<br>Your feedback will be helpful to improve our app.');
       this.router.navigateByUrl('/home');
     });

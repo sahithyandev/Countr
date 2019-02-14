@@ -4,6 +4,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { Router } from '@angular/router';
 import * as moment from "moment";
 import { CustomService } from '../custom.service';
+import { LocalNotifications } from "@ionic-native/local-notifications/ngx";
 
 @Component({
   selector: "app-add",
@@ -12,8 +13,9 @@ import { CustomService } from '../custom.service';
 })
 export class AddPage implements OnInit {
   uid: string;
+  countDownId;
   title: string;
-  description: string;
+  description: string = '';
   false_time: boolean = false;
 
   datetime: string = moment()
@@ -38,6 +40,7 @@ export class AddPage implements OnInit {
 
   constructor(
     public fireauth: AngularFireAuth,
+    public localNotification: LocalNotifications,
     public router: Router,
     public zone: NgZone,
     public firebase: AngularFireDatabase,
@@ -65,13 +68,32 @@ export class AddPage implements OnInit {
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;
+    
+    // Test this function and implement this function to set the id for the new count down
+    this.firebase.database.ref(`/reminders/${this.uid}`).on('value', snap => {
+      console.log(snap.numChildren());
+    });
+  }
+
+  schedule() {
+    this.localNotification.schedule({
+      id: this.countDownId,
+      title: 'Count Down Finished',
+      text: 'Your count down, ' + this.title + " has finished",
+      trigger: {
+        at: new Date(this.datetime)
+      }
+    });
   }
 
   saveItem() {
-    this.firebase.database.ref(`/reminders/${this.uid}`).push({
+    console.log(this.title);
+    this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`).push({
       title: this.title,
       datetime: this.datetime,
       description: this.description
+    }).then(data => {
+      this.schedule();
     });
 
     this.router.navigateByUrl('/home');

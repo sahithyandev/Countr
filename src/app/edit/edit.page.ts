@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { CustomService } from '../custom.service';
 import * as moment from 'moment';
+import { LocalNotifications, ILocalNotification } from "@ionic-native/local-notifications/ngx";
 
 @Component({
   selector: "app-edit",
@@ -39,6 +40,7 @@ export class EditPage implements OnInit {
     public firebase: AngularFireDatabase,
     public fireauth: AngularFireAuth,
     public parse: DataService,
+    public localNotification: LocalNotifications,
     public custom: CustomService,
     public element: ElementRef,
     public router: Router
@@ -63,6 +65,7 @@ export class EditPage implements OnInit {
         var result: object = snapshot.toJSON();
         this.temp.push(result);
         this.reminder = {
+          id: this.temp[0]['id'],
           title: this.temp[0]["title"],
           description: this.temp[0]["description"],
           datetime: this.temp[0]["datetime"],
@@ -70,8 +73,18 @@ export class EditPage implements OnInit {
       });
   }
 
+  updateNotification() {
+    this.localNotification.update({
+      id: this.reminder.id,
+      title: this.reminder.title,
+      text: 'Your count down, ' + this.reminder.title + " has finished",
+      trigger: {
+        at: new Date(this.reminder.datetime)
+      }
+    });
+  }
+
   saveEdits() {
-    // this.zone.run(() => {
     this.firebase.database.ref(`/reminders/${this.uid}/${this.id}`).update({
       title: this.reminder.title,
       description: this.reminder.description,
@@ -85,6 +98,7 @@ export class EditPage implements OnInit {
       });
     this.custom.toast("Saved", "top");
     this.router.navigateByUrl("/home");
-    // });
+
+    this.updateNotification();
   }
 }
