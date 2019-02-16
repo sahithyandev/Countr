@@ -20,6 +20,7 @@ npm-debug.log*
 .versions/
 coverage/
 www/
+src/environments/environment-firbase.ts
 node_modules/
 tmp/
 temp/

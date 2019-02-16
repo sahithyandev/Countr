@@ -44,28 +44,33 @@ export class SignupPage implements OnInit {
           this.firebase.database
             .ref("/users")
             .child(newUser.user.uid)
-            .set({
-              info: this.user
-            });
+            .set(this.user);
         });
+      this.custom.email = this.user.email;
+      this.custom.password = this.user.password;
 
-        this.custom.alert_dismiss(
-          "Successfully Registered",
-          "You can Log In Now..."
-        );
+      this.custom.alert_dismiss(
+        "Successfully Registered",
+        "Add your Count Downs now.."
+      );
+      
+      this.custom.alertCtrl.dismiss();
+      this.custom.login();
+      
     } catch (e) {
-      console.log(e.code);
       if (e.code == "auth/weak-password") {
         this.custom.alert_dismiss(
           "Weak Password",
           "Try a different password.<br>This password is <b>Weak</b>"
         );
       }
-      if (e.code == "auth/email-already-in-use") {
+      else if (e.code == "auth/email-already-in-use") {
         this.custom.alert_dismiss(
           "Already Registered",
           "Log In instead of Sign Up"
         );
+      } else {
+        console.log(e.code);
       }
     }
   }

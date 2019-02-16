@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, ElementRef, NgZone } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Router } from '@angular/router';
@@ -13,10 +13,11 @@ import { LocalNotifications } from "@ionic-native/local-notifications/ngx";
 })
 export class AddPage implements OnInit {
   uid: string;
-  countDownId;
+  countDownId = 1;
   title: string;
   description: string = '';
   false_time: boolean = false;
+  username: string ;
 
   datetime: string = moment()
     .minute(moment().minute() + 1)
@@ -66,29 +67,42 @@ export class AddPage implements OnInit {
     }
   }
 
+  findCountDownId() {
+    this.firebase.database.ref(`reminders/${this.uid}`).on('value', (countDownList) => {
+      countDownList.forEach((countDown) => {
+        if (this.countDownId <= parseInt(countDown.key)) {
+          this.countDownId = parseInt(countDown.key) + 1;
+        }
+      })
+    });
+  }
+
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;
-    
-    // Test this function and implement this function to set the id for the new count down
-    this.firebase.database.ref(`/reminders/${this.uid}`).on('value', snap => {
-      console.log(snap.numChildren());
-    });
+    this.firebase.database.ref(`/users/${this.uid}`).on('value', (userInfo) => {
+      console.log(userInfo['name']);
+    })
+    this.findCountDownId();
   }
 
   schedule() {
     this.localNotification.schedule({
       id: this.countDownId,
       title: 'Count Down Finished',
-      text: 'Your count down, ' + this.title + " has finished",
+      text: this.username + ', Your count down, ' + this.title + " has finished",
       trigger: {
         at: new Date(this.datetime)
-      }
+      },
+      actions: [
+        { id: 'delete', title: 'Delete' },
+        { id: 'enter', title: 'Open the app' }
+      ]
     });
   }
 
   saveItem() {
     console.log(this.title);
-    this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`).push({
+    this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`).set({
       title: this.title,
       datetime: this.datetime,
       description: this.description

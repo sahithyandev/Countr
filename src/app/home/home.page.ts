@@ -62,17 +62,14 @@ export class HomePage implements OnInit {
 
   logout() {
     this.fireauth.auth.signOut();
+    this.popCtrl.dismiss();
     this.storage.remove('loggedInfo');
     this.router.navigateByUrl('/login');
     this.custom.toast("Successfully Logged Out!", "top");
   }
 
-  removeNotification(countDownId) {
-    this.localNotification.cancel(countDownId);
-  }
-
 	delete(countDownId) {
-    this.removeNotification(countDownId);
+    this.localNotification.cancel(countDownId);
     this.firebase.database.ref(`/reminders/${this.uid}/${countDownId}`).remove();
   }
 
