@@ -40,7 +40,7 @@ export class FeedbackPage implements OnInit {
     this.feedback.uid = this.fireauth.auth.currentUser.uid;
     this.firebase.database.ref(`/users/${this.feedback.uid}`).on('value', snapshot => {
       var data: object = snapshot.toJSON();
-      this.feedback.username = data['info']['name'];
+      this.feedback.username = data['name'];
     });
   }
 

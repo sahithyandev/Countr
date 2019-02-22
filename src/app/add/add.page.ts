@@ -81,6 +81,7 @@ export class AddPage implements OnInit {
     this.uid = this.fireauth.auth.currentUser.uid;
     this.firebase.database.ref(`/users/${this.uid}`).on('value', (userInfo) => {
       console.log(userInfo['name']);
+      this.username = userInfo['name'];
     })
     this.findCountDownId();
   }
@@ -93,6 +94,7 @@ export class AddPage implements OnInit {
       trigger: {
         at: new Date(this.datetime)
       },
+      data: [this.countDownId],
       actions: [
         { id: 'delete', title: 'Delete' },
         { id: 'enter', title: 'Open the app' }

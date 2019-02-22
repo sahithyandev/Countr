@@ -17,8 +17,9 @@ exports.sendMail = functions.https.onRequest((request, response) => {
         });
         const html = 
             `<html>
-                <body>
+                <body style='font-size: 15px;'>
                     <br>
+                    <h2>Feedback</h2>
                     <div>
                         Hi Sahithyan,<br>
                         ${feedback.username} (${feedback.uid}) has given feedback on your app.<br>
@@ -33,9 +34,9 @@ exports.sendMail = functions.https.onRequest((request, response) => {
             from: "Support <feed.sahithyan@gmail.com>",
             to: "sahithyan2701@gmail.com",
             subject: "Feedback from " + feedback.username,
-            attachments: [
-                {data: html, alternative:'true'}
-            ]
+            text: 'Email from Firebase',
+            attachment: [{ data: html, alternative: true }]
+            
         }, (err: any, message: any) => {
             console.log(err || message);
             });

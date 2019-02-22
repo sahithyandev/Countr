@@ -5,10 +5,11 @@ import { CustomService } from '../custom.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { Storage } from "@ionic/storage";
-import { ToastController, PopoverController } from '@ionic/angular';
+import { ToastController, PopoverController, Platform } from '@ionic/angular';
 import { PopComponent } from '../pop/pop.component';
 import { LoadingService } from '../loading.service';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { toTypeScript } from '@angular/compiler';
 
 @Component({
   selector: "app-home",
@@ -21,8 +22,10 @@ export class HomePage implements OnInit {
 
   constructor(
     public firebase: AngularFireDatabase,
+    public plt: Platform,
     public fireauth: AngularFireAuth,
     public custom: CustomService,
+    public data: DataService,
     public localNotification: LocalNotifications,
     public router: Router,
     public parse: DataService,
@@ -30,7 +33,28 @@ export class HomePage implements OnInit {
     public loading: LoadingService,
     public popCtrl: PopoverController,
     public storage: Storage
-  ) {}
+  ) {
+    this.plt.ready().then(() => {
+      // handle the notification to delete and open the app
+      // Check it
+      this.localNotification.on('enter').toPromise().then((notification) => {
+
+        this.data.countDownId = notification.data;
+        this.router.navigateByUrl('/details');
+
+      }).catch((error) => {
+        console.log(error);
+      });
+
+      this.localNotification.on('delete').toPromise().then((notification) => {
+        
+        this.delete(notification.data);
+
+      }).catch((error) => {
+        console.log(error);
+      });
+    })
+  }
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;

@@ -4,8 +4,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Storage } from "@ionic/storage";
 import { Router } from '@angular/router';
 import { LoadingService } from './loading.service';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
-// import * as email_send from "emailjs/email";
 
 @Injectable({
   providedIn: "root"
@@ -16,7 +14,6 @@ export class CustomService {
   
   constructor(
     public alertCtrl: AlertController,
-    public localNotifications: LocalNotifications,
     public toastCtrl: ToastController,
     public fireauth: AngularFireAuth,
     public storage: Storage,
