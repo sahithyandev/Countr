@@ -6,7 +6,7 @@ It helps you to create Count Downs. They are stored in Cloud (Firebase) to enabl
 
 # Installing
  
- This app is not released in any of the official stores of Windows, Google, Apple.
+ This app is not released in any of the official stores of Windows, Google, Apple.<br>
  You can ask <b>Authors</b> of this project for the installers.
 
  # Authors
