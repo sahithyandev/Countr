@@ -45,7 +45,7 @@ export class DetailsPage implements OnInit {
         var result: object = snapshot.toJSON();
         this.temp.push(result);
         this.reminder = {
-          id: this.temp[0]['id'],
+          id: snapshot.key,
           title: this.temp[0]["title"],
           description: this.temp[0]["description"],
           datetime: this.temp[0]["datetime"]
@@ -102,24 +102,17 @@ export class DetailsPage implements OnInit {
         document.getElementById('timer').innerHTML = output;
       } catch (error) {
         window.clearInterval(x);
-        console.log("Stopped because of \n" + error);
+        console.log("Stopped");
       }
     }, 1);
   }
 
   finished() {
-    let user_info;
-
     this.firebase.database.ref(`/users/${this.uid}/info/`).on('value', (data) => {
       var result: object = data.toJSON();
       console.log(result);
       this.user_temp.push(result);
-      user_info = {
-        name: this.user_temp[0]["name"],
-      };
-      console.log(user_info);
     });
-    
   }
 
   removeNotification() {
@@ -129,8 +122,8 @@ export class DetailsPage implements OnInit {
   delete() {
     this.removeNotification();
     this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`)
-      .remove((e) => {
-        console.log(e);
+      .remove((error) => {
+        console.log(error);
       }).then((after) => {
         this.router.navigateByUrl('/home');
       });

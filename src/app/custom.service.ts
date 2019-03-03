@@ -4,7 +4,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Storage } from "@ionic/storage";
 import { Router } from '@angular/router';
 import { LoadingService } from './loading.service';
-// import * as email_send from "emailjs/email";
 
 @Injectable({
   providedIn: "root"
@@ -21,19 +20,19 @@ export class CustomService {
     public loading: LoadingService,
     public loadCtrl: LoadingController,
     public router: Router
-    ) {}
-
-  async presentLoading() {
-    const loadingController = document.querySelector('ion-loading-controller');
-    await loadingController.componentOnReady();
-
-    const loadingElement = await loadingController.create({
-      message: 'Please wait...',
-      spinner: 'crescent',
-      duration: 2000
-    });
-    return await loadingElement.present();
-  }
+  ) {}
+  
+    async presentLoading() {
+      const loadingController = document.querySelector('ion-loading-controller');
+      await loadingController.componentOnReady();
+      
+      const loadingElement = await loadingController.create({
+        message: 'Please wait...',
+        spinner: 'crescent',
+        duration: 2000
+      });
+      return await loadingElement.present();
+    }
 
   async alert_dismiss(title, message) {
     const al = await this.alertCtrl.create({
@@ -95,5 +94,6 @@ export class CustomService {
         this.loading.dismiss();
       });
   }
+
 
 }

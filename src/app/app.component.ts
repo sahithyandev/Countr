@@ -9,7 +9,13 @@ import { Storage } from "@ionic/storage";
 import { CustomService } from './custom.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoadingService } from './loading.service';
+<<<<<<< HEAD
 import { ConnectionService } from 'ng-connection-service';
+=======
+import { AngularFireDatabase } from '@angular/fire/database';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+// import { Push, PushOptions, PushObject } from "@ionic-native/push";
+>>>>>>> 7088d0f234180fee17c86fa6dc5c17e99a551d72
 
 @Component({
   selector: 'app-root',
@@ -22,13 +28,19 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public router: Router,
-    public DataService: DataService,
-    public loadCtrl: LoadingController,
+    private firebase: AngularFireDatabase,
     public fireauth: AngularFireAuth,
-    public custom: CustomService,
     public storage: Storage,
+<<<<<<< HEAD
     public loading: LoadingService,
     public connection: ConnectionService
+=======
+    public localNotifications: LocalNotifications,
+    public DataService: DataService,
+    public loadCtrl: LoadingController,
+    public loading: LoadingService,
+    public custom: CustomService
+>>>>>>> 7088d0f234180fee17c86fa6dc5c17e99a551d72
   ) {
     this.initializeApp();
   }
@@ -38,6 +50,33 @@ export class AppComponent {
       this.loading.present();
       this.statusBar.hide();
       this.splashScreen.hide();
+<<<<<<< HEAD
+=======
+      // this.pushSetup();
+
+      this.firebase.database.ref('notify?').on('value', (value) => {
+        const notify = value.val();
+
+        if (notify) {
+          
+          this.firebase.database.ref('/notification').on('value', (value) => {
+            var json = value.toJSON();
+    
+            this.localNotifications.schedule({
+              title: json['title'],
+              id: json['id'],
+              text: json['description'],
+              icon: 'resources/icon.png',
+              trigger: {
+                in: 5000 // milli seconds
+              }
+            });
+
+            // this.firebase.database.ref('/notify?').set(false);
+          });
+        }
+      });
+>>>>>>> 7088d0f234180fee17c86fa6dc5c17e99a551d72
 
       this.router.navigateByUrl('/login');
 
@@ -50,4 +89,33 @@ export class AppComponent {
       });
     });
   }
+<<<<<<< HEAD
+=======
+
+  // pushSetup() {
+  //   const options: PushOptions = {
+  //     android: {
+  //       senderID: '123449767831',
+  //       sound: 'true',
+  //     },
+  //     ios: {
+  //       alert: 'true',
+  //       badge: true,
+  //       sound: 'true'
+  //     },
+  //     browser: {
+  //       pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+  //     }
+  //   }
+
+  //   const pushObject: PushObject = Push.init(options);
+
+
+  //   pushObject.on('notification').subscribe((notification: any) => console.log('Received a notification', notification));
+
+  //   pushObject.on('registration').subscribe((registration: any) => console.log('Device registered', registration));
+
+  //   pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
+  // }
+>>>>>>> 7088d0f234180fee17c86fa6dc5c17e99a551d72
 }
