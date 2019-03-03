@@ -18,6 +18,7 @@ import { IonicStorageModule } from "@ionic/storage";
 import { PopComponent } from './pop/pop.component';
 import { HttpClientModule } from "@angular/common/http";
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { ConnectionServiceModule } from "ng-connection-service";
 
 @NgModule({
   declarations: [AppComponent, PopComponent],
@@ -30,9 +31,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
     AngularFireModule.initializeApp(FIRE_CONFIG),
     AngularFireAuthModule,
     HttpClientModule,
-    // PopComponent,
-    // Storage,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    ConnectionServiceModule
   ],
   providers: [
     StatusBar,

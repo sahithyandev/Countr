@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { CustomService } from '../custom.service';
 import { Keyboard } from "@ionic-native/keyboard";
-import { Alert } from 'selenium-webdriver';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { LoadingService } from '../loading.service';
 
@@ -33,9 +32,18 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    Keyboard.onKeyboardShow().subscribe((data) => {
-      console.log(data);
-    });
+    this.storage.get('loggedInfo')
+        .then((data) => {
+          if (data.isLogged) {
+            this.custom.email = data.email;
+            this.custom.password = data.password;
+            this.custom.login();
+          }
+          this.loading.dismiss();
+        }).catch(error => {
+          console.log('Error : ' + error);
+          this.loading.dismiss();
+        });
   }
 
   async alert_password_reset(title, message) {

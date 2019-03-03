@@ -9,7 +9,7 @@ import { Storage } from "@ionic/storage";
 import { CustomService } from './custom.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { LoadingService } from './loading.service';
-import { Push, PushOptions, PushObject } from "@ionic-native/push";
+import { ConnectionService } from 'ng-connection-service';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +27,8 @@ export class AppComponent {
     public fireauth: AngularFireAuth,
     public custom: CustomService,
     public storage: Storage,
-    public loading: LoadingService
+    public loading: LoadingService,
+    public connection: ConnectionService
   ) {
     this.initializeApp();
   }
@@ -37,46 +38,16 @@ export class AppComponent {
       this.loading.present();
       this.statusBar.hide();
       this.splashScreen.hide();
-      this.pushSetup();
+
       this.router.navigateByUrl('/login');
 
-      this.storage.get('loggedInfo')
-        .then((data) => {
-          if (data.isLogged) {
-            this.custom.email = data.email;
-            this.custom.password = data.password;
-            this.custom.login();
-          }
-          this.loading.dismiss();
-        }).catch(e => {
-          console.log('Error : ' + e);
-          this.loading.dismiss();
-        });
+      this.connection.monitor().subscribe(isOnline => {
+        if (isOnline) {
+          this.router.navigateByUrl('/login');
+        } else {
+          this.router.navigateByUrl('/noInternet');
+        }
+      });
     });
-  }
-
-  pushSetup() {
-    const options: PushOptions = {
-      android: {
-        senderID: '123449767831'
-      },
-      ios: {
-        alert: 'true',
-        badge: true,
-        sound: 'false'
-      },
-      browser: {
-        pushServiceURL: 'http://push.api.phonegap.com/v1/push'
-      }
-    }
-
-    const pushObject: PushObject = Push.init(options);
-
-
-    pushObject.on('notification').subscribe((notification: any) => console.log('Received a notification', notification));
-
-    pushObject.on('registration').subscribe((registration: any) => console.log('Device registered', registration));
-
-    pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
   }
 }
