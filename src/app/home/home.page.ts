@@ -65,13 +65,11 @@ export class HomePage implements OnInit {
         .on("value", snapshot => {
           this.loading.dismiss();
           this.count_downs = this.custom.snapToArray(snapshot);
-          this.storage.set('countdowns', this.count_downs);
         });
     } catch (e) {
-      this.storage.get('countdowns').then((data) => {
-        this.loading.dismiss();
-        this.count_downs = data;
-      });
+      this.loading.dismiss();
+      console.log("No Internet");
+      // swal
     }
   }
 

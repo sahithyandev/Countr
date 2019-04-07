@@ -11,8 +11,7 @@ const routes: Routes = [
   { path: 'add', loadChildren: './add/add.module#AddPageModule' },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
   { path: 'feedback', loadChildren: './feedback/feedback.module#FeedbackPageModule' },
-  { path: 'noInternet', loadChildren: './no-internet/no-internet.module#NoInternetPageModule' },
-  { path: 'temporaryCountDown', loadChildren: './temporary-count-down/temporary-count-down.module#TemporaryCountDownPageModule' }
+  { path: 'noInternet', loadChildren: './no-internet/no-internet.module#NoInternetPageModule' }
 ];
 
 @NgModule({

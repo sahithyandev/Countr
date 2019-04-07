@@ -18,8 +18,4 @@ export class NoInternetPage implements OnInit {
     this.loading.dismiss();
   }
 
-  temporaryCountDown() {
-    this.router.navigateByUrl('/temporaryCountDown');
-  }
-
 }

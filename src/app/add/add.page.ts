@@ -26,7 +26,7 @@ export class AddPage implements OnInit {
     .format();
 
   max_time: string = moment()
-    .years(moment().years() + 10)
+    .year(moment().year() + 10)
     .millisecond(0)
     .seconds(0)
     .format();
@@ -79,10 +79,10 @@ export class AddPage implements OnInit {
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid;
-    this.firebase.database.ref(`/users/${this.uid}`).on('value', (userInfo) => {
-      console.log(userInfo['name']);
+    this.firebase.database.ref(`/users/${this.uid}`).on('value', (user) => {
+      let userInfo = user.toJSON();
       this.username = userInfo['name'];
-    })
+    });
     this.findCountDownId();
   }
 

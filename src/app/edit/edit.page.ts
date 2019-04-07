@@ -29,7 +29,7 @@ export class EditPage implements OnInit {
     .format();
 
   max_time = moment()
-    .years(moment().years() + 10)
+    .year(moment().year() + 10)
     .second(0)
     .millisecond(0)
     .format();

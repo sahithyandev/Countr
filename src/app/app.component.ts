@@ -38,28 +38,29 @@ export class AppComponent {
     this.initializeApp();
   }
 
+  determineHomepage() {
+    if (navigator.onLine) {
+      this.router.navigateByUrl('/login');
+    } else {
+      this.router.navigateByUrl('/noInternet');
+    }
+  }
+
   initializeApp() {
     this.platform.ready().then(() => {
       this.loading.present();
       this.statusBar.hide();
       this.splashScreen.hide();
 
-      // this.router.navigateByUrl('/login');
+      this.router.navigateByUrl('/login');
+      this.determineHomepage()
 
       // for testing
-      // this.router.navigateByUrl('/temporaryCountDown');
-      this.router.navigateByUrl('/noInternet');
-
-      if (navigator.onLine) {
-        console.log('Internet Available');
-      } else {
-        console.log('Internet Down');
-      }
+      // this.router.navigateByUrl('/noInternet');
 
       this.connection.monitor().subscribe(isOnline => {
-        if (!navigator.onLine) {
-          this.router.navigateByUrl('/noInternet');
-        }
+        console.log(navigator.onLine);
+        this.determineHomepage();
       });
     });
   }
