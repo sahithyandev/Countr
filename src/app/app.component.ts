@@ -44,33 +44,20 @@ export class AppComponent {
       this.statusBar.hide();
       this.splashScreen.hide();
 
-      this.firebase.database.ref('notify?').on('value', (value) => {
-        const notify = value.val();
+      // this.router.navigateByUrl('/login');
 
-        if (notify) {
-          
-          this.firebase.database.ref('/notification').on('value', (value) => {
-            var json = value.toJSON();
-    
-            this.localNotifications.schedule({
-              title: json['title'],
-              id: json['id'],
-              text: json['description'],
-              icon: 'resources/icon.png',
-              trigger: {
-                in: 5000 // milli seconds
-              }
-            });
-          });
-        }
-      });
+      // for testing
+      // this.router.navigateByUrl('/temporaryCountDown');
+      this.router.navigateByUrl('/noInternet');
 
-      this.router.navigateByUrl('/login');
+      if (navigator.onLine) {
+        console.log('Internet Available');
+      } else {
+        console.log('Internet Down');
+      }
 
       this.connection.monitor().subscribe(isOnline => {
-        if (isOnline) {
-          this.router.navigateByUrl('/login');
-        } else {
+        if (!navigator.onLine) {
           this.router.navigateByUrl('/noInternet');
         }
       });

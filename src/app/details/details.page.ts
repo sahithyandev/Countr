@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { DataService } from '../data.service';
@@ -20,7 +20,9 @@ export class DetailsPage implements OnInit {
 	// reminder = {};
 
 	uid;
-	countDownId;
+  countDownId;
+  output; // to output time and show it on the page
+  isInternetAvailable: boolean = true; // to determine how to tweak UI depended on Internet
 
 	temp: Array<object> = [];
 	user_temp: Array<object> = [];
@@ -31,29 +33,46 @@ export class DetailsPage implements OnInit {
     public router: Router,
     public custom: CustomService,
     public localNotification: LocalNotifications,
-    public parse: DataService
+    public parse: DataService,
+    public zone: NgZone
   ) { }
 
   ngOnInit() {
     this.countDownId = this.parse.countDownId;
 
-    this.uid = this.fireauth.auth.currentUser.uid;
+    if (this.countDownId != -1) {
 
-    this.firebase.database
-      .ref(`/reminders/${this.uid}/${this.countDownId}`)
-      .on("value", snapshot => {
-        var result: object = snapshot.toJSON();
-        this.temp.push(result);
-        this.reminder = {
-          id: snapshot.key,
-          title: this.temp[0]["title"],
-          description: this.temp[0]["description"],
-          datetime: this.temp[0]["datetime"]
-        };
-        let next = new Date(this.reminder.datetime);
-        this.ex_time = next;
-        this.counting(next, this);
-      });
+      this.uid = this.fireauth.auth.currentUser.uid;
+
+      this.firebase.database
+        .ref(`/reminders/${this.uid}/${this.countDownId}`)
+        .on("value", snapshot => {
+          var result: object = snapshot.toJSON();
+          this.temp.push(result);
+          this.reminder = {
+            id: snapshot.key,
+            title: this.temp[0]["title"],
+            description: this.temp[0]["description"],
+            datetime: this.temp[0]["datetime"]
+          };
+          
+          this.ex_time = new Date(this.reminder.datetime);
+          this.counting(this.ex_time, this);
+        }
+      );
+    } else {
+      this.isInternetAvailable = false;
+      this.reminder = {
+        id: -1,
+        title: "",
+        description: "",
+        datetime: this.parse.temporaryCountDown.datetime
+      };
+
+      let next = new Date(this.reminder.datetime);
+      this.counting(next, this);
+      
+    }
   }
 
   counting(next, page) {
@@ -69,7 +88,6 @@ export class DetailsPage implements OnInit {
         output = "Finished";
         console.log("Stopped");
         window.clearInterval(x);
-        document.getElementById('timer').innerHTML = output;
         page.finished();
       } else {
 
@@ -78,30 +96,29 @@ export class DetailsPage implements OnInit {
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
         var mseconds = ('000' + Math.floor(distance % 1000)).substr(-3);
 
+        output = `${hours}h : ${minutes}m : ${seconds}.${mseconds}s`; // Normal Syntax
+
         if (hours >= 24) {
           var days = Math.floor(hours / 24);                      
           hours = hours - (days * 24);
 
-          output = days + "D: " + hours + "h : " + minutes + "m : " + seconds + "." + mseconds + "s";
+          output = `${days}D: ${hours}h : ${minutes}m : ${seconds}.${mseconds}s`; // with Days Syntax
         } else {
           if (hours <= 0) {
+            output = `${minutes}m : ${seconds}.${mseconds}s`; // without Hours Syntax
+
             if (minutes <= 0) {
-              output = seconds + "." + mseconds + "s";
-            } else {
-              output = minutes + "m : " + seconds + "." + mseconds + "s";
+              output = `${seconds}.${mseconds}s`; // without Hours and Minutes Syntax
             }
-          } else if (minutes <= 0) {
-            output = seconds + "." + mseconds + "s";
-          } else {
-            output = hours + "h : " + minutes + "m : " + seconds + "." + mseconds + "s";
           }
         }
       }
 
       try {
-        document.getElementById('timer').innerHTML = output;
+        page.output = output;
       } catch (error) {
         window.clearInterval(x);
+        console.log(error);
         console.log("Stopped");
       }
     }, 1);
@@ -120,15 +137,19 @@ export class DetailsPage implements OnInit {
   }
 
   delete() {
-    this.removeNotification();
-    this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`)
-      .remove((error) => {
-        console.log(error);
-      }).then((after) => {
-        this.router.navigateByUrl('/home');
-      });
+    if (this.countDownId != -1) {
+      this.removeNotification();
+      this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`)
+        .remove((error) => {
+          console.log(error);
+        }).then((after) => {
+          this.router.navigateByUrl('/home');
+        });
 
-    this.custom.toast('Deleted', 'top');
+      this.custom.toast('Deleted', 'top');
+    } else {
+      this.router.navigateByUrl('/login');
+    }
   }
 
   edit() {

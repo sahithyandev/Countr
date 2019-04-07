@@ -28,14 +28,14 @@
   </h2><br><br>
 
   <div id='timer' align='center'>
-
+    {{output}}
   </div><br><br>
 
-  <div align='center' id='description'>
+  <div *ngIf="isInternetAvailable" align='center' id='description'>
     {{reminder.description}}<br /><br /> 
     {{ex_time}}<br />
     <br />
-    <ion-button id='edit' (click)='edit()' color='secondary'>
+    <ion-button *ngIf="IsInternetAvailable" id='edit' (click)='edit()' color='secondary'>
       Edit
     </ion-button>
   </div>

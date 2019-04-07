@@ -1,15 +1,11 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>noInternet</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content padding>
+<ion-content>
   <div class="container">
-    <h2 class="no-internet-heading">No Internet</h2>
-    <span class="message">
-      Please make sure the internet is available.<br>
-      This page will be removed after connecting to Internet.
-    </span>
+      <h3 class="no-internet-heading">No Internet Connections</h3>
+      <div class="message">
+        Please make sure the internet is available.<br>
+        This page will be removed after connecting to Internet.<br>
+        <br>
+        <button class="temporary-countdown-button" (click)="temporaryCountDown()">Add a Count Down</button>
+      </div>
   </div>
 </ion-content>

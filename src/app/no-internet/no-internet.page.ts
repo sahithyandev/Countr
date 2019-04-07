@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingService } from '../loading.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-no-internet',
@@ -9,11 +10,16 @@ import { LoadingService } from '../loading.service';
 export class NoInternetPage implements OnInit {
 
   constructor(
-    public loading: LoadingService
+    public loading: LoadingService,
+    public router: Router
   ) { }
 
   ngOnInit() {
     this.loading.dismiss();
+  }
+
+  temporaryCountDown() {
+    this.router.navigateByUrl('/temporaryCountDown');
   }
 
 }

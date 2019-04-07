@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Count Down</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <div id="timer" align="center">
+    <ion-item>
+      <ion-label position="fixed">Time</ion-label>
+      <ion-datetime name="time" [max]="max_time" [min]="min_time" displayFormat="mm:ss"  pickerFormat="mm:ss" [(ngModel)]="time"></ion-datetime>
+    </ion-item>
+  </div>
+
+  <ion-button *ngIf="!isRunning" block full align='center' color="primary" (click)="startTimer()">Start Count Down</ion-button>
+
+</ion-content>
