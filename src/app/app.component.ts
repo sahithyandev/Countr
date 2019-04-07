@@ -44,36 +44,16 @@ export class AppComponent {
       this.statusBar.hide();
       this.splashScreen.hide();
 
-      this.firebase.database.ref('notify?').on('value', (value) => {
-        const notify = value.val();
+      // this.router.navigateByUrl('/login');
+      this.router.navigateByUrl('/noInternet');
 
-        if (notify) {
-          
-          this.firebase.database.ref('/notification').on('value', (value) => {
-            var json = value.toJSON();
-    
-            this.localNotifications.schedule({
-              title: json['title'],
-              id: json['id'],
-              text: json['description'],
-              icon: 'resources/icon.png',
-              trigger: {
-                in: 5000 // milli seconds
-              }
-            });
-          });
-        }
-      });
-
-      this.router.navigateByUrl('/login');
-
-      this.connection.monitor().subscribe(isOnline => {
-        if (isOnline) {
-          this.router.navigateByUrl('/login');
-        } else {
-          this.router.navigateByUrl('/noInternet');
-        }
-      });
+      // this.connection.monitor().subscribe(isOnline => {
+      //   if (isOnline) {
+      //     this.router.navigateByUrl('/login');
+      //   } else {
+      //     this.router.navigateByUrl('/noInternet');
+      //   }
+      // });
     });
   }
 }
