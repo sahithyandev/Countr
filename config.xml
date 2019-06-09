@@ -23,7 +23,9 @@
     <preference name="ShowSplashScreen" value="true" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="FadeSplashScreen" value="true" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
     <platform name="android">
+        <hook src="hooks/copy-build-extras-gradle.js" type="before_build" />
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />

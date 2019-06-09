@@ -1,7 +1,3 @@
-.h-title {
-    color: hsl(164,83%,43.7%); // #44cc13;
-}
-
 #login-button {
     color: white;
     background-color: hsl(344, 82.1, 43.9); // #CC1445;
@@ -11,28 +7,6 @@
 
 #special-header {
     color: hsl(344, 83%, 43.7%); // #cc1344;
-}
-
-.input-text {
-    background-color: hsla(0, 0%, 0%, 0.20);
-    border-radius: 12px;
-    --padding-start: 11px;
-}
-
-.label {
-    padding-left: 15px;
-}
-
-.input-field {
-    border-radius: 12px;
-}
-
-#signup-content {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    padding-bottom: 8px;
 }
 
 #signup-text {

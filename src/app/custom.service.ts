@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { AlertController, ToastController, LoadingController } from '@ionic/angular';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { Storage } from "@ionic/storage";
-import { Router } from '@angular/router';
-import { LoadingService } from './loading.service';
+import { Injectable } from '@angular/core'
+import { AlertController, ToastController, LoadingController } from '@ionic/angular'
+import { AngularFireAuth } from '@angular/fire/auth'
+import { Storage } from "@ionic/storage"
+import { Router } from '@angular/router'
+import { LoadingService } from './loading.service'
 
 @Injectable({
   providedIn: "root"
 })
 export class CustomService {
-  email;
-  password;
+  email
+  password
   
   constructor(
     public alertCtrl: AlertController,
@@ -23,15 +23,15 @@ export class CustomService {
   ) {}
   
     async presentLoading() {
-      const loadingController = document.querySelector('ion-loading-controller');
-      await loadingController.componentOnReady();
+      const loadingController = document.querySelector('ion-loading-controller')
+      await loadingController.componentOnReady()
       
       const loadingElement = await loadingController.create({
         message: 'Please wait...',
         spinner: 'crescent',
         duration: 2000
-      });
-      return await loadingElement.present();
+      })
+      return await loadingElement.present()
     }
 
   async alert_dismiss(title, message) {
@@ -39,8 +39,8 @@ export class CustomService {
       header: title,
       message: message,
       buttons: ['OK']
-    });
-    al.present();
+    })
+    al.present()
   }
 
   async alert_signup(title, message) {
@@ -48,21 +48,21 @@ export class CustomService {
       header: title,
       message: message,
       buttons: ['OK']
-    });
-    al.present();
+    })
+    al.present()
   }
 
   snapToArray(snapshot) {
-    var Arr = [];
+    var Arr = []
 
     snapshot.forEach(function(child) {
-      var item = child.val();
-      item.key = child.key;
+      var item = child.val()
+      item.key = child.key
 
-      Arr.push(item);
-    });
+      Arr.push(item)
+    })
 
-    return Arr;
+    return Arr
   }
   async toast(msg, pos) {
     const toast = await this.toastCtrl.create({
@@ -71,16 +71,17 @@ export class CustomService {
       position: pos,
       animated: true,
       mode: 'ios'
-    });
+    })
 
-    toast.present();
+    toast.present()
 
     let t = setTimeout(() => {
-      toast.dismiss();
-    }, 2000);
+      toast.dismiss()
+    }, 2000)
   }
 
   login() {
+    // this.loading.present()
     this.fireauth.auth
       .signInWithEmailAndPassword(this.email, this.password)
       .then(data => {
@@ -88,12 +89,10 @@ export class CustomService {
           email: this.email,
           password: this.password,
           isLogged: true
-        });
+        })
 
-        this.router.navigateByUrl("/home");
-        this.loading.dismiss();
-      });
+        this.router.navigateByUrl("/home")
+      })
   }
-
 
 }

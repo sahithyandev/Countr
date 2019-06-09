@@ -1,12 +1,12 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { CountDown } from '../modals/countdown';
-import { AngularFireDatabase } from '@angular/fire/database';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from '../data.service';
-import { CustomService } from '../custom.service';
-import * as moment from 'moment';
-import { LocalNotifications, ILocalNotification } from "@ionic-native/local-notifications/ngx";
+import { Component, OnInit, ElementRef } from '@angular/core'
+import { CountDown } from '../modals/countdown'
+import { AngularFireDatabase } from '@angular/fire/database'
+import { AngularFireAuth } from '@angular/fire/auth'
+import { ActivatedRoute, Router } from '@angular/router'
+import { DataService } from '../data.service'
+import { CustomService } from '../custom.service'
+import * as moment from 'moment'
+import { LocalNotifications, ILocalNotification } from "@ionic-native/local-notifications/ngx"
 
 @Component({
   selector: "app-edit",
@@ -14,27 +14,27 @@ import { LocalNotifications, ILocalNotification } from "@ionic-native/local-noti
   styleUrls: ["./edit.page.scss"]
 })
 export class EditPage implements OnInit {
-  id;
-  uid;
+  id
+  uid
   reminder = {
     title: "",
     description: "",
     datetime: ""
-  } as CountDown;
+  } as CountDown
 
   min_time = moment()
     .minute(moment().minute() + 1)
     .second(0)
     .millisecond(0)
-    .format();
+    .format()
 
   max_time = moment()
     .year(moment().year() + 10)
     .second(0)
     .millisecond(0)
-    .format();
+    .format()
 
-  temp: Array<object> = [];
+  temp: Array<object> = []
 
   constructor(
     public firebase: AngularFireDatabase,
@@ -85,20 +85,17 @@ export class EditPage implements OnInit {
   }
 
   saveEdits() {
-    this.firebase.database.ref(`/reminders/${this.uid}/${this.id}`).update({
-      title: this.reminder.title,
-      description: this.reminder.description,
-      datetime: this.reminder.datetime,
-    });
-
-    this.firebase.database
-      .ref(`/reminders/${this.uid}/${this.id}`)
-      .on("value", sn => {
-        console.log(sn.toJSON());
+    if (this.reminder.title) {
+      this.firebase.database.ref(`/reminders/${this.uid}/${this.id}`).update({
+        title: this.reminder.title,
+        description: this.reminder.description,
+        datetime: this.reminder.datetime,
       });
-    this.custom.toast("Saved", "top");
-    this.router.navigateByUrl("/home");
 
-    this.updateNotification();
+      this.custom.toast("Saved", "top");
+      this.router.navigateByUrl("/home");
+
+      this.updateNotification();
+    }
   }
 }

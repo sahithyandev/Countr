@@ -9,3 +9,45 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+
+@font-face {
+font-family: Google Sans;
+// src: url("../src/assets/fonts/OpenSans-Regular.ttf");
+src: url("src/assets/fonts/Oxygen-Regular.ttf");
+}
+
+* {
+    font-family: "Google Sans" !important;
+    font-weight: bold;
+}
+
+.h-title {
+    color: hsl(164, 83%, 43.7%);
+}
+
+#special-header {
+    color: hsl(344, 83%, 43.7%);
+    ;
+}
+
+.label {
+    padding-left: 15px;
+}
+
+.input-text {
+    background-color: hsla(0, 0%, 0%, 0.20);
+    border-radius: 12px;
+    --padding-start: 11px;
+}
+
+.input-field {
+    border-radius: 12px;
+}
+
+#signup-content {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding-bottom: 8px;
+}

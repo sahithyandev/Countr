@@ -15,12 +15,11 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position='stacked'>Password</ion-label>
+      <ion-label class='label' position='stacked'>Password</ion-label>
       <ion-input class='input-text' [(ngModel)]='password' type='password'></ion-input>
     </ion-item><br />
 
-    <button *ngIf='!(email && password)' ion-button id="login-button" (click)='login()' disabled>Log In</button>
-    <button *ngIf='(email && password)' ion-button id="login-button" (click)='login()'>Log In</button>
+    <button ion-button id="login-button" (click)='login()'>Log In</button>
     
   </div>
   

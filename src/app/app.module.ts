@@ -19,6 +19,7 @@ import { PopComponent } from './pop/pop.component';
 import { HttpClientModule } from "@angular/common/http";
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { ConnectionServiceModule } from "ng-connection-service";
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 @NgModule({
   declarations: [AppComponent, PopComponent],
@@ -39,6 +40,7 @@ import { ConnectionServiceModule } from "ng-connection-service";
     SplashScreen,
     // TextToSpeechOriginal,
     LocalNotifications,
+    BackgroundMode,
     // Storage,
     // FacebookOriginal,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -46,4 +48,4 @@ import { ConnectionServiceModule } from "ng-connection-service";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

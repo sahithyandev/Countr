@@ -12,8 +12,8 @@ export class LoadingService {
     this.isLoading = true;
     return await this.loadingController
       .create({
-        duration: 1,
-        message: 'Loading...'
+        message: 'Loading...',
+        mode: "ios"
       })
       .then(a => {
         a.present().then(() => {

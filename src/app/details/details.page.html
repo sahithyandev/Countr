@@ -22,7 +22,6 @@
 
 
 <ion-content padding>
-
   <h2 align='center'>
     {{reminder.title}}
   </h2><br><br>
@@ -35,7 +34,10 @@
     {{reminder.description}}<br /><br /> 
     {{ex_time}}<br />
     <br />
-    <ion-button *ngIf="IsInternetAvailable" id='edit' (click)='edit()' color='secondary'>
+  </div>
+
+  <div class="edit-container" align="center">
+    <ion-button *ngIf="isInternetAvailable" id='edit' (click)='edit()' color="secondary">
       Edit
     </ion-button>
   </div>

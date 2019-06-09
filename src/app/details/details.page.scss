@@ -38,3 +38,19 @@ ion-title {
     background-color: rgb(52, 86, 147);
     color: rgb(247, 247, 247);
 }
+
+.edit-container {
+    white-space: pre-line;
+    width: 100%;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 24px;
+}
+
+#edit {
+    width: 80%;
+    position: relative;
+    right: 0;
+    left: 0;
+}

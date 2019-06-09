@@ -19,7 +19,8 @@
 
     <ion-item>
       <ion-label>Date & Time</ion-label>
-      <ion-datetime name='datetime' [min]='min_time' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A"  pickerFormat="DD MM YYYY HH mm" [(ngModel)]="datetime" (ngModelChange)='check()'></ion-datetime>
+      <ion-datetime name='datetime' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A" pickerFormat="DD MM YYYY HH mm"
+        [(ngModel)]="datetime" (ngModelChange)='check()'></ion-datetime>
     </ion-item>
 
     <ion-item>

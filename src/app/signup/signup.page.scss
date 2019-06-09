@@ -1,46 +1,24 @@
-.h-title {
-    color: hsl(164, 83%, 43.7%);
-}
+// @import "../../global.scss";
 
-#create {
-    padding: 12px;
-    font-size: 18px;
-    border-radius: 20px;
-    color: hsl(300, 89%, 96%);
+// #create-button {
+//     // padding: 12px;
+//     font-size: 18px;
+//     // border-radius: 20px;
+//     color: hsl(300, 89%, 96%);
+//     background-color: hsl(164, 83%, 43.7%);
+// }
+
+#create-button {
+    color: white;
     background-color: hsl(164, 83%, 43.7%);
+    border-radius: 50px;
+    padding: 11px;
 }
 
-#special-header {
-    color: hsl(344, 83%, 43.7%);
-    ;
-}
-
-.input-text {
-    background-color: hsla(0, 0%, 0%, 0.20);
-    border-radius: 12px;
-    --padding-start: 11px;
-}
-
-.label {
-    padding-left: 15px;
-}
-
-.input-field {
-    border-radius: 12px;
-}
-
-#signup-content {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    padding-bottom: 8px;
-}
-
-#eror {
-    background-color: hsl(360, 100%, 50%);
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-}
+// #eror {
+//     background-color: hsl(360, 100%, 50%);
+//     position: absolute;
+//     bottom: 0;
+//     right: 0;
+//     left: 0;
+// }
