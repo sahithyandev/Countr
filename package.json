@@ -1,11 +1,10 @@
 {
   "name": "count-it",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "author": "Sahithyan",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start-local": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
