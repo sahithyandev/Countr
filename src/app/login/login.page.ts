@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
-import { AngularFireDatabase } from '@angular/fire/database'
 import { Router } from '@angular/router'
 import { Storage } from '@ionic/storage'
 import { CustomService } from '../custom.service'
@@ -25,7 +24,6 @@ export class LoginPage implements OnInit {
     public fireauth: AngularFireAuth,
     public alertCtrl: AlertController,
     public loadCtrl: LoadingController,
-    public firebase: AngularFireDatabase,
     public router: Router,
     public loading: LoadingService,
     public custom: CustomService
@@ -46,20 +44,17 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    this.synchronizeWithLocalStorage()
-
-    if (this.custom.email != "") {
-      this.storage.get('loggedInfo')
-        .then((data) => {
-            if (data.isLogged) {
-              this.custom.password = data.password
-              this.custom.login()
-            }
+    this.storage.get('loggedInfo')
+      .then(data => {
+          if (data.isLogged) {
+            this.custom.email = this.email = data.email
+            this.custom.password = this.password = data.password
+            this.custom.login()
+          }
         }).catch(error => {
-          console.log(error)
-          this.loading.dismiss()
-        })
-    }
+        console.log(error)
+        this.loading.dismiss()
+      })
   }
 
   async alert_password_reset(title, message) {
@@ -88,14 +83,13 @@ export class LoginPage implements OnInit {
       let load =
         this.fireauth.auth.signInWithEmailAndPassword(this.email, this.password)
           .then(data => {
-
-            this.storage.set("email", this.email)
             this.storage.set('loggedInfo', {
+              email: this.email,
               password: this.password,
               isLogged: true
             })
 
-            this.email, this.password = "", ""
+            this.email = this.password = ""
 
             this.router.navigateByUrl('/home')
 
@@ -132,17 +126,5 @@ export class LoginPage implements OnInit {
     } else {
       this.custom.alert_dismiss('Email Not Found', 'Enter your Email and Try again')
     }
-  }
-
-  synchronizeWithLocalStorage() {
-    this.storage.get("email").then(data => {
-      this.custom.email, this.email = data
-
-    }).catch(e => {
-      console.log(e)
-      this.custom.email, this.email = ""
-      this.loading.dismiss()
-    })
-
   }
 }

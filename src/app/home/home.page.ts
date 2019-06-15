@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
-import { AngularFireDatabase } from '@angular/fire/database'
+import { AngularFirestore, Query } from '@angular/fire/firestore'
 import { CustomService } from '../custom.service'
 import { Router } from '@angular/router'
 import { DataService } from '../data.service'
@@ -9,6 +9,7 @@ import { ToastController, PopoverController, Platform, AlertController } from '@
 import { PopComponent } from '../pop/pop.component'
 import { LoadingService } from '../loading.service'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
+import { CountDown } from '../modals/countdown';
 
 @Component({
   selector: "app-home",
@@ -17,10 +18,12 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 })
 export class HomePage implements OnInit {
   uid
-  count_downs  : Array<object>
+  count_downs  = Array<CountDown>()
+  countdownRef : Query
+  showWatermark = false // tells when to show watermark
 
   constructor(
-    public firebase: AngularFireDatabase,
+    public firestore: AngularFirestore,
     public platform: Platform,
     public fireauth: AngularFireAuth,
     public custom: CustomService,
@@ -45,22 +48,62 @@ export class HomePage implements OnInit {
     })
   }
 
+  reschedule() {
+    for (let i in this.count_downs) {
+      let countdown = this.count_downs[i]
+      this.localNotification.schedule({
+        title: "Count down Finished",
+        text: "Your count down titled " + countdown.title + " has finished",
+        trigger: {
+          at: new Date(countdown.datetime) // finished time
+        },
+        data: { cid : countdown.id },
+        actions: [
+          { id: 'enter', title: 'Open Count Down' }
+        ]
+      })
+    }
+  }
+
+  ionViewWillEnter() {
+    this.getCountdowns(),
+    this.getCategories() }
+
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid
+    this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.uid)
+    .orderBy("datetime")
 
-    try {
-      this.firebase.database
-        .ref(`/reminders/${this.uid}`)
-        .on("value", snapshot => {
-          this.count_downs = this.custom.snapToArray(snapshot)
-          console.log(this.count_downs.length)
-        })
-    } catch (e) {
-      this.firebase.database.goOffline()
-      console.log("No Internet")
-    }
+    this.getCountdowns()
+    this.getCategories()
 
+    this.localNotification.cancelAll()
     this.loading.dismiss()
+    this.reschedule()
+  }
+
+  async getCategories() {
+    this.firestore.collection("users").doc(this.uid).ref.get().then(snapshot => {
+      this.parse.categories = snapshot.get("categories")
+      console.log(this.parse.categories)
+    }).catch(e => {
+      console.log("Error " + e) 
+    })
+  }
+
+  async getCountdowns() {
+    this.countdownRef.onSnapshot(snapshot => {
+      snapshot.forEach(doc => {
+        // this.count_downs = []
+        // this.count_downs.push(doc.data())
+        this.showWatermark = false
+        this.count_downs = this.custom.snapToArray(snapshot)
+        this.parse.user_countdowns = this.count_downs
+      })
+      // this.count_downs = this.custom.snapToArray(snapshot)
+      // console.log(this.count_downs.length)
+    })
+    if (this.count_downs.length == 0) { this.showWatermark = true }
   }
 
   add() {
@@ -69,6 +112,12 @@ export class HomePage implements OnInit {
 
   async details(countDownId) {
     this.parse.countDownId = countDownId
+    for (let i in this.count_downs) {
+      if (this.count_downs[i].id == countDownId) {
+        console.log("Count down found")
+        this.parse.details_countdown = this.count_downs[i]
+      }
+    }
     await this.router.navigate(['/details'])
   }
 
@@ -81,8 +130,11 @@ export class HomePage implements OnInit {
   }
 
   delete(countDownId) {
-    this.localNotification.cancel(countDownId)
-    this.firebase.database.ref(`/reminders/${this.uid}/${countDownId}`).remove()
+    this.firestore.collection("countdowns").doc(countDownId).delete().then(() => {
+      console.log("Deleted")
+      this.custom.toast("Countdown Deleted", "top")
+      this.localNotification.cancel(countDownId)
+    })
   }
 
   async pop2(poper) {
@@ -99,12 +151,5 @@ export class HomePage implements OnInit {
       .then(output => {
         this.pop2(output)
       });
-  }
-
-  scheduleNotifications() {
-    this.localNotification.schedule({
-      title: "Good Morning",
-      text: "You have " + this.count_downs + ""
-    })
   }
 }

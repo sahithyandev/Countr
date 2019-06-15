@@ -14,18 +14,27 @@
   <ion-list>
     <ion-item>
       <ion-label position='stacked'>Title</ion-label>
-      <ion-input name='title' [(ngModel)]='title'></ion-input>
+      <ion-input name='title' [(ngModel)]='newCountdown.title'></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Date & Time</ion-label>
       <ion-datetime name='datetime' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A" pickerFormat="DD MM YYYY HH mm"
-        [(ngModel)]="datetime" (ngModelChange)='check()'></ion-datetime>
+        [(ngModel)]="newCountdown.datetime" (ngModelChange)='check()'></ion-datetime>
     </ion-item>
 
     <ion-item>
       <ion-label position='stacked'>Description : </ion-label>
-      <textarea id="description" (input)='resize()' width='100%' [(ngModel)]='description'></textarea>
+      <textarea id="description" (input)='resize()' width='100%' [(ngModel)]='newCountdown.description'></textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position='stacked'>Category </ion-label>
+      <ion-select placeholder="Select Category" [(ngModel)]='newCountdown.category'>
+        <ion-select-option *ngFor="let item of categories" value="{{item}}">
+          {{item}}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
   </ion-list>
 

@@ -1,0 +1,16 @@
+<div class="container">
+  <ion-item>
+      <ion-label position='floating' placeholder="Name of Category">Name</ion-label>
+      <ion-input name='title' class="titleInput" [(ngModel)]='category'></ion-input>
+    </ion-item>
+
+  <div align="center" class="button-div">
+    <ion-button full *ngIf="category != null" small (click)="add()">
+      Add
+    </ion-button>
+
+    <ion-button full *ngIf="category == null" small disabled>
+      Fill the Name
+    </ion-button>
+  </div>
+</div>

@@ -1,10 +1,12 @@
 import { Component, OnInit, ElementRef, NgZone } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
-import { AngularFireDatabase } from '@angular/fire/database'
 import { Router } from '@angular/router'
 import * as moment from "moment"
 import { CustomService } from '../custom.service'
 import { LocalNotifications } from "@ionic-native/local-notifications/ngx"
+import { AngularFirestore, Query } from '@angular/fire/firestore'
+import { CountDown } from '../modals/countdown';
+import { DataService } from '../data.service';
 
 @Component({
   selector: "app-add",
@@ -12,18 +14,24 @@ import { LocalNotifications } from "@ionic-native/local-notifications/ngx"
   styleUrls: ["./add.page.scss"]
 })
 export class AddPage implements OnInit {
-  uid: string
-  countDownId = 1
-  title: string
-  description: string = ''
+  countDownId
+  categories = Array<String>()
+  // title: string
+  // description: string = ''
   false_time: boolean = false
   username: string
 
-  datetime: string = moment()
-    .minute(moment().minute() + 1)
-    .seconds(0)
-    .milliseconds(0)
-    .format()
+  newCountdown = {
+    title: "",
+    owner: "",
+    description: "",
+    category: "__default__",
+    datetime: moment()
+      .minute(moment().minute() + 1)
+      .seconds(0)
+      .milliseconds(0)
+      .format()
+  } as CountDown
 
   max_time: string = moment()
     .year(moment().year() + 2)
@@ -38,6 +46,7 @@ export class AddPage implements OnInit {
     .format()
 
   notify_time: string
+  countdownRef : Query
 
   public count_downs
 
@@ -46,8 +55,9 @@ export class AddPage implements OnInit {
     public localNotification: LocalNotifications,
     public router: Router,
     public zone: NgZone,
-    public firebase: AngularFireDatabase,
+    public firestore: AngularFirestore,
     public custom: CustomService,
+    public parse: DataService,
     public element: ElementRef
   ) { }
 
@@ -61,7 +71,7 @@ export class AddPage implements OnInit {
   }
 
   check() {
-    if (this.datetime < this.min_time) {
+    if (this.newCountdown.datetime < this.min_time) {
       this.false_time = true
       this.custom.alert_dismiss(
         'Date & Time are not valid!',
@@ -71,34 +81,41 @@ export class AddPage implements OnInit {
     }
   }
 
-  findCountDownId() {
-    this.firebase.database.ref(`reminders/${this.uid}`).on('value', (countDownList) => {
-      countDownList.forEach((countDown) => {
-        if (this.countDownId <= parseInt(countDown.key)) {
-          this.countDownId = parseInt(countDown.key) + 1
-        }
-      })
+  async findCountDownId() {
+    await this.firestore.collection("countdowns").ref.get().then(countDownList => {
+      let id = parseInt(countDownList.docs[countDownList.docs.length - 1].id) + 1
+      this.countDownId = id
+      console.log(this.countDownId)
+      // countDownList.forEach(countdown => {
+      //   console.log(countdown)
+      //   if (this.countDownId <= parseInt(countdown.id)) {
+      //     this.countDownId = parseInt(countdown.id) + 1
+      //   }
+      // })
     })
   }
 
   ngOnInit() {
-    this.uid = this.fireauth.auth.currentUser.uid
-    this.firebase.database.ref(`/users/${this.uid}`).on('value', (user) => {
-      let userInfo = user.toJSON()
-      this.username = userInfo['name']
+    this.categories = this.parse.categories
+    this.newCountdown.owner = this.fireauth.auth.currentUser.uid
+    this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.newCountdown.owner)
+    this.firestore.collection("users").doc(this.newCountdown.owner).ref.get().then(user => {
+      this.username = user.get("name")
     })
+
     this.findCountDownId()
+    console.log(this.countDownId)
   }
 
   schedule() {
     var remaining_time = 30
-    this.notify_time = moment(this.datetime).subtract(moment.duration(remaining_time).asMinutes()).format()
+    this.notify_time = moment(this.newCountdown.datetime).subtract(moment.duration(remaining_time).asMinutes()).format()
     if (this.notify_time > moment.now.toString()) { // if count down is lower than 30 minutes
       this.localNotification.schedule({
         id: this.countDownId - 1,
         launch: true,
         title: 'Count Down is Running',
-        text: this.username + ', Your count down, ' + this.title + " will be finished in " + remaining_time + " minutes",
+        text: this.username + ', Your count down, ' + this.newCountdown.title + " will be finished in " + remaining_time + " minutes",
         trigger: {
           at: new Date(this.notify_time) // notify time
         },
@@ -115,9 +132,9 @@ export class AddPage implements OnInit {
       id: this.countDownId - 1,
       launch: true,
       title: 'Count Down Finished',
-      text: this.username + ', Your count down, ' + this.title + " has finished",
+      text: this.username + ', Your count down, ' + this.newCountdown.title + " has finished",
       trigger: {
-        at: new Date(this.datetime) // finished time
+        at: new Date(this.newCountdown.datetime) // finished time
       },
       data: { cid: this.countDownId - 1 },
       actions: [
@@ -127,14 +144,18 @@ export class AddPage implements OnInit {
   }
 
   saveItem() {
-    console.log(this.title)
-    this.firebase.database.ref(`/reminders/${this.uid}/${this.countDownId}`).set({
-      title: this.title,
-      datetime: this.datetime,
-      description: this.description
-    }).then(data => {
+    console.log(this.newCountdown)
+
+    this.firestore.collection("countdowns").doc(this.countDownId + "").set({
+      title: this.newCountdown.title,
+      datetime: this.newCountdown.datetime,
+      description: this.newCountdown.description,
+      owner: this.newCountdown.owner,
+      category: this.newCountdown.category
+    }).then(date => {
       this.schedule()
       this.notify_finished()
+      console.log("added successfully")
     })
 
     this.router.navigateByUrl('/home')

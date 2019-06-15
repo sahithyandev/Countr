@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from "../modals/user";
 
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { CustomService } from '../custom.service';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
@@ -20,7 +20,7 @@ export class SignupPage implements OnInit {
   constructor(
     public platform: Platform,
     public fireauth: AngularFireAuth,
-    public firebase: AngularFireDatabase,
+    public firestore: AngularFirestore,
     public router: Router,
     public custom: CustomService
   ) { }
@@ -60,10 +60,7 @@ export class SignupPage implements OnInit {
       const result = await this.fireauth.auth
         .createUserWithEmailAndPassword(setemail, setpassword)
         .then(newUser => {
-          this.firebase.database
-            .ref("/users")
-            .child(newUser.user.uid)
-            .set(this.user)
+          this.firestore.collection("users").doc(newUser.user.uid).set(this.user);
         });
       this.custom.email = this.user.email
       this.custom.password = this.password

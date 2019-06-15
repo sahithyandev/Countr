@@ -9,9 +9,14 @@ import { Storage } from "@ionic/storage"
 export class DataService {
 
   public countDownId // for parsing from home and offline count down
-  public edit_id // for parsing from details page to editting page
+  public details_countdown // passing a count down form home page to details page
+  // public edit_id // for parsing from details page to editting page
   public email // email to login
   public password // to authenticate with email
+  public edit_countdown
+  public categories // categories of the user
+  public selectedCategory // category selected by the user
+  public user_countdowns // user's countdowns
 
   public temporaryCountDown = {
     datetime: '' // for parsing time from offline timer to details page

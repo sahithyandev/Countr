@@ -20,17 +20,17 @@ Ionic pages and navigation.
   <ion-list>
     <ion-item>
       <ion-label position='stacked'>Title</ion-label>
-      <ion-input [(ngModel)]='reminder.title' id='title' type="text"></ion-input>
+      <ion-input [(ngModel)]='countdown.title' id='title' type="text"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Date</ion-label>
-      <ion-datetime [(ngModel)]='reminder.datetime' id='date' [min]='min_time' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A" pickerFormat="DD MM YYYY HH mm"></ion-datetime>
+      <ion-datetime [(ngModel)]='countdown.datetime' id='date' [min]='min_time' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A" pickerFormat="DD MM YYYY HH mm"></ion-datetime>
     </ion-item>
     
     <ion-item>
       <ion-label position='stacked'>Description : </ion-label>
-      <textarea id="description" (input)='resize()' width='100%' [(ngModel)]='reminder.description'></textarea>
+      <textarea id="description" (input)='resize()' width='100%' [(ngModel)]='countdown.description'></textarea>
     </ion-item>
 
     <div align='center'>

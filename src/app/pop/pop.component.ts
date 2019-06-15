@@ -22,11 +22,13 @@ export class PopComponent implements OnInit {
   }
 
   logout() {
-    this.fireauth.auth.signOut();
-    this.storage.remove("loggedInfo");
-    this.router.navigateByUrl('/login');
-    console.log('Signing Out');
-    this.popCtrl.dismiss();
+    this.fireauth.auth.signOut().then(() => {
+      this.storage.remove("loggedInfo")
+      this.popCtrl.dismiss().then(() => {
+        this.router.navigateByUrl('/login')
+        console.log('Signing Out')
+      })
+    })
   }
 
   settings() {
@@ -37,7 +39,13 @@ export class PopComponent implements OnInit {
   feedback() {
     this.popCtrl.dismiss().then(() => {
       this.router.navigateByUrl('/feedback');
-    });
+    })
+  }
+
+  categories() {
+    this.popCtrl.dismiss().then(() => {
+      this.router.navigateByUrl('/categories')
+    })
   }
 
 }

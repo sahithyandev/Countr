@@ -56,8 +56,8 @@ export class CustomService {
     var Arr = []
 
     snapshot.forEach(function(child) {
-      var item = child.val()
-      item.key = child.key
+      var item = child.data()
+      item.id = child.id
 
       Arr.push(item)
     })
@@ -91,8 +91,23 @@ export class CustomService {
           isLogged: true
         })
 
+        this.email = this.password = ""
+
         this.router.navigateByUrl("/home")
       })
+  }
+  
+  removeItem(array, item) {
+    let type = typeof(item)
+    let outputArray = array
+    outputArray = []
+
+    for (let obj of array) {
+      console.log(obj)
+      if (obj != item) { outputArray.push(obj) }
+    }
+
+    return outputArray
   }
 
 }

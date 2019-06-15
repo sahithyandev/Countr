@@ -1,6 +1,8 @@
 export interface CountDown {
   id,
-  title: string;
-  description: string;
-  datetime;
+  title: string,
+  description: string,
+  datetime,
+  owner,
+  category
 }

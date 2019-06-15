@@ -32,7 +32,8 @@
 
   <div *ngIf="isInternetAvailable" align='center' id='description'>
     {{reminder.description}}<br /><br /> 
-    {{ex_time}}<br />
+    {{ex_time}}<br /><br />
+    <font class="category" *ngIf="reminder.category != '__default__'"> Category : {{reminder.category}} </font>
     <br />
   </div>
 

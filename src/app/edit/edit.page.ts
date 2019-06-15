@@ -1,12 +1,12 @@
 import { Component, OnInit, ElementRef } from '@angular/core'
 import { CountDown } from '../modals/countdown'
-import { AngularFireDatabase } from '@angular/fire/database'
+import { AngularFirestore, DocumentReference, Query } from '@angular/fire/firestore'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { ActivatedRoute, Router } from '@angular/router'
 import { DataService } from '../data.service'
 import { CustomService } from '../custom.service'
 import * as moment from 'moment'
-import { LocalNotifications, ILocalNotification } from "@ionic-native/local-notifications/ngx"
+import { LocalNotifications } from "@ionic-native/local-notifications/ngx"
 
 @Component({
   selector: "app-edit",
@@ -16,11 +16,7 @@ import { LocalNotifications, ILocalNotification } from "@ionic-native/local-noti
 export class EditPage implements OnInit {
   id
   uid
-  reminder = {
-    title: "",
-    description: "",
-    datetime: ""
-  } as CountDown
+  countdown = {} as CountDown
 
   min_time = moment()
     .minute(moment().minute() + 1)
@@ -35,9 +31,10 @@ export class EditPage implements OnInit {
     .format()
 
   temp: Array<object> = []
+  countdownRef : Query
 
   constructor(
-    public firebase: AngularFireDatabase,
+    public firestore: AngularFirestore,
     public fireauth: AngularFireAuth,
     public parse: DataService,
     public localNotification: LocalNotifications,
@@ -51,51 +48,42 @@ export class EditPage implements OnInit {
     const textArea = this.element.nativeElement.getElementsByTagName(
       "textarea"
     )[0];
-    textArea.style.overflow = "hidden";
-    textArea.style.height = "auto";
-    textArea.style.height = textArea.scrollHeight + 2 + "px";
+    textArea.style.overflow = "hidden"
+    textArea.style.height = "auto"
+    textArea.style.height = textArea.scrollHeight + 2 + "px"
   }
 
   ngOnInit() {
-    this.id = this.parse.edit_id;
-    this.uid = this.fireauth.auth.currentUser.uid;
-    this.firebase.database
-      .ref(`/reminders/${this.uid}/${this.id}`)
-      .on("value", snapshot => {
-        var result: object = snapshot.toJSON();
-        this.temp.push(result);
-        this.reminder = {
-          id: this.temp[0]['id'],
-          title: this.temp[0]["title"],
-          description: this.temp[0]["description"],
-          datetime: this.temp[0]["datetime"],
-        };
-      });
+    this.uid = this.fireauth.auth.currentUser.uid
+    this.countdown = this.parse.edit_countdown
+
+    this.countdownRef = this.firestore.collection("countdowns").ref
+      .where("owner", "==", this.uid)
   }
 
   updateNotification() {
     this.localNotification.update({
-      id: this.reminder.id,
-      title: this.reminder.title,
-      text: 'Your count down, ' + this.reminder.title + " has finished",
+      id: this.countdown.id,
+      title: this.countdown.title,
+      text: 'Your count down, ' + this.countdown.title + " has finished",
       trigger: {
-        at: new Date(this.reminder.datetime)
+        at: new Date(this.countdown.datetime)
       }
-    });
+    })
   }
 
   saveEdits() {
-    if (this.reminder.title) {
-      this.firebase.database.ref(`/reminders/${this.uid}/${this.id}`).update({
-        title: this.reminder.title,
-        description: this.reminder.description,
-        datetime: this.reminder.datetime,
-      });
+    if (this.countdown.title) {
+      this.firestore.collection("countdowns").doc(this.countdown.id).update({
+        title: this.countdown.title,
+        description: this.countdown.description,
+        datetime: this.countdown.datetime
+      })
 
-      this.custom.toast("Saved", "top");
-      this.router.navigateByUrl("/home");
+      this.custom.toast("Saved", "top")
+      this.router.navigateByUrl("/home")
 
-      this.updateNotification();
+      this.updateNotification()
     }
   }
 }

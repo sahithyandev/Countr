@@ -1,0 +1,14 @@
+$padding-horizontal: 12px;
+$padding-vertical: 6px;
+
+.button-div {
+    width: 100%;
+}
+
+.container {
+    padding-top: $padding-vertical;
+    padding-bottom: $padding-vertical;
+
+    padding-left: $padding-horizontal;
+    padding-right: $padding-horizontal;
+}
