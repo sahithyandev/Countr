@@ -15,7 +15,7 @@
         <ion-icon name='trash'></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Count It</ion-title>
+    <ion-title>CountIt</ion-title>
   </ion-toolbar>
 
 </ion-header>
@@ -41,17 +41,22 @@
   </div>
   <br><br>
 
-  <div *ngIf="isInternetAvailable" align='center' class='description'>
-    {{countdown.description}}<br /><br />
-    {{stop_time}}<br /><br />
-    <span class="category" *ngIf="countdown.category != '__default__'"> Category : 
-      <a class="category-name" (click)="categoryPage()">{{countdown.category}}</a>
+  <div align='center' class='description'>
+    <span *ngIf="countdown.description">
+      {{countdown.description}}<br />
+      <br />
     </span>
+    {{stop_time}}<br />
     <br />
+    <a *ngIf="countdown.category != '__default__'">
+      <ion-chip (click)="categoryPage()" color="primary">
+        <ion-label class="category-name">{{countdown.category}}</ion-label>
+      </ion-chip>
+    </a>
   </div>
 
   <div class="edit-container" align="center">
-    <ion-button *ngIf="isInternetAvailable" id='edit' (click)='edit()' color="secondary">
+    <ion-button id='edit' (click)='edit()' color="secondary">
       Edit
     </ion-button>
   </div>

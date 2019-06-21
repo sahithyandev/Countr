@@ -6,7 +6,7 @@ import { CustomService } from '../custom.service'
 import { AlertController, LoadingController, Platform } from '@ionic/angular'
 import { LoadingService } from '../loading.service'
 import { DataService } from '../data.service'
-import { FirebaseAuthenticationUiComponent } from "firebase-authentication-ui";
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -37,7 +37,7 @@ export class LoginPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    if ("desktop" == this.platform.platforms()[0]) { // If the platform is desktop, so we have to add 'enter' key recognition
+    if ("desktop" == this.platform.platforms()[0]) { // If the platform is desktop, we have to add 'enter' key recognition
       document.body.addEventListener("keyup", this.listener)
       console.log("login page listener added")
     }

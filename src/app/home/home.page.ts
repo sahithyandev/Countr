@@ -74,11 +74,11 @@ export class HomePage implements OnInit {
       })
       this.sortCountdowns()
       // find if finished
-      for (let countdown of this.countdowns) {
+      this.countdowns.forEach(countdown => {
         if (countdown.datetime < moment().format()) {
           countdown.isFinished = true
         }
-      }
+      })
     })
   }
 
