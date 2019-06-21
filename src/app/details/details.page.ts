@@ -1,11 +1,12 @@
-import { Component, OnInit, NgZone } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { DataService } from '../data.service'
 import { CountDown } from '../modals/countdown'
 import { Router } from '@angular/router'
 import { CustomService } from '../custom.service'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 import { AngularFirestore, Query } from '@angular/fire/firestore'
+import * as moment from "moment"
+import { CountdownOutput } from '../modals/countdownOutput'
 
 @Component({
   selector: 'app-details',
@@ -15,12 +16,13 @@ import { AngularFirestore, Query } from '@angular/fire/firestore'
 export class DetailsPage implements OnInit {
 
 	timer
-	ex_time
-	reminder = {} as CountDown
+  stop_time
+  countdown = {} as CountDown
+  output = {} as CountdownOutput
 	// reminder = {}
 
 	uid
-  output // to output time and show it on the page
+  // output // to output time and show it on the page
   isInternetAvailable: boolean = true // to determine how to tweak UI depended on Internet
 
 	temp: Array<object> = []
@@ -32,52 +34,75 @@ export class DetailsPage implements OnInit {
     public fireauth: AngularFireAuth,
     public router: Router,
     public custom: CustomService,
-    public localNotification: LocalNotifications,
-    public parse: DataService,
-    public zone: NgZone
+    public parse: DataService
   ) { }
 
   ngOnInit() {
-    this.reminder = this.parse.details_countdown
+    this.countdown = this.parse.details_countdown
     this.uid = this.fireauth.auth.currentUser.uid
-
-    this.ex_time = new Date(this.reminder.datetime)
-    this.counting(this.ex_time, this)
+    this.startCountdown()
   }
 
-  counting(next, page) {
+  startCountdown() {
+    this.stop_time = new Date(this.countdown.datetime)
+    this.counting(this.countdown, this)
+  }
+
+  counting(countdown: CountDown, page) {
     // page.ex_time = next;
-    var output;
-    var stop = next.getTime()
+    var output = {} as CountdownOutput;
+    var stop = new Date(countdown.datetime).getTime()
     var x = window.setInterval(function () {
       var now = new Date().getTime()
       var distance = stop - now
-      // console.log(distance);                     
 
       if (distance <= 0) {
-        output = "Finished"
-        console.log("Stopped")
-        window.clearInterval(x)
-      } else {
+        if (countdown.isRepeat) {
+          let old_time = countdown.datetime
+          countdown.datetime = moment(old_time).year(moment(old_time).year() + 1).format()
 
+          page.custom.alert_dismiss("Info", "This countdown is repeated as your Wish")
+          page.custom.syncWithFirestore(countdown)
+          page.startCountdown()
+        }
+        window.clearInterval(x)
+        // output = "Finished"
+        console.log("Stopped")
+      } else {
         var hours = Math.floor(distance / (1000 * 60 * 60))
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
         var seconds = Math.floor((distance % (1000 * 60)) / 1000)
-        var mseconds = ('000' + Math.floor(distance % 1000)).substr(-3)
+        var mseconds =  Math.floor(distance % 1000)
+        // var mseconds = ('000' + Math.floor(distance % 1000)).substr(-3)
 
-        output = `${hours}h : ${minutes}m : ${seconds}.${mseconds}s` // Normal Syntax
+        output.days = ''
+        output.hours = hours.toString().padStart(2, '0')
+        output.minutes = minutes.toString().padStart(2, '0')
+        output.seconds = seconds.toString().padStart(2, '0')
+        output.mseconds = mseconds.toString().padStart(3, '0')
+
+        // output = `${hours__}h : ${minutes__}m : ${seconds__}s` // Normal Syntax without milliseconds
+        // output = `${hours__}h : ${minutes__}m : ${seconds__}.${mseconds__}s` // Normal Syntax
 
         if (hours >= 24) {
-          var days = Math.floor(hours / 24)                  
-          hours = hours - (days * 24)
+          var days = Math.floor(hours / 24)
 
-          output = `${days}D: ${hours}h : ${minutes}m : ${seconds}.${mseconds}s` // with Days Syntax
+          output.days = days.toString()                
+          output.hours = (hours - (days * 24)).toString().padStart(2, '0')
+
+          // output = `${days}D : ${hours__}h : ${minutes__}m : ${seconds__}s` // with Days Syntax without milliseconds
+          // output = `${days__}D:${hours__}h : ${minutes__}m : ${seconds__}.${mseconds__}s` // with Days Syntax
+
         } else {
           if (hours <= 0) {
-            output = `${minutes}m : ${seconds}.${mseconds}s` // without Hours Syntax
+            output.hours = ''
+            // output = `${minutes__}m : ${seconds__}s` // without Hours Syntax without milliseconds
+            // output = `${minutes__}m : ${seconds__}.${mseconds__}s` // without Hours Syntax
 
             if (minutes <= 0) {
-              output = `${seconds}.${mseconds}s` // without Hours and Minutes Syntax
+              output.hours = output.minutes = ''
+              // output = `${seconds__}s` // without Hours and Minutes Syntax without milliseconds
+              // output = `${seconds__}.${mseconds__}s` // without Hours and Minutes Syntax  
             }
           }
         }
@@ -101,13 +126,8 @@ export class DetailsPage implements OnInit {
   //   });
   // }
 
-  removeNotification() {
-    this.localNotification.cancel(this.reminder.id)
-  }
-
   delete() {
-    this.removeNotification();
-    this.firestore.collection("countdowns").doc(this.reminder.id).delete().then(after => { 
+    this.firestore.collection("countdowns").doc(this.countdown.id).delete().then(after => { 
       this.router.navigateByUrl('/home') 
     }).catch(e => {
       console.log(e)
@@ -117,8 +137,13 @@ export class DetailsPage implements OnInit {
 
   edit() {
     // this.parse.edit_id = this.reminder.id;
-    this.parse.edit_countdown = this.reminder
+    this.parse.edit_countdown = this.countdown
     this.router.navigateByUrl('/edit')
+  }
+
+  categoryPage() {
+    this.parse.selectedCategory = this.countdown.category
+    this.router.navigateByUrl('/category-countdowns')
   }
 
 }

@@ -23,17 +23,30 @@
 
 <ion-content padding>
   <h2 align='center'>
-    {{reminder.title}}
+    {{countdown.title}} <ion-icon *ngIf="countdown.isRepeat" name="infinite"></ion-icon>
   </h2><br><br>
 
-  <div id='timer' align='center'>
-    {{output}}
-  </div><br><br>
+  <div class="timer-finished" align="center" *ngIf="!output.days && !output.hours && !output.minutes && !output.seconds && !output.mseconds">
+    Finished
+  </div>
 
-  <div *ngIf="isInternetAvailable" align='center' id='description'>
-    {{reminder.description}}<br /><br /> 
-    {{ex_time}}<br /><br />
-    <font class="category" *ngIf="reminder.category != '__default__'"> Category : {{reminder.category}} </font>
+  <div class='timer' align='center' *ngIf="output.days || output.hours || output.minutes || output.seconds || output.mseconds">
+    <span id="timer-digit" class="days" *ngIf="output.days">{{output.days}}D</span>
+    <span id="divider" *ngIf="output.days"> : </span>
+    <span id="timer-digit" class="hours" *ngIf="output.hours">{{output.hours}}h</span>
+    <span id="divider" *ngIf="output.hours"> : </span>
+    <span id="timer-digit" class="minutes" *ngIf="output.minutes">{{output.minutes}}m</span>
+    <span id="divider" *ngIf="output.minutes"> : </span>
+    <span id="timer-digit" class="seconds">{{output.seconds}}.{{output.mseconds}}s</span>
+  </div>
+  <br><br>
+
+  <div *ngIf="isInternetAvailable" align='center' class='description'>
+    {{countdown.description}}<br /><br />
+    {{stop_time}}<br /><br />
+    <span class="category" *ngIf="countdown.category != '__default__'"> Category : 
+      <a class="category-name" (click)="categoryPage()">{{countdown.category}}</a>
+    </span>
     <br />
   </div>
 

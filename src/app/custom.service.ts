@@ -4,6 +4,8 @@ import { AngularFireAuth } from '@angular/fire/auth'
 import { Storage } from "@ionic/storage"
 import { Router } from '@angular/router'
 import { LoadingService } from './loading.service'
+import { AngularFirestore } from '@angular/fire/firestore';
+import { CountDown } from './modals/countdown';
 
 @Injectable({
   providedIn: "root"
@@ -11,11 +13,13 @@ import { LoadingService } from './loading.service'
 export class CustomService {
   email
   password
+  isInfoShown = false
   
   constructor(
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
     public fireauth: AngularFireAuth,
+    public firestore: AngularFirestore,
     public storage: Storage,
     public loading: LoadingService,
     public loadCtrl: LoadingController,
@@ -92,7 +96,6 @@ export class CustomService {
         })
 
         this.email = this.password = ""
-
         this.router.navigateByUrl("/home")
       })
   }
@@ -110,4 +113,29 @@ export class CustomService {
     return outputArray
   }
 
+  showInfo() {
+    console.log("Function fired")
+    if (!this.isInfoShown) {
+      this.alert_dismiss("Info", "This countdown will be repeated every years")
+      this.isInfoShown = true
+    }
+  }
+
+  syncWithFirestore(countdown: CountDown) {
+    let obj = {
+      title: countdown.title,
+      datetime: countdown.datetime,
+      isStarred: countdown.isStarred,
+      category: countdown.category,
+      description: countdown.description,
+      isRepeat: countdown.isRepeat,
+      owner: countdown.owner
+    }
+    
+    this.firestore.collection("countdowns").doc(countdown.id).update(obj).then(() => {
+      return "success"
+    }).catch(e => {
+      return e
+    })
+  }
 }

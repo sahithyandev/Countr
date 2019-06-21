@@ -54,24 +54,32 @@ export class CategoriesPage implements OnInit {
   }
 
   goCategoryPage(category) {
-    console.log("function fired")
     this.parse.selectedCategory = category
     this.router.navigateByUrl('/category-countdowns')
   }
 
   delete(item) {
     let canDelete = this.checkCategory(item)
+    let verified = true
 
-    if (!canDelete && this.getVerified()) {
+    if (!canDelete) {
+      verified = this.getVerified()
 
-      let countdownlist: Array<CountDown> = this.parse.user_countdowns
+      if (verified) {
 
-      for (let countdown of countdownlist) {
-        if (countdown.category == item) {
-          this.firestore.collection("countdowns").doc(countdown.id).update({
-            category: "__default__"
-          })
+        let countdownlist: Array<CountDown> = this.parse.user_countdowns
+
+        for (let countdown of countdownlist) {
+          if (countdown.category == item) {
+            this.firestore.collection("countdowns").doc(countdown.id).update({
+              category: "__default__"
+            })
+          }
         }
+      } else {
+        this.custom.toast("Category Not Deleted", "top")
+        console.log("delete rejected")
+        return null
       }
     }
 
@@ -94,7 +102,7 @@ export class CategoriesPage implements OnInit {
     return true
   }
 
-  async getVerified() {
+  async showToast(): Promise<boolean> {
     const al = await this.alertCtrl.create({
       header: "Warning",
       message: "Be sure, All your countdowns with this category will be changed to 'default' category if you agree.",
@@ -114,6 +122,20 @@ export class CategoriesPage implements OnInit {
     })
 
     al.present()
-    return false
+    return
+  }
+
+  getVerified() : boolean {
+    let verified: boolean
+
+    this.showToast().then(v => {
+      console.log(v)
+      verified = v
+    }).catch(e => {
+      console.log(e)
+      verified = false
+    })
+
+    return verified
   }
 }

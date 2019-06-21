@@ -5,15 +5,14 @@ import { Storage } from '@ionic/storage'
 import { CustomService } from '../custom.service'
 import { AlertController, LoadingController, Platform } from '@ionic/angular'
 import { LoadingService } from '../loading.service'
-
-
+import { DataService } from '../data.service'
+import { FirebaseAuthenticationUiComponent } from "firebase-authentication-ui";
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
   email
   password
   email_wrong = false
@@ -26,7 +25,8 @@ export class LoginPage implements OnInit {
     public loadCtrl: LoadingController,
     public router: Router,
     public loading: LoadingService,
-    public custom: CustomService
+    public custom: CustomService,
+    public parse: DataService
   ) { }
 
   listener = (event) => {
@@ -37,23 +37,25 @@ export class LoginPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    if ("desktop" == this.platform.platforms()[0]) { // if the platform is desktop, so we have to add 'enter' key recognition
+    if ("desktop" == this.platform.platforms()[0]) { // If the platform is desktop, so we have to add 'enter' key recognition
       document.body.addEventListener("keyup", this.listener)
       console.log("login page listener added")
     }
   }
 
   ngOnInit() {
+    // this.loading.dismiss()
+    console.log(this.fireauth.auth.currentUser) // for checking
     this.storage.get('loggedInfo')
       .then(data => {
-          if (data.isLogged) {
-            this.custom.email = this.email = data.email
-            this.custom.password = this.password = data.password
-            this.custom.login()
-          }
-        }).catch(error => {
-        console.log(error)
+        if (data.isLogged) {
+          this.custom.email = this.email = data.email
+          this.custom.password = this.password = data.password
+          this.custom.login()
+        }
+      }).catch(error => {
         this.loading.dismiss()
+        console.log(error)
       })
   }
 
@@ -99,16 +101,16 @@ export class LoginPage implements OnInit {
             if (e.code == 'auth/invalid-email') {
               this.email_wrong = true
               this.custom.alert_dismiss('Invalid Email', 'Type your email fully..<br>(example: john@gmail.com)')
-            } 
+            }
             if (e.code == 'auth/wrong-password') {
-              this.alert_password_reset('Password Wrong',
-                "Check your password before trying again. <br> You can change your password")
+              this.alert_password_reset('Password Is Wrong',
+                "Check your password before trying again. <br> You can also change your password")
             }
             if (e.code == 'auth/user-not-found') {
               this.custom.alert_dismiss('Wrong Email Address', 'It seems like as you are not signed up yet<br> <b>Sign In before Log In again</b>')
             }
           });
-        }
+    }
 
   }
 

@@ -17,6 +17,11 @@
       <ion-input name='title' [(ngModel)]='newCountdown.title'></ion-input>
     </ion-item>
 
+    <ion-item class="repeat-input">
+      <ion-label>Repeat</ion-label>
+      <ion-toggle class="repeat-toggle" [(ngModel)]="newCountdown.isRepeat" (ngModelChange)="custom.showInfo()"></ion-toggle>
+    </ion-item>
+
     <ion-item>
       <ion-label>Date & Time</ion-label>
       <ion-datetime name='datetime' [max]='max_time' displayFormat="DD MMM YYYY hh:mm A" pickerFormat="DD MM YYYY HH mm"
@@ -31,6 +36,7 @@
     <ion-item>
       <ion-label position='stacked'>Category </ion-label>
       <ion-select placeholder="Select Category" [(ngModel)]='newCountdown.category'>
+        <ion-select-option value="__default__">Default</ion-select-option>
         <ion-select-option *ngFor="let item of categories" value="{{item}}">
           {{item}}
         </ion-select-option>

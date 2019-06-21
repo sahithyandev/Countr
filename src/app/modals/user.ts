@@ -4,4 +4,5 @@ export interface User {
   name: string
   email: string
   categories: Array<Category>
+  getEmailNotifications: boolean
 }

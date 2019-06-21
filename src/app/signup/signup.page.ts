@@ -6,6 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { CustomService } from '../custom.service';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
+import { DataService } from '../data.service';
 
 @Component({
   selector: "app-signup",
@@ -22,6 +23,7 @@ export class SignupPage implements OnInit {
     public fireauth: AngularFireAuth,
     public firestore: AngularFirestore,
     public router: Router,
+    public parse: DataService,
     public custom: CustomService
   ) { }
 

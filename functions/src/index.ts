@@ -1,12 +1,12 @@
-import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions'
 
-exports.sendMail = functions.https.onRequest((request, response) => {
-    const cors = require('cors')({ origin: true });
+exports.sendMailToOwner = functions.https.onRequest((request, response) => {
+    const cors = require('cors')({ origin: true })
     cors(request, response, () => {
 
-        const emailjs = require('emailjs/email');
+        const emailjs = require('emailjs/email')
         
-        const feedback = request.body;
+        const feedback = request.body
 
         const server = emailjs.server.connect({
             user: "feed.sahithyan@gmail.com",
@@ -14,7 +14,7 @@ exports.sendMail = functions.https.onRequest((request, response) => {
             host: "smtp.gmail.com",
             port: 465,
             ssl: true
-        });
+        })
         const html = 
             `<html>
                 <body style='font-size: 15px;'>
@@ -38,7 +38,30 @@ exports.sendMail = functions.https.onRequest((request, response) => {
             attachment: [{ data: html, alternative: true }]
             
         }, (err: any, message: any) => {
-            console.log(err || message);
-            });
-    });
-});
+            console.log(err || message)
+            })
+    })
+})
+
+// exports.sendEmailNotification = functions.https.onRequest((request, response) => {
+//     const cors = require('cors')
+//     cors(request, response, () => {
+//         const admin = require('firebase-admin')
+//         admin.initializeApp(functions.config().firebase)
+
+//         const payload = {
+//             notification: {
+//                 title: `Hi`,
+//                 body: `You have ${}`
+//             }
+//         };
+        
+//         return admin.messaging().sendToTopic("News", payload)
+//             .then(function (response) {
+//                 console.log('Notification sent successfully:', response)
+//             })
+//             .catch(function (error) {
+//                 console.log('Notification sent failed:', error)
+//             });
+//     })
+// })

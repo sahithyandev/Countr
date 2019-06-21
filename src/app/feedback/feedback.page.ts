@@ -51,7 +51,7 @@ export class FeedbackPage implements OnInit {
       })
     };
 
-    this.http.post('https://us-central1-countit-19021.cloudfunctions.net/sendMail', this.feedback, httpOptions)
+    this.http.post('https://us-central1-countit-19021.cloudfunctions.net/sendMailToOwner', this.feedback, httpOptions)
       .subscribe(
         res => {
           console.log(res);

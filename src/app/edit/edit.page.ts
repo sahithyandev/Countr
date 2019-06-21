@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { DataService } from '../data.service'
 import { CustomService } from '../custom.service'
 import * as moment from 'moment'
-import { LocalNotifications } from "@ionic-native/local-notifications/ngx"
 
 @Component({
   selector: "app-edit",
@@ -17,6 +16,7 @@ export class EditPage implements OnInit {
   id
   uid
   countdown = {} as CountDown
+  categories = Array<String>()
 
   min_time = moment()
     .minute(moment().minute() + 1)
@@ -29,15 +29,13 @@ export class EditPage implements OnInit {
     .second(0)
     .millisecond(0)
     .format()
-
-  temp: Array<object> = []
+    
   countdownRef : Query
 
   constructor(
     public firestore: AngularFirestore,
     public fireauth: AngularFireAuth,
     public parse: DataService,
-    public localNotification: LocalNotifications,
     public custom: CustomService,
     public element: ElementRef,
     public router: Router
@@ -54,6 +52,7 @@ export class EditPage implements OnInit {
   }
 
   ngOnInit() {
+    this.categories = this.parse.categories
     this.uid = this.fireauth.auth.currentUser.uid
     this.countdown = this.parse.edit_countdown
 
@@ -61,29 +60,18 @@ export class EditPage implements OnInit {
       .where("owner", "==", this.uid)
   }
 
-  updateNotification() {
-    this.localNotification.update({
-      id: this.countdown.id,
-      title: this.countdown.title,
-      text: 'Your count down, ' + this.countdown.title + " has finished",
-      trigger: {
-        at: new Date(this.countdown.datetime)
-      }
-    })
-  }
-
   saveEdits() {
     if (this.countdown.title) {
       this.firestore.collection("countdowns").doc(this.countdown.id).update({
         title: this.countdown.title,
         description: this.countdown.description,
-        datetime: this.countdown.datetime
+        datetime: this.countdown.datetime,
+        category : this.countdown.category,
+        isRepeat: this.countdown.isRepeat
       })
 
       this.custom.toast("Saved", "top")
       this.router.navigateByUrl("/home")
-
-      this.updateNotification()
     }
   }
 }

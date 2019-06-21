@@ -11,8 +11,6 @@ import { AngularFireAuth } from '@angular/fire/auth'
 import { LoadingService } from './loading.service'
 import { ConnectionService } from 'ng-connection-service'
 import { AngularFireDatabase } from '@angular/fire/database'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
-import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 
 @Component({
   selector: 'app-root',
@@ -30,11 +28,9 @@ export class AppComponent {
     public storage: Storage,
     public loading: LoadingService,
     public connection: ConnectionService,
-    public localNotifications: LocalNotifications,
     public DataService: DataService,
     public loadCtrl: LoadingController,
-    public custom: CustomService,
-    public background: BackgroundMode
+    public custom: CustomService
   ) {
     this.initializeApp()
   }
@@ -51,7 +47,6 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.loading.present()
       this.splashScreen.hide()
-      this.background.enable()
 
       this.router.navigateByUrl('/login')
       this.determineHomepage()

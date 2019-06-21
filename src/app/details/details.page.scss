@@ -1,10 +1,10 @@
-#timer {
-    padding-bottom: 10px;
-    font-size: 18px;
-}
+$timer-font-size: 25px;
 
-#description {
-    white-space: pre-line;
+@font-face {
+    font-family: Oxygen Mono;
+    src: url("src/assets/fonts/Roboto-Mono.ttf");
+    // src: url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+    // src: url("src/assets/fonts/B612-Mono.ttf");
 }
 
 ion-title {
@@ -18,12 +18,43 @@ ion-title {
     text-align: center;
 }
 
-#delete {
-    background-color: rgba(255, 255, 255, 0);
+.description {
+    white-space: pre-line;
 }
 
-#timer {
-    font-size: 28px;
+#timer-digit {
+    // font-size: 6.3vw; // fluid font size
+    font-size: $timer-font-size;
+    width: 100%;
+    padding-bottom: 10px;
+    font-family: "Oxygen Mono", monospace !important;
+}
+
+.timer-finished {
+    font-size: $timer-font-size + 10;
+    width: 100%;
+    padding-bottom: 6px;
+}
+
+#divider {
+    font-size: $timer-font-size;
+}
+
+.category {
+    font-weight: bold;
+}
+
+.edit-container {
+    white-space: pre-line;
+    width: 100%;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 16px;
+}
+
+#delete {
+    background-color: rgba(255, 255, 255, 0);
 }
 
 #signup-content {
@@ -39,22 +70,9 @@ ion-title {
     color: rgb(247, 247, 247);
 }
 
-.edit-container {
-    white-space: pre-line;
-    width: 100%;
-    position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 24px;
-}
-
 #edit {
     width: 80%;
     position: relative;
     right: 0;
     left: 0;
-}
-
-.category {
-    font-weight: bold;
 }

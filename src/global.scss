@@ -11,25 +11,47 @@
 @import '~@ionic/angular/css/flex-utils.css';
 
 @font-face {
-font-family: Google Sans;
+font-family: Oxygen Regular;
 // src: url("../src/assets/fonts/OpenSans-Regular.ttf");
 src: url("src/assets/fonts/Oxygen-Regular.ttf");
 }
 
+// changing the global elements
 * {
-    font-family: "Google Sans" !important;
+    font-family: "Oxygen Regular" !important;
     font-weight: bold;
 }
+//
+// <hr>'s styles, hr is not working
+hr {
+    border-bottom: 1px solid #ccc;
+    margin: 10px 0;
+    width: 100%;
+}
+// to hide scrollbar
+::-webkit-scrollbar, *::-webkit-scrollbar {
+  display: none;
+  overflow: hidden;
+}
 
+ion-content {
+  overflow: hidden;
+  --overflow: hidden;
+}
+
+.scroll-content {
+  overflow: hidden;
+}
+//
+// headings
 .h-title {
     color: hsl(164, 83%, 43.7%);
 }
 
 #special-header {
     color: hsl(344, 83%, 43.7%);
-    ;
 }
-
+//
 .label {
     padding-left: 15px;
 }
@@ -50,4 +72,19 @@ src: url("src/assets/fonts/Oxygen-Regular.ttf");
     right: 0;
     left: 0;
     padding-bottom: 8px;
+}
+
+.repeat-toggle {
+    position: relative;
+    right: 0;
+}
+
+.category {
+    font-weight: 100;
+    margin-left: 6px;
+}
+
+.container {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

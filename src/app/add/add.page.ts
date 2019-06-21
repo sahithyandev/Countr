@@ -1,12 +1,11 @@
-import { Component, OnInit, ElementRef, NgZone } from '@angular/core'
+import { Component, OnInit, ElementRef } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Router } from '@angular/router'
 import * as moment from "moment"
 import { CustomService } from '../custom.service'
-import { LocalNotifications } from "@ionic-native/local-notifications/ngx"
 import { AngularFirestore, Query } from '@angular/fire/firestore'
-import { CountDown } from '../modals/countdown';
-import { DataService } from '../data.service';
+import { CountDown } from '../modals/countdown'
+import { DataService } from '../data.service'
 
 @Component({
   selector: "app-add",
@@ -24,6 +23,8 @@ export class AddPage implements OnInit {
   newCountdown = {
     title: "",
     owner: "",
+    isStarred: false,
+    isRepeat: false,
     description: "",
     category: "__default__",
     datetime: moment()
@@ -39,11 +40,11 @@ export class AddPage implements OnInit {
     .seconds(0)
     .format()
 
-  min_time: string = moment()
-    .minute(moment().minute() + 1)
-    .seconds(0)
-    .milliseconds(0)
-    .format()
+  // min_time: string = moment()
+  //   .minute(moment().minute() + 1)
+  //   .seconds(0)
+  //   .milliseconds(0)
+  //   .format()
 
   notify_time: string
   countdownRef : Query
@@ -52,9 +53,7 @@ export class AddPage implements OnInit {
 
   constructor(
     public fireauth: AngularFireAuth,
-    public localNotification: LocalNotifications,
     public router: Router,
-    public zone: NgZone,
     public firestore: AngularFirestore,
     public custom: CustomService,
     public parse: DataService,
@@ -71,11 +70,17 @@ export class AddPage implements OnInit {
   }
 
   check() {
-    if (this.newCountdown.datetime < this.min_time) {
+    let min_time = moment()
+      .minute(moment().minute() + 1)
+      .seconds(0)
+      .milliseconds(0)
+      .format()
+      
+    if (this.newCountdown.datetime < min_time) {
       this.false_time = true
       this.custom.alert_dismiss(
         'Date & Time are not valid!',
-        "You have selected <br /><b>" + moment(this.min_time).format('DD MMM, YYYY. HH:mm') + "</b><br />This time is not valid.<br /> Please select a valid date.")
+        "You have selected <br /><b>" + moment(min_time).format('DD MMM, YYYY. HH:mm') + "</b><br />This time is not valid.<br /> Please select a valid date.")
     } else {
       this.false_time = false
     }
@@ -104,43 +109,6 @@ export class AddPage implements OnInit {
     })
 
     this.findCountDownId()
-    console.log(this.countDownId)
-  }
-
-  schedule() {
-    var remaining_time = 30
-    this.notify_time = moment(this.newCountdown.datetime).subtract(moment.duration(remaining_time).asMinutes()).format()
-    if (this.notify_time > moment.now.toString()) { // if count down is lower than 30 minutes
-      this.localNotification.schedule({
-        id: this.countDownId - 1,
-        launch: true,
-        title: 'Count Down is Running',
-        text: this.username + ', Your count down, ' + this.newCountdown.title + " will be finished in " + remaining_time + " minutes",
-        trigger: {
-          at: new Date(this.notify_time) // notify time
-        },
-        data: { cid: this.countDownId - 1 },
-        actions: [
-          { id: 'enter', title: 'Open Count Down' }
-        ]
-      })
-    }
-  }
-
-  notify_finished() {
-    this.localNotification.schedule({
-      id: this.countDownId - 1,
-      launch: true,
-      title: 'Count Down Finished',
-      text: this.username + ', Your count down, ' + this.newCountdown.title + " has finished",
-      trigger: {
-        at: new Date(this.newCountdown.datetime) // finished time
-      },
-      data: { cid: this.countDownId - 1 },
-      actions: [
-        { id: 'enter', title: 'Open Count Down' }
-      ]
-    })
   }
 
   saveItem() {
@@ -151,10 +119,10 @@ export class AddPage implements OnInit {
       datetime: this.newCountdown.datetime,
       description: this.newCountdown.description,
       owner: this.newCountdown.owner,
-      category: this.newCountdown.category
+      category: this.newCountdown.category,
+      isStarred: this.newCountdown.isStarred,
+      isRepeat: this.newCountdown.isRepeat
     }).then(date => {
-      this.schedule()
-      this.notify_finished()
       console.log("added successfully")
     })
 

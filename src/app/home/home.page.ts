@@ -8,8 +8,10 @@ import { Storage } from "@ionic/storage"
 import { ToastController, PopoverController, Platform, AlertController } from '@ionic/angular'
 import { PopComponent } from '../pop/pop.component'
 import { LoadingService } from '../loading.service'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
-import { CountDown } from '../modals/countdown';
+import { CountDown } from '../modals/countdown'
+import { Note } from '../modals/note'
+import * as moment from 'moment'
+// import {  } from "@ionic-native/local-notifications"
 
 @Component({
   selector: "app-home",
@@ -18,9 +20,15 @@ import { CountDown } from '../modals/countdown';
 })
 export class HomePage implements OnInit {
   uid
-  count_downs  = Array<CountDown>()
+  countdowns  = Array<CountDown>()
+  notes = Array<Note>()
+
   countdownRef : Query
-  showWatermark = false // tells when to show watermark
+  notesRef : Query
+  // showWatermark = false // tells when to show watermark
+  newNote = {
+    isStarred: false
+  } as Note
 
   constructor(
     public firestore: AngularFirestore,
@@ -28,7 +36,6 @@ export class HomePage implements OnInit {
     public fireauth: AngularFireAuth,
     public custom: CustomService,
     public data: DataService,
-    public localNotification: LocalNotifications,
     public router: Router,
     public parse: DataService,
     public toastCtrl: ToastController,
@@ -36,56 +43,25 @@ export class HomePage implements OnInit {
     public popCtrl: PopoverController,
     public storage: Storage,
     public alertCtrl: AlertController
-  ) {
-    this.platform.ready().then(() => {
-      // handle the notification to delete and open the app
-      // Check it
-      this.localNotification.on('enter').subscribe(notification => {
-        this.data.countDownId = notification.data.cid
-        this.router.navigateByUrl('/details')
-        console.log(notification.data)
-      });
-    })
-  }
-
-  reschedule() {
-    for (let i in this.count_downs) {
-      let countdown = this.count_downs[i]
-      this.localNotification.schedule({
-        title: "Count down Finished",
-        text: "Your count down titled " + countdown.title + " has finished",
-        trigger: {
-          at: new Date(countdown.datetime) // finished time
-        },
-        data: { cid : countdown.id },
-        actions: [
-          { id: 'enter', title: 'Open Count Down' }
-        ]
-      })
-    }
-  }
+  ) { }
 
   ionViewWillEnter() {
-    this.getCountdowns(),
+    this.getCountdowns()
+    this.getNotes()
     this.getCategories() }
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid
-    this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.uid)
-    .orderBy("datetime")
+    this.newNote.owner = this.uid
+    this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.uid).orderBy("datetime")
+    this.notesRef = this.firestore.collection("notes").ref.where("owner", "==", this.uid).orderBy("addedTime")
 
-    this.getCountdowns()
-    this.getCategories()
-
-    this.localNotification.cancelAll()
     this.loading.dismiss()
-    this.reschedule()
   }
 
   async getCategories() {
     this.firestore.collection("users").doc(this.uid).ref.get().then(snapshot => {
       this.parse.categories = snapshot.get("categories")
-      console.log(this.parse.categories)
     }).catch(e => {
       console.log("Error " + e) 
     })
@@ -94,16 +70,44 @@ export class HomePage implements OnInit {
   async getCountdowns() {
     this.countdownRef.onSnapshot(snapshot => {
       snapshot.forEach(doc => {
-        // this.count_downs = []
-        // this.count_downs.push(doc.data())
-        this.showWatermark = false
-        this.count_downs = this.custom.snapToArray(snapshot)
-        this.parse.user_countdowns = this.count_downs
+        this.countdowns = this.parse.user_countdowns = this.custom.snapToArray(snapshot)
       })
-      // this.count_downs = this.custom.snapToArray(snapshot)
-      // console.log(this.count_downs.length)
+      this.sortCountdowns()
+      // find if finished
+      for (let countdown of this.countdowns) {
+        if (countdown.datetime < moment().format()) {
+          countdown.isFinished = true
+        }
+      }
     })
-    if (this.count_downs.length == 0) { this.showWatermark = true }
+  }
+
+  async getNotes() {
+    this.notesRef.onSnapshot(snapshot => { // using get() slow downs for about ~300ms
+      snapshot.forEach(doc => {
+        this.notes = this.parse.user_notes = this.custom.snapToArray(snapshot)
+      })
+      this.sortNotes()
+    })
+  }
+
+  saveNote() {
+    console.log(this.newNote)
+    this.newNote.addedTime = moment().format()
+
+    if (this.newNote.text) {
+      this.firestore.collection("notes").add({
+        text: this.newNote.text,
+        owner: this.newNote.owner,
+        isStarred: this.newNote.isStarred,
+        addedTime: this.newNote.addedTime
+      }).then(() => {
+        this.newNote.text = ""
+        console.log(this.parse.user_notes)
+      })
+    } else {
+      this.custom.alert_dismiss("Can't add", "Please give a name to your <b>Note</b>")
+    }
   }
 
   add() {
@@ -112,13 +116,39 @@ export class HomePage implements OnInit {
 
   async details(countDownId) {
     this.parse.countDownId = countDownId
-    for (let i in this.count_downs) {
-      if (this.count_downs[i].id == countDownId) {
+    for (let countdown of this.parse.user_countdowns) {
+      if (countdown.id == countDownId) {
         console.log("Count down found")
-        this.parse.details_countdown = this.count_downs[i]
+        this.parse.details_countdown = countdown
       }
     }
     await this.router.navigate(['/details'])
+  }
+
+  async starCountdown(countdown: CountDown) {
+    let newValue = !countdown.isStarred
+    countdown.isStarred = newValue
+    this.firestore.collection("countdowns").doc(countdown.id).update({
+      isStarred: countdown.isStarred
+    })
+    this.sortCountdowns()
+  }
+
+  async starNote(note: Note) {
+    let newValue = !note.isStarred
+    note.isStarred = newValue
+    this.firestore.collection("notes").doc(note.id).update({
+      isStarred: note.isStarred
+    })
+    this.sortNotes()
+  }
+
+  sortCountdowns() {
+    this.parse.user_countdowns.sort((a, b) => (a.isStarred && !(b.isStarred) ? -1 : 1))
+  }
+
+  sortNotes() {
+    this.parse.user_notes.sort((a, b) => (a.isStarred && !(b.isStarred) ? -1 : 1))
   }
 
   logout() {
@@ -129,11 +159,17 @@ export class HomePage implements OnInit {
     this.custom.toast("Successfully Logged Out!", "top")
   }
 
-  delete(countDownId) {
+  deleteCountdown(countDownId) {
     this.firestore.collection("countdowns").doc(countDownId).delete().then(() => {
-      console.log("Deleted")
       this.custom.toast("Countdown Deleted", "top")
-      this.localNotification.cancel(countDownId)
+    })
+  }
+
+  deleteNote(note: Note) {
+    this.firestore.collection("notes").doc(note.id).delete().then(() => {
+      this.custom.toast("Note Deleted", "top")
+      this.notes = this.parse.user_notes = Array<Note>()
+      this.getNotes()
     })
   }
 

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { DataService } from '../data.service'
 import { CountDown } from '../modals/countdown'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 import { CustomService } from '../custom.service'
 import { Router } from '@angular/router'
 import { AngularFirestore } from '@angular/fire/firestore'
@@ -21,11 +20,14 @@ export class CategoryCountdownsPage implements OnInit {
   constructor(
     public fireauth: AngularFireAuth,
     public firestore: AngularFirestore,
-    public localNotification: LocalNotifications,
     public custom: CustomService,
     public router: Router,
     public parse: DataService
   ) { }
+
+  sortCountdowns() {
+    this.parse.user_countdowns.sort((a, b) => (a.isStarred && !(b.isStarred) ? -1 : 1))
+  }
 
   ngOnInit() {
     this.title = this.parse.selectedCategory
@@ -42,11 +44,19 @@ export class CategoryCountdownsPage implements OnInit {
     }
   }
 
+  async starCountdown(countdown: CountDown) {
+    let newValue = !countdown.isStarred
+    countdown.isStarred = newValue
+    this.firestore.collection("countdowns").doc(countdown.id).update({
+      isStarred: countdown.isStarred
+    })
+    this.sortCountdowns()
+  }
+
   delete(countDownId) {
     this.firestore.collection("countdowns").doc(countDownId).delete().then(() => {
       console.log("Deleted")
       this.custom.toast("Countdown Deleted", "top")
-      this.localNotification.cancel(countDownId)
     })
   }
 
