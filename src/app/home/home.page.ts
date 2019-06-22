@@ -144,7 +144,7 @@ export class HomePage implements OnInit {
   }
 
   sortCountdowns() {
-    this.parse.user_countdowns.sort((a, b) => (a.isStarred && !(b.isStarred) ? -1 : 1))
+    if (this.parse.user_countdowns.length > 0) this.parse.user_countdowns.sort((a, b) => (a.isStarred && !(b.isStarred) ? -1 : 1))
   }
 
   sortNotes() {

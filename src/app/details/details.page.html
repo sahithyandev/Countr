@@ -21,23 +21,25 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <h2 align='center'>
     {{countdown.title}} <ion-icon *ngIf="countdown.isRepeat" name="infinite"></ion-icon>
   </h2><br><br>
 
-  <div class="timer-finished" align="center" *ngIf="!output.days && !output.hours && !output.minutes && !output.seconds && !output.mseconds">
+  <div class="timer-finished" align="center" *ngIf="!(output.days || output.hours || output.minutes || output.seconds || output.mseconds)">
     Finished
   </div>
 
   <div class='timer' align='center' *ngIf="output.days || output.hours || output.minutes || output.seconds || output.mseconds">
-    <span id="timer-digit" class="days" *ngIf="output.days">{{output.days}}D</span>
-    <span id="divider" *ngIf="output.days"> : </span>
-    <span id="timer-digit" class="hours" *ngIf="output.hours">{{output.hours}}h</span>
-    <span id="divider" *ngIf="output.hours"> : </span>
-    <span id="timer-digit" class="minutes" *ngIf="output.minutes">{{output.minutes}}m</span>
-    <span id="divider" *ngIf="output.minutes"> : </span>
-    <span id="timer-digit" class="seconds">{{output.seconds}}.{{output.mseconds}}s</span>
+    <span class="timer-digit" id="days" *ngIf="output.days">{{output.days}}D</span>
+      <!-- <span class="timer-descriptor" id="days-text" align="center">Days</span> -->
+    <span class="divider" *ngIf="output.days"> : </span>
+    <div class="timer-digit" id="hours" *ngIf="output.hours">{{output.hours}}h</div>
+    <span class="divider" *ngIf="output.hours"> : </span>
+    <span class="timer-digit" id="minutes" *ngIf="output.minutes">{{output.minutes}}m</span>
+    <span class="divider" *ngIf="output.hours"> : </span>
+    <span class="timer-digit" id="seconds">{{output.seconds}}.{{output.mseconds}}s</span>
+    <br />
   </div>
   <br><br>
 

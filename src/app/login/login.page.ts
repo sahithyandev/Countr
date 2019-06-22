@@ -6,6 +6,7 @@ import { CustomService } from '../custom.service'
 import { AlertController, LoadingController, Platform } from '@ionic/angular'
 import { LoadingService } from '../loading.service'
 import { DataService } from '../data.service'
+import { auth } from 'firebase'
 
 @Component({
   selector: 'app-login',
@@ -53,6 +54,12 @@ export class LoginPage implements OnInit {
         this.router.navigateByUrl('/home')
       }
     })
+
+    this.fireauth.auth.getRedirectResult().then(user => {
+      console.log(user)
+    }).catch(e => {
+      console.error(e)
+    })
   }
 
   async alert_password_reset(title, message) {
@@ -90,8 +97,7 @@ export class LoginPage implements OnInit {
         this.fireauth.auth.signInWithEmailAndPassword(this.email, this.password)
           .then(data => {
             this.email = this.password = ""
-
-            this.router.navigateByUrl('/home')
+            // this.router.navigateByUrl('/home')
 
           }).catch(e => {
             this.loading.dismiss()
