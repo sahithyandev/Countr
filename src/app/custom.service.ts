@@ -83,22 +83,6 @@ export class CustomService {
       toast.dismiss()
     }, 2000)
   }
-
-  login() {
-    // this.loading.present()
-    this.fireauth.auth
-      .signInWithEmailAndPassword(this.email, this.password)
-      .then(data => {
-        this.storage.set("loggedInfo", {
-          email: this.email,
-          password: this.password,
-          isLogged: true
-        })
-
-        this.email = this.password = ""
-        this.router.navigateByUrl("/home")
-      })
-  }
   
   removeItem(array, item) {
     let type = typeof(item)

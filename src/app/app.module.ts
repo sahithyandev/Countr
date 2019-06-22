@@ -10,7 +10,7 @@ import { AppComponent } from './app.component'
 import { AppRoutingModule } from './app-routing.module'
 
 import { FIRE_CONFIG } from "../environments/environment-firebase"
-import { AngularFireModule } from "@angular/fire"
+import { AngularFireModule, FirebaseApp } from "@angular/fire"
 import { AngularFireAuthModule } from "@angular/fire/auth"
 import { AngularFireDatabaseModule } from "@angular/fire/database"
 import { AngularFirestoreModule } from '@angular/fire/firestore'

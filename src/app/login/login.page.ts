@@ -6,7 +6,8 @@ import { CustomService } from '../custom.service'
 import { AlertController, LoadingController, Platform } from '@ionic/angular'
 import { LoadingService } from '../loading.service'
 import { DataService } from '../data.service'
-import { FirebaseAuthenticationUiComponent } from "firebase-authentication-ui";
+import { auth } from 'firebase';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -44,19 +45,15 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    // this.loading.dismiss()
-    console.log(this.fireauth.auth.currentUser) // for checking
-    this.storage.get('loggedInfo')
-      .then(data => {
-        if (data.isLogged) {
-          this.custom.email = this.email = data.email
-          this.custom.password = this.password = data.password
-          this.custom.login()
-        }
-      }).catch(error => {
-        this.loading.dismiss()
-        console.log(error)
-      })
+    this.loading.dismiss()
+    this.fireauth.auth.onAuthStateChanged(user => {
+      console.log(user)
+      
+      if (user) {
+        this.fireauth.auth.updateCurrentUser(user)
+        this.router.navigateByUrl('/home')
+      }
+    })
   }
 
   async alert_password_reset(title, message) {
@@ -77,6 +74,14 @@ export class LoginPage implements OnInit {
     al.present()
   }
 
+  googleSignin() {
+    this.fireauth.auth.signInWithRedirect(new auth.GoogleAuthProvider())
+  }
+
+  facebookSignin() {
+    this.fireauth.auth.signInWithRedirect(new auth.FacebookAuthProvider())
+  }
+
   login() {
     if (!this.email && !this.password) {
       this.custom.alert_dismiss("Input Fields are Empty", "Email and Password have to be filled")
@@ -85,12 +90,6 @@ export class LoginPage implements OnInit {
       let load =
         this.fireauth.auth.signInWithEmailAndPassword(this.email, this.password)
           .then(data => {
-            this.storage.set('loggedInfo', {
-              email: this.email,
-              password: this.password,
-              isLogged: true
-            })
-
             this.email = this.password = ""
 
             this.router.navigateByUrl('/home')

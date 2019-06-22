@@ -73,7 +73,6 @@ export class SignupPage implements OnInit {
       );
 
       this.custom.alertCtrl.dismiss()
-      this.custom.login()
 
     } catch (e) {
       if (e.code == "auth/weak-password") {

@@ -10,7 +10,6 @@ import { CustomService } from './custom.service'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { LoadingService } from './loading.service'
 import { ConnectionService } from 'ng-connection-service'
-import { AngularFireDatabase } from '@angular/fire/database'
 
 @Component({
   selector: 'app-root',
@@ -21,9 +20,8 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
+    private statusbar: StatusBar,
     public router: Router,
-    private firebase: AngularFireDatabase,
     public fireauth: AngularFireAuth,
     public storage: Storage,
     public loading: LoadingService,
@@ -47,6 +45,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.loading.present()
       this.splashScreen.hide()
+      this.fireauth.auth.setPersistence('local')
 
       this.router.navigateByUrl('/login')
       this.determineHomepage()
