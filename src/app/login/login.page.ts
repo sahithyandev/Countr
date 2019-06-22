@@ -6,7 +6,6 @@ import { CustomService } from '../custom.service'
 import { AlertController, LoadingController, Platform } from '@ionic/angular'
 import { LoadingService } from '../loading.service'
 import { DataService } from '../data.service'
-import { auth } from 'firebase';
 
 @Component({
   selector: 'app-login',
