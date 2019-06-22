@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="app.sahithyan.countit" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Count It</name>
+<widget id="app.sahithyan.countit" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>CountIt</name>
     <description>An Cloud and Ionic based (Countdown + Todo) app.</description>
     <author email="sahithyan2701@gmail" href="sahithyan2701@gmail.com">Sahithyan</author>
     <content src="index.html" />

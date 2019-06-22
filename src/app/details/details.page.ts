@@ -44,7 +44,7 @@ export class DetailsPage implements OnInit {
   }
 
   startCountdown() {
-    this.stop_time = new Date(this.countdown.datetime)
+    this.stop_time = moment(this.countdown.datetime).format("ddd, Do MMM YYYY, h:mm A") // fancy time
     this.counting(this.countdown, this)
   }
 

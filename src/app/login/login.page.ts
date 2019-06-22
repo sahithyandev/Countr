@@ -38,7 +38,7 @@ export class LoginPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    if ("desktop" == this.platform.platforms()[0]) { // If the platform is desktop, so we have to add 'enter' key recognition
+    if ("desktop" == this.platform.platforms()[0]) { // If the platform is desktop, we have to add 'enter' key recognition
       document.body.addEventListener("keyup", this.listener)
       console.log("login page listener added")
     }
@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
     this.loading.dismiss()
     this.fireauth.auth.onAuthStateChanged(user => {
       console.log(user)
-      
+
       if (user) {
         this.fireauth.auth.updateCurrentUser(user)
         this.router.navigateByUrl('/home')
