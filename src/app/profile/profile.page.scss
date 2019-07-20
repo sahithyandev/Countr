@@ -1,0 +1,31 @@
+#profile-container {
+    display: grid;
+    grid-template-columns: 5% 80px 40% 10% auto;
+    grid-template-rows: 100%;
+    height: 75px;
+    justify-items: start;
+    // background: linear-gradient(23deg, rgb(238, 210, 205), rgba(212, 142, 133, 0.548))
+}
+
+#profile-photo {
+    grid-column: 2;
+
+    clip-path: circle(45% at 50% 50%);
+}
+
+#profile-name {
+    grid-column: 3 / span 2;
+
+    font-size: 23px;
+    align-self: center;
+    justify-content: stretch;
+}
+
+#body-container {
+    margin-top: 20px;
+}
+
+.option-title {
+    margin-left: 2vw;
+}
+

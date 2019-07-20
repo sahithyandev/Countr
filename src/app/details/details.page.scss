@@ -1,10 +1,18 @@
-$timer-font-size: 25px;
+$timer-font-size: 28px;
+$background-color: hsl(0, 0%, 99%); // 2 refs
 
 @font-face {
     font-family: Oxygen Mono;
     src: url("src/assets/fonts/Roboto-Mono.ttf");
-    // src: url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
-    // src: url("src/assets/fonts/B612-Mono.ttf");
+}
+
+ion-content {
+    // --ion-background-color: -webkit-linear-gradient(-45deg,#cc13441F, #12cb9a3F) !important;
+    --ion-background-color: hsl(0, 0%, 99%); 
+}
+
+ion-toolbar {
+    --background: hsl(0, 0%, 99%);
 }
 
 ion-title {
@@ -22,44 +30,52 @@ ion-title {
     white-space: pre-line;
 }
 
-.timer-digit {
-    // font-size: 6.0vw; // fluid font size
-    display: inline-block;
-    font-size: $timer-font-size;
-    // margin-left: 2px;
-    font-family: "Oxygen Mono", monospace !important;
-}
-
-.timer-finished {
-    font-size: $timer-font-size + 10;
-    width: 100%;
-    padding-bottom: 2px;
+.minus-timer {
+    color: rgb(240, 37, 37);
 }
 
 .timer {
-    width: 100%;
-    padding-bottom: 10px;
+    display: table-cell;
+    width: 50%;
+}
+
+.timer-digit {
+    font-size: 30.0vw; // fluid font size // change this ! Its too big in desktop view.
+    display: inline-block;
+    // font-size: 50px;
+    // font-size: $timer-font-size;
+    // background-color: brown;
+    font-family: "Oxygen Mono", monospace !important;
+}
+
+.timer-digit-desktop {
+    font-size: 10.0vw; // fluid font size // change this ! Its too big in desktop view.
+    display: inline-block;
+    // font-size: 50px;
+    // font-size: $timer-font-size;
+    // background-color: brown;
+    font-family: "Oxygen Mono", monospace !important;
 }
 
 .timer-descriptor {
-    font-size: 13px;
+    font-size: 4vw;
+}
+
+.timer-descriptor-desktop {
+    font-size: 22px;
 }
 
 .category {
     font-weight: bold;
 }
 
-.edit-container {
+#countdown-button-container {
     white-space: pre-line;
     width: 100%;
     position: absolute;
     right: 0;
     left: 0;
     bottom: 16px;
-}
-
-.divider {
-    font-size: $timer-font-size;
 }
 
 #delete {
@@ -79,9 +95,20 @@ ion-title {
     color: rgb(247, 247, 247);
 }
 
-#edit {
+#editButton, #shareButton {
     width: 80%;
     position: relative;
     right: 0;
     left: 0;
+}
+
+#container {
+    display: table;
+    margin-left: 18%;
+    width: 75%;
+}
+
+#navigation-container {
+    display: table-cell;
+    width: 30%;
 }

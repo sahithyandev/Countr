@@ -1,3 +1,7 @@
 <ion-app>
+  <div *ngIf="showSplash" class="splash">
+    <div class="spinner"></div>
+    <!-- <div class="tapToLoad" (click)="load()"></div> -->
+  </div>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

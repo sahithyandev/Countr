@@ -6,7 +6,8 @@ import { PopoverController, AlertController } from '@ionic/angular'
 import { DataService } from '../data.service'
 import { Router } from '@angular/router'
 import { CustomService } from '../custom.service'
-import { CountDown } from '../modals/countdown';
+import { CountDown } from '../modals/countdown'
+import * as firebase from 'firebase'
 
 @Component({
   selector: 'app-categories',
@@ -16,11 +17,11 @@ import { CountDown } from '../modals/countdown';
 export class CategoriesPage implements OnInit {
   uid // id of the user
   categories: Array<String>
+  newCategory: String 
 
   constructor(
     public firestore: AngularFirestore,
     public fireauth: AngularFireAuth,
-    public popCtrl: PopoverController,
     public router: Router,
     public parse: DataService,
     public alertCtrl: AlertController,
@@ -29,28 +30,11 @@ export class CategoriesPage implements OnInit {
 
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid
-    this.categories = this.parse.categories
 
-    // this.firestore.collection("users").doc(this.uid).ref.onSnapshot(snapshot => {
-    //   this.categories = this.parse.categories = snapshot.get("categories")
-    //   console.log(this.categories)
-    // }, e => { console.log("Error " + e) })
-  }
-
-  pop(event) { // to add category
-    const popover = this.popCtrl
-      .create({
-        component: AddCategoryComponent,
-        mode: 'ios',
-        event: event
-      })
-      .then(output => {
-        this.popPresent(output)
-      });
-  }
-
-  async popPresent(pop: HTMLIonPopoverElement) {
-    return await pop.present()
+    this.firestore.collection("users").doc(this.uid).ref.onSnapshot(snapshot => {
+      this.categories = this.parse.user.categories = snapshot.get("categories")
+      console.log(this.categories)
+    }, e => { console.log("Error " + e) })
   }
 
   goCategoryPage(category) {
@@ -85,7 +69,7 @@ export class CategoriesPage implements OnInit {
 
     let newArray
 
-    newArray = this.categories = this.parse.categories = this.custom.removeItem(this.categories, item)
+    newArray = this.categories = this.parse.user.categories = this.custom.removeItem(this.categories, item)
     console.log(newArray)
 
     this.firestore.collection("users").doc(this.uid).update({
@@ -137,5 +121,16 @@ export class CategoriesPage implements OnInit {
     })
 
     return verified
+  }
+
+  addCategory() {
+    // update firestore
+    this.firestore.collection("users").doc(this.uid).ref.update({
+      categories: firebase.firestore.FieldValue.arrayUnion(this.newCategory)
+    }).then(() => {this.newCategory = ""}).catch(e => {
+      console.log(e)
+      this.custom.toast("Category not added", "top")
+    })
+    
   }
 }

@@ -23,11 +23,25 @@
     margin-top: 20px;
 }
 
-.service-login-button {
-    margin-top: 12px;
-    width: 60%;
-}
+main {
 
-.service-logo {
-    margin-right: 8px;
+    #email-login-card {
+        $bgcolor: rgba(29, 223, 181, 0.801);
+        padding: 10px;
+        border-radius: 15px;
+        z-index: 3;
+        // padding: 45% 0px; repair this
+    }
+
+    #services-login {
+        .service-login-button {
+            margin-top: 12px;
+            width: 80%;
+            
+
+            .service-logo {
+                margin-right: 8px;
+            }
+        }
+    }
 }

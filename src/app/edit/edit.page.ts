@@ -1,8 +1,8 @@
 import { Component, OnInit, ElementRef } from '@angular/core'
 import { CountDown } from '../modals/countdown'
-import { AngularFirestore, DocumentReference, Query } from '@angular/fire/firestore'
+import { AngularFirestore, Query } from '@angular/fire/firestore'
 import { AngularFireAuth } from '@angular/fire/auth'
-import { ActivatedRoute, Router } from '@angular/router'
+import { Router } from '@angular/router'
 import { DataService } from '../data.service'
 import { CustomService } from '../custom.service'
 import * as moment from 'moment'
@@ -42,7 +42,6 @@ export class EditPage implements OnInit {
   ) {}
 
   resize() {
-    console.log("Increase Height");
     const textArea = this.element.nativeElement.getElementsByTagName(
       "textarea"
     )[0];
@@ -52,7 +51,7 @@ export class EditPage implements OnInit {
   }
 
   ngOnInit() {
-    this.categories = this.parse.categories
+    this.categories = this.parse.user.categories
     this.uid = this.fireauth.auth.currentUser.uid
     this.countdown = this.parse.edit_countdown
 

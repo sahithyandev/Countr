@@ -5,34 +5,38 @@
 </ion-header>
 
 <ion-content padding>
-  <h2 align='center' class='h-title'>
-    Count<font id='special-header'>It</font>
-  </h2>
-  <div align='center'>
-    <ion-item id='input-field'>
-      <ion-label class='label' position='stacked'>Email</ion-label>
-      <ion-input class="input-text" type='email' [(ngModel)]='email'></ion-input>
-    </ion-item>
+  <h1 align='center' class='h-title'>
+    <font id='special-header'>Countr</font>
+  </h1>
 
-    <ion-item>
-      <ion-label class='label' position='stacked'>Password</ion-label>
-      <ion-input class='input-text' [(ngModel)]='password' type='password'></ion-input>
-    </ion-item><br />
+  <main>
+    <div id="email-login-card" align='center'>
+      <ion-item> <!-- </ion-item> id='input-field'> -->
+        <ion-label class='label' position='stacked'>Email</ion-label>
+        <ion-input class="input-text" type='email' [(ngModel)]='email'></ion-input>
+      </ion-item>
 
-    <button ion-button id="login-button" (click)='login()'>Log In</button>
-  </div>
-  <hr id="divider"/>
-  <div align="center">
-    <ion-button class="service-login-button" (click)="googleSignin()" color="medium">
-      <img class="service-logo" src="./../../assets/pics/google.png" width="32px" height="32px"/>
-      Sign In With Google
-    </ion-button>
+      <ion-item>
+        <ion-label class='label' position='stacked'>Password</ion-label>
+        <ion-input class='input-text' [(ngModel)]='password' type='password'></ion-input>
+      </ion-item><br />
 
-    <ion-button class="service-login-button" (click)="facebookSignin()" color="medium">
-      <img class="service-logo" src="./../../assets/pics/facebook.png" width="24px" height="24px"/>
-      Sign In With Facebook
-    </ion-button>
-  </div>
+      <button ion-button id="login-button" (click)='login()'>Log In</button>
+    </div>
+    <hr id="divider"/>
+
+    <div id="services-login" align="center">
+      <ion-button class="service-login-button" (click)="googleSignin()" color="light">
+        <img class="service-logo" src="./../../assets/pics/google.png" width="32px" height="32px"/>
+        Sign In With Google
+      </ion-button>
+
+      <ion-button class="service-login-button" (click)="facebookSignin()" color="light">
+        <img class="service-logo" src="./../../assets/pics/facebook.png" width="24px" height="24px"/>
+        Sign In With Facebook
+      </ion-button>
+    </div>
+  </main>
 
   <div id='signup-content' align='center'>
     <font>Don't Have an Account?</font><br />

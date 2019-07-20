@@ -10,12 +10,14 @@ import { CustomService } from './custom.service'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { LoadingService } from './loading.service'
 import { ConnectionService } from 'ng-connection-service'
+import { timer } from "rxjs/observable/timer"
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+  showSplash: Boolean = true
 
   constructor(
     private platform: Platform,
@@ -42,20 +44,24 @@ export class AppComponent {
   }
 
   initializeApp() {
+    this.splashScreen.hide()
     this.platform.ready().then(() => {
-      this.loading.present()
-      this.splashScreen.hide()
+      // this.loading.present()
+      console.log(this.showSplash)
       this.fireauth.auth.setPersistence('local')
 
-      this.router.navigateByUrl('/login')
-      this.determineHomepage()
-
-      // for testing
-      // this.router.navigateByUrl('/noInternet')
+      this.router.navigateByUrl('/')
+      // this.determineHomepage()
 
       this.connection.monitor().subscribe(isOnline => {
         console.log(navigator.onLine)
         this.determineHomepage()
+      })
+      
+      timer(3000).subscribe(() => {
+        console.log("3 sec")
+        this.showSplash = false
+        // this.router.navigateByUrl('/')
       })
     })
   }

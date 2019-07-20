@@ -1,15 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-back-button></ion-back-button>
-
-    <ion-title>Categories</ion-title>
-
-    <ion-buttons slot="end">
-      <ion-button id='add' (click)='pop($event)' small>
-        <ion-icon name='add'></ion-icon>
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
     </ion-buttons>
-
+    <ion-title>Categories</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -28,3 +22,14 @@
   </ion-list>
 
 </ion-content>
+
+<div align="center" class="add-category-container">
+  <ion-item lines="none" class="add-category">
+    <ion-input class="add-category-input" type="text" placeholder="Add new category" [(ngModel)]="newCategory"></ion-input>
+    <ion-buttons slot='end' (click)="addCategory()">
+      <ion-button id='save-category' small>
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+</div>

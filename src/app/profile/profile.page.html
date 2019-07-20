@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div id="profile-container">
+    <img src="{{profile.photoURL}}" height="75" width="75" id="profile-photo" />
+    <span id="profile-name">Hi {{profile.name}},</span>
+  </div>
+
+  <div id="body-container">
+    <ion-list lines="full">
+      <hr />
+      <ion-item (click)="categoriesPage()">
+        My Categories
+      </ion-item>
+      <ion-item>
+        <ion-label>Allow Shared Countdowns</ion-label>
+        <ion-toggle name="accept-shares?" [(ngModel)]="newProfile.accept_sharing"></ion-toggle>
+      </ion-item>
+      <hr />
+      <!-- Add Save button here -->
+      <ion-item (click)="logout()" color="danger" style="margin-top: 5px">
+        <ion-icon slot="end" name="log-out"></ion-icon>
+        <ion-label>Log Out</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+</ion-content>

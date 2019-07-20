@@ -26,7 +26,7 @@ export class AddCategoryComponent implements OnInit {
   ngOnInit() {
     this.uid = this.fireauth.auth.currentUser.uid
     this.ref = this.firestore.collection("users").doc(this.uid).ref
-    this.oldCategories = this.parse.categories
+    this.oldCategories = this.parse.user.categories
   }
 
   add() {

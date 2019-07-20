@@ -11,18 +11,17 @@ import { User } from './modals/user';
 })
 export class DataService {
 
-  public user : User// signed user
+  public user: User// signed user's profile
   public countDownId // for parsing from home and offline count down
-  public details_countdown // passing a count down form home page to details page
-  // public edit_id // for parsing from details page to editting page
+  public details_countdown: CountDown // passing a count down form home page to details page
   public email // email to login
   public password // to authenticate with email
-  public edit_countdown
-  public categories // categories of the user
+  public edit_countdown: CountDown
   public selectedCategory // category selected by the user
   public user_countdowns: Array<CountDown> // user's countdowns
   public user_notes = Array<Note>() // user's notes
-
+  public countdownToShare: CountDown
+  
   public temporaryCountDown = {
     datetime: '' // for parsing time from offline timer to details page
   }

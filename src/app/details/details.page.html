@@ -1,9 +1,3 @@
-<!--
-  Generated template for the DetailsPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-toolbar>
@@ -15,7 +9,7 @@
         <ion-icon name='trash'></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>CountIt</ion-title>
+    <ion-title>Countr</ion-title>
   </ion-toolbar>
 
 </ion-header>
@@ -25,23 +19,46 @@
   <h2 align='center'>
     {{countdown.title}} <ion-icon *ngIf="countdown.isRepeat" name="infinite"></ion-icon>
   </h2><br><br>
-
-  <div class="timer-finished" align="center" *ngIf="!(output.days || output.hours || output.minutes || output.seconds || output.mseconds)">
-    Finished
+  
+  <div align="center" [class.minus-timer]="minusTimer">
+    <div id="days-container" *ngIf="output.days">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.days}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Days</div>
+    </div>
+    <div id="hours-container" *ngIf="!(output.days) && output.hours">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.hours}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Hours</div>
+    </div>
+    <div id="minutes-container" *ngIf="!(output.days || output.hours) && output.minutes">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.minutes}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Minutes</div>
+    </div>
+    <div id="seconds-container" *ngIf="!(output.days || output.hours || output.minutes) && output.seconds">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.seconds}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Seconds</div>
+    </div>
   </div>
 
-  <div class='timer' align='center' *ngIf="output.days || output.hours || output.minutes || output.seconds || output.mseconds">
-    <span class="timer-digit" id="days" *ngIf="output.days">{{output.days}}D</span>
-      <!-- <span class="timer-descriptor" id="days-text" align="center">Days</span> -->
-    <span class="divider" *ngIf="output.days"> : </span>
-    <div class="timer-digit" id="hours" *ngIf="output.hours">{{output.hours}}h</div>
-    <span class="divider" *ngIf="output.hours"> : </span>
-    <span class="timer-digit" id="minutes" *ngIf="output.minutes">{{output.minutes}}m</span>
-    <span class="divider" *ngIf="output.hours"> : </span>
-    <span class="timer-digit" id="seconds">{{output.seconds}}.{{output.mseconds}}s</span>
-    <br />
-  </div>
-  <br><br>
+  <!-- <div align="center" *ngIf="minusTimer" class="minus-timer">
+    <div id="seconds-container" *ngIf="output.seconds">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.seconds}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Seconds</div>
+    </div>
+    <div id="minutes-container" *ngIf="output.minutes">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.minutes}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Minutes</div>
+    </div>
+    <div id="hours-container" *ngIf="()output.hours">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.hours}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Hours</div>
+    </div>
+    <div id="days-container" *ngIf="output.days">
+      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.days}}</div>
+      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Days</div>
+    </div>
+  </!-->
+
+  <br /><br />
 
   <div align='center' class='description'>
     <span *ngIf="countdown.description">
@@ -57,9 +74,12 @@
     </a>
   </div>
 
-  <div class="edit-container" align="center">
-    <ion-button id='edit' (click)='edit()' color="secondary">
+  <div id="countdown-button-container" align="center" *ngIf="countdown.owner == fireauth.auth.currentUser.uid">
+    <ion-button id='editButton' (click)='editPage()' color="secondary">
       Edit
+    </ion-button>
+    <ion-button id="shareButton" (click)="sharePage()" color="primary">
+      Share
     </ion-button>
   </div>
 

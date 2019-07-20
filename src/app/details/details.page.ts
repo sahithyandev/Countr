@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { DataService } from '../data.service'
 import { CountDown } from '../modals/countdown'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { CustomService } from '../custom.service'
 import { AngularFirestore, Query } from '@angular/fire/firestore'
 import * as moment from "moment"
 import { CountdownOutput } from '../modals/countdownOutput'
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-details',
@@ -14,12 +15,13 @@ import { CountdownOutput } from '../modals/countdownOutput'
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
+  isDesktop: Boolean
+  minusTimer: Boolean = false
 
 	timer
   stop_time
   countdown = {} as CountDown
   output = {} as CountdownOutput
-	// reminder = {}
 
 	uid
   // output // to output time and show it on the page
@@ -33,9 +35,13 @@ export class DetailsPage implements OnInit {
     public firestore: AngularFirestore,
     public fireauth: AngularFireAuth,
     public router: Router,
+    public route: ActivatedRoute,
+    public platform: Platform,
     public custom: CustomService,
     public parse: DataService
-  ) { }
+  ) {
+    this.isDesktop = this.platform.platforms().includes('desktop') || this.platform.platforms().includes('tablet')
+   }
 
   ngOnInit() {
     this.countdown = this.parse.details_countdown
@@ -65,48 +71,32 @@ export class DetailsPage implements OnInit {
           page.custom.syncWithFirestore(countdown)
           page.startCountdown()
         }
-        window.clearInterval(x)
-        // output = "Finished"
-        console.log("Stopped")
-      } else {
+        page.minusTimer = true
+      }
         var hours = Math.floor(distance / (1000 * 60 * 60))
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
         var seconds = Math.floor((distance % (1000 * 60)) / 1000)
-        var mseconds =  Math.floor(distance % 1000)
         // var mseconds = ('000' + Math.floor(distance % 1000)).substr(-3)
 
         output.days = ''
         output.hours = hours.toString().padStart(2, '0')
         output.minutes = minutes.toString().padStart(2, '0')
         output.seconds = seconds.toString().padStart(2, '0')
-        output.mseconds = mseconds.toString().padStart(3, '0')
 
-        // output = `${hours__}h : ${minutes__}m : ${seconds__}s` // Normal Syntax without milliseconds
-        // output = `${hours__}h : ${minutes__}m : ${seconds__}.${mseconds__}s` // Normal Syntax
-
-        if (hours >= 24) {
+        if (hours >= 24 || distance < -24 * 3600000) {
           var days = Math.floor(hours / 24)
 
-          output.days = days.toString()                
+          output.days = days.toString()
           output.hours = (hours - (days * 24)).toString().padStart(2, '0')
-
-          // output = `${days}D : ${hours__}h : ${minutes__}m : ${seconds__}s` // with Days Syntax without milliseconds
-          // output = `${days__}D:${hours__}h : ${minutes__}m : ${seconds__}.${mseconds__}s` // with Days Syntax
-
         } else {
-          if (hours <= 0) {
+          if (hours <= 0 && !(distance < -60 * 60 * 1000)) {
             output.hours = ''
-            // output = `${minutes__}m : ${seconds__}s` // without Hours Syntax without milliseconds
-            // output = `${minutes__}m : ${seconds__}.${mseconds__}s` // without Hours Syntax
 
-            if (minutes <= 0) {
-              output.hours = output.minutes = ''
-              // output = `${seconds__}s` // without Hours and Minutes Syntax without milliseconds
-              // output = `${seconds__}.${mseconds__}s` // without Hours and Minutes Syntax  
+            if (minutes <= 0 && !(distance < -60 * 1000)) {
+              output.minutes = ''
             }
           }
         }
-      }
 
       try {
         page.output = output
@@ -118,14 +108,6 @@ export class DetailsPage implements OnInit {
     }, 1)
   }
 
-  // finished() {
-  //   this.firebase.database.ref(`/users/${this.uid}/info/`).on('value', (data) => {
-  //     var result: object = data.toJSON();
-  //     console.log(result);
-  //     this.user_temp.push(result);
-  //   });
-  // }
-
   delete() {
     this.firestore.collection("countdowns").doc(this.countdown.id).delete().then(after => { 
       this.router.navigateByUrl('/home') 
@@ -135,8 +117,7 @@ export class DetailsPage implements OnInit {
     this.custom.toast('Deleted', 'top')
   }
 
-  edit() {
-    // this.parse.edit_id = this.reminder.id;
+  editPage() {
     this.parse.edit_countdown = this.countdown
     this.router.navigateByUrl('/edit')
   }
@@ -146,4 +127,8 @@ export class DetailsPage implements OnInit {
     this.router.navigateByUrl('/category-countdowns')
   }
 
+  sharePage() {
+    this.parse.countdownToShare = this.countdown
+    this.router.navigateByUrl('/share-countdown')
+  }
 }

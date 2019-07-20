@@ -9,10 +9,12 @@ const routes: Routes = [
   { path: 'edit', loadChildren: './edit/edit.module#EditPageModule' },
   { path: 'details', loadChildren: './details/details.module#DetailsPageModule' },
   { path: 'add', loadChildren: './add/add.module#AddPageModule' },
-  { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
   { path: 'feedback', loadChildren: './feedback/feedback.module#FeedbackPageModule' },
-  { path: 'noInternet', loadChildren: './no-internet/no-internet.module#NoInternetPageModule' },  { path: 'categories', loadChildren: './categories/categories.module#CategoriesPageModule' },
-  { path: 'category-countdowns', loadChildren: './category-countdowns/category-countdowns.module#CategoryCountdownsPageModule' }
+  { path: 'noInternet', loadChildren: './no-internet/no-internet.module#NoInternetPageModule' },
+  { path: 'categories', loadChildren: './categories/categories.module#CategoriesPageModule' },
+  { path: 'category-countdowns', loadChildren: './category-countdowns/category-countdowns.module#CategoryCountdownsPageModule' },
+  { path: 'share-countdown', loadChildren: './share-countdown/share-countdown.module#ShareCountdownPageModule' },
+  { path: 'profile', loadChildren: './profile/profile.module#ProfilePageModule' }
 
 ];
 

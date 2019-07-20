@@ -56,6 +56,8 @@ export class SignupPage implements OnInit {
 
   async create(): Promise<any> {
     var setemail = this.user.email
+    this.user.accept_sharing = true
+    this.user.photoURL = `https://via.placeholder.com/75?text=${this.user.name.slice(0, 1).toUpperCase()}`
     var setpassword = this.password
 
     try {

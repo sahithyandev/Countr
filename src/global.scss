@@ -9,11 +9,33 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+@import './splash.scss';
 
 @font-face {
 font-family: Oxygen Regular;
 // src: url("../src/assets/fonts/OpenSans-Regular.ttf");
 src: url("src/assets/fonts/Oxygen-Regular.ttf");
+}
+
+$desktop-breakpoint: 800px;
+
+.ion-color-aple {
+--ion-color-base: var(--ion-color-aple) !important;
+--ion-color-base-rgb: var(--ion-color-aple-rgb) !important;
+--ion-color-contrast: var(--ion-color-aple-contrast) !important;
+--ion-color-contrast-rgb: var(--ion-color-aple-contrast-rgb) !important;
+--ion-color-shade: var(--ion-color-aple-shade) !important;
+--ion-color-tint: var(--ion-color-aple-tint) !important;
+}
+
+@mixin desktop {
+    @media (min-width: #{$desktop-breakpoint}) {
+        @content;
+    }
+}
+
+body {
+    padding: 35px;
 }
 
 // changing the global elements
@@ -37,6 +59,11 @@ hr {
 ion-content {
   overflow: hidden;
   --overflow: hidden;
+  --ion-background-color: hsl(0, 0%, 99%); 
+}
+
+ion-toolbar {
+    --background: hsl(0, 0%, 99%);
 }
 
 .scroll-content {

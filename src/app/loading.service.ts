@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { Injectable } from '@angular/core'
+import { LoadingController } from '@ionic/angular'
 
 @Injectable({
   providedIn: "root"
 })
 export class LoadingService {
-  isLoading:boolean = false;
+  isLoading:boolean = false
   constructor(public loadingController: LoadingController) {}
 
   async present() {
@@ -17,12 +17,11 @@ export class LoadingService {
       })
       .then(a => {
         a.present().then(() => {
-          console.log("presented");
           if (!this.isLoading) {
-            a.dismiss().then(() => console.log("abort presenting"));
+            a.dismiss()
           }
-        });
-      });
+        })
+      })
   }
 
   async dismiss() {
@@ -30,7 +29,6 @@ export class LoadingService {
     return await this.loadingController
       .dismiss()
       .then(() => {
-        console.log("dismissed")
-      });
+      })
   }
 }

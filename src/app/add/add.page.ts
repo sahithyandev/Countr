@@ -21,10 +21,12 @@ export class AddPage implements OnInit {
   username: string
 
   newCountdown = {
+    id: "",
     title: "",
-    owner: "",
+    owner: this.parse.user.id,
     isStarred: false,
     isRepeat: false,
+    isFinished: false,
     description: "",
     category: "__default__",
     datetime: moment()
@@ -86,35 +88,19 @@ export class AddPage implements OnInit {
     }
   }
 
-  async findCountDownId() {
-    await this.firestore.collection("countdowns").ref.get().then(countDownList => {
-      let id = parseInt(countDownList.docs[countDownList.docs.length - 1].id) + 1
-      this.countDownId = id
-      console.log(this.countDownId)
-      // countDownList.forEach(countdown => {
-      //   console.log(countdown)
-      //   if (this.countDownId <= parseInt(countdown.id)) {
-      //     this.countDownId = parseInt(countdown.id) + 1
-      //   }
-      // })
-    })
-  }
-
   ngOnInit() {
-    this.categories = this.parse.categories
+    this.categories = this.parse.user.categories
     this.newCountdown.owner = this.fireauth.auth.currentUser.uid
     this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.newCountdown.owner)
     this.firestore.collection("users").doc(this.newCountdown.owner).ref.get().then(user => {
       this.username = user.get("name")
     })
-
-    this.findCountDownId()
   }
 
   saveItem() {
     console.log(this.newCountdown)
 
-    this.firestore.collection("countdowns").doc(this.countDownId + "").set({
+    this.firestore.collection("countdowns").add({
       title: this.newCountdown.title,
       datetime: this.newCountdown.datetime,
       description: this.newCountdown.description,
@@ -122,7 +108,7 @@ export class AddPage implements OnInit {
       category: this.newCountdown.category,
       isStarred: this.newCountdown.isStarred,
       isRepeat: this.newCountdown.isRepeat
-    }).then(date => {
+    } as CountDown).then(date => {
       console.log("added successfully")
     })
 

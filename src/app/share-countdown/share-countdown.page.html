@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Share</ion-title>
+    <ion-buttons slot="end">
+       <ion-button (click)="share()">
+        <ion-icon name="share" mode="md"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="search-container">
+    <ion-searchbar placeholder="Select users" (ionChange)="onSearchChange($event)" [debounce]="10"></ion-searchbar>
+  </div>
+
+  <div id="user-container">
+    <ion-item *ngFor="let user of showList">
+      <!-- <img src="{{user.photoURL}}" width="10" height="10" alt="{{user.name}}"> -->
+      {{ user.name }}
+      <ion-checkbox *ngIf="!toShareList.includes(user)" (click)="selectUser(user, $event)" name="{{user.email}}" slot="end"></ion-checkbox>
+      <ion-checkbox *ngIf="toShareList.includes(user)" (click)="selectUser(user, $event)" name="{{user.email}}" slot="end" checked></ion-checkbox>
+    </ion-item>
+  </div>
+
+</ion-content>

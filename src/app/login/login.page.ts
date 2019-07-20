@@ -7,6 +7,9 @@ import { AlertController, LoadingController, Platform } from '@ionic/angular'
 import { LoadingService } from '../loading.service'
 import { DataService } from '../data.service'
 import { auth } from 'firebase'
+import { AngularFirestore } from '@angular/fire/firestore';
+import { User } from '../modals/user';
+import { userInfo } from 'os';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +25,7 @@ export class LoginPage implements OnInit {
     public platform: Platform,
     public storage: Storage,
     public fireauth: AngularFireAuth,
+    public firestore: AngularFirestore,
     public alertCtrl: AlertController,
     public loadCtrl: LoadingController,
     public router: Router,
@@ -47,18 +51,26 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.loading.dismiss()
     this.fireauth.auth.onAuthStateChanged(user => {
-      console.log(user)
+      // this.loading.present()
+      console.log("auth:changed")
 
       if (user) {
-        this.fireauth.auth.updateCurrentUser(user)
         this.router.navigateByUrl('/home')
+        console.log("auth:exists")
+      } else {
+        console.error("auth:notExists so home:notTriggered")
       }
     })
 
     this.fireauth.auth.getRedirectResult().then(user => {
-      console.log(user)
+      if (this.fireauth.auth.currentUser) {
+        if (user.additionalUserInfo.isNewUser) {
+          this.saveUserToFirebase(user, 'redirect')
+        }
+        this.custom.updateUser(user)
+      }
     }).catch(e => {
-      console.error(e)
+      console.log(typeof e)
     })
   }
 
@@ -81,11 +93,15 @@ export class LoginPage implements OnInit {
   }
 
   googleSignin() {
-    this.fireauth.auth.signInWithRedirect(new auth.GoogleAuthProvider())
+    let provider = new auth.GoogleAuthProvider()
+    if (this.platform.is("cordova")) this.fireauth.auth.signInWithRedirect(provider)
+    else this.fireauth.auth.signInWithPopup(provider).then(result => { this.saveUserToFirebase(result, 'pop') })
   }
 
   facebookSignin() {
-    this.fireauth.auth.signInWithRedirect(new auth.FacebookAuthProvider())
+    let provider = new auth.FacebookAuthProvider()
+    if (this.platform.is("cordova")) this.fireauth.auth.signInWithRedirect(provider)
+    else this.fireauth.auth.signInWithPopup(provider).then(result => { this.saveUserToFirebase(result, 'pop') })
   }
 
   login() {
@@ -131,6 +147,19 @@ export class LoginPage implements OnInit {
       this.fireauth.auth.sendPasswordResetEmail(this.email)
     } else {
       this.custom.alert_dismiss('Email Not Found', 'Enter your Email and Try again')
+    }
+  }
+
+  saveUserToFirebase(creds: auth.UserCredential, from: String)  {
+    console.log(creds)
+
+    if ((from == 'pop' && creds.additionalUserInfo.isNewUser) || from == 'redirect') {
+      this.firestore.collection("users").doc(creds.user.uid).set({
+        name: creds.user.displayName,
+        email: creds.user.email,
+        photoURL: creds.user.photoURL,
+        accept_sharing: true
+      } as User)
     }
   }
 }

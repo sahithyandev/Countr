@@ -31,10 +31,10 @@ export class PopComponent implements OnInit {
     })
   }
 
-  settings() {
-    this.router.navigateByUrl('/settings');
-    this.popCtrl.dismiss();
-  }
+  // settings() {
+  //   this.router.navigateByUrl('/settings');
+  //   this.popCtrl.dismiss();
+  // }
 
   feedback() {
     this.popCtrl.dismiss().then(() => {

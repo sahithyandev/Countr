@@ -1,11 +1,12 @@
 export interface CountDown {
-  id
+  id?
   title: string
   description: string
   datetime
   isFinished: boolean
   owner
-  category
+  category: String
   isStarred: boolean // starred or not
   isRepeat: boolean // repeat or not
+  sharedWith?: Array<String>
 }

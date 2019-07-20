@@ -4,8 +4,10 @@ import { AngularFireAuth } from '@angular/fire/auth'
 import { Storage } from "@ionic/storage"
 import { Router } from '@angular/router'
 import { LoadingService } from './loading.service'
-import { AngularFirestore } from '@angular/fire/firestore';
-import { CountDown } from './modals/countdown';
+import { AngularFirestore } from '@angular/fire/firestore'
+import { CountDown } from './modals/countdown'
+import { auth } from 'firebase'
+import { User } from './modals/user';
 
 @Injectable({
   providedIn: "root"
@@ -17,13 +19,13 @@ export class CustomService {
   
   constructor(
     public alertCtrl: AlertController,
-    public toastCtrl: ToastController,
-    public fireauth: AngularFireAuth,
-    public firestore: AngularFirestore,
-    public storage: Storage,
-    public loading: LoadingService,
-    public loadCtrl: LoadingController,
-    public router: Router
+    private toastCtrl: ToastController,
+    private fireauth: AngularFireAuth,
+    private firestore: AngularFirestore,
+    private storage: Storage,
+    private loading: LoadingService,
+    private loadCtrl: LoadingController,
+    private router: Router
   ) {}
   
     async presentLoading() {
@@ -85,12 +87,10 @@ export class CustomService {
   }
   
   removeItem(array, item) {
-    let type = typeof(item)
     let outputArray = array
     outputArray = []
 
     for (let obj of array) {
-      console.log(obj)
       if (obj != item) { outputArray.push(obj) }
     }
 
@@ -105,7 +105,7 @@ export class CustomService {
     }
   }
 
-  syncWithFirestore(countdown: CountDown) {
+  private syncWithFirestore(countdown: CountDown) {
     let obj = {
       title: countdown.title,
       datetime: countdown.datetime,
@@ -120,6 +120,13 @@ export class CustomService {
       return "success"
     }).catch(e => {
       return e
+    })
+  }
+
+  public updateUser(user: auth.UserCredential) {
+    this.firestore.collection("users").doc(user.user.uid).update({
+      name: user.user.displayName,
+      email: user.user.email
     })
   }
 }

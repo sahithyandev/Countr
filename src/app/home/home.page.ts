@@ -5,12 +5,14 @@ import { CustomService } from '../custom.service'
 import { Router } from '@angular/router'
 import { DataService } from '../data.service'
 import { Storage } from "@ionic/storage"
-import { ToastController, PopoverController, Platform, AlertController } from '@ionic/angular'
-import { PopComponent } from '../pop/pop.component'
+import { ToastController, PopoverController, Platform, AlertController, NavController } from '@ionic/angular'
 import { LoadingService } from '../loading.service'
 import { CountDown } from '../modals/countdown'
 import { Note } from '../modals/note'
 import * as moment from 'moment'
+
+import * as firebase from 'firebase'
+import { User } from '../modals/user'
 // import {  } from "@ionic-native/local-notifications"
 
 @Component({
@@ -19,7 +21,9 @@ import * as moment from 'moment'
   styleUrls: ["./home.page.scss"]
 })
 export class HomePage implements OnInit {
-  uid
+  profile = {
+    id: this.fireauth.auth.currentUser.uid
+  } as User
   countdowns  = Array<CountDown>()
   notes = Array<Note>()
 
@@ -31,62 +35,64 @@ export class HomePage implements OnInit {
   } as Note
 
   constructor(
-    public firestore: AngularFirestore,
-    public platform: Platform,
-    public fireauth: AngularFireAuth,
+    private platform: Platform,
+    private router: Router,
+    private firestore: AngularFirestore,
+    private fireauth: AngularFireAuth,
     public custom: CustomService,
     public data: DataService,
-    public router: Router,
     public parse: DataService,
-    public toastCtrl: ToastController,
     public loading: LoadingService,
+    public toastCtrl: ToastController,
     public popCtrl: PopoverController,
-    public storage: Storage,
     public alertCtrl: AlertController
   ) { }
 
   ionViewWillEnter() {
     this.getCountdowns()
     this.getNotes()
-    this.getCategories() }
+    this.getUserData()
+  }
+
+  async getUserData() {
+    await this.firestore.collection("users").doc(this.profile.id).ref.get().then(snap => {
+      this.profile.name = snap.get('name')
+      this.profile.email = this.fireauth.auth.currentUser.email
+      this.profile.accept_sharing = snap.get('accept_shares')
+      this.profile.photoURL = snap.get('photoURL')
+      this.profile.categories = snap.get('categories')
+    })
+    this.parse.user = this.profile
+  }
 
   ngOnInit() {
-    this.uid = this.fireauth.auth.currentUser.uid
-    this.newNote.owner = this.uid
-    this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.uid).orderBy("datetime")
-    this.notesRef = this.firestore.collection("notes").ref.where("owner", "==", this.uid).orderBy("addedTime")
+    console.log(this.platform.platforms())
+    this.newNote.owner = this.profile.id
+    this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.profile.id).orderBy("datetime")
+    this.notesRef = this.firestore.collection("notes").ref.where("owner", "==", this.profile.id).orderBy("addedTime")
 
     this.loading.dismiss()
   }
 
-  async getCategories() {
-    this.firestore.collection("users").doc(this.uid).ref.get().then(snapshot => {
-      this.parse.categories = snapshot.get("categories")
-    }).catch(e => {
-      console.log("Error " + e) 
-    })
-  }
-
   async getCountdowns() {
     this.countdownRef.onSnapshot(snapshot => {
-      snapshot.forEach(doc => {
-        this.countdowns = this.parse.user_countdowns = this.custom.snapToArray(snapshot)
-      })
+      this.countdowns = this.parse.user_countdowns = this.custom.snapToArray(snapshot)
       this.sortCountdowns()
-      // find if finished
-      this.countdowns.forEach(countdown => {
-        if (countdown.datetime < moment().format()) {
-          countdown.isFinished = true
-        }
+    })
+
+    this.firestore.collection("countdowns").ref.where("sharedWith", "array-contains", this.profile.id).onSnapshot(snapshot => {
+      let countdowns = this.custom.snapToArray(snapshot)
+      countdowns.forEach(c => {
+        this.countdowns.push(c)
       })
+
+      this.sortCountdowns()
     })
   }
 
   async getNotes() {
     this.notesRef.onSnapshot(snapshot => { // using get() slow downs for about ~300ms
-      snapshot.forEach(doc => {
-        this.notes = this.parse.user_notes = this.custom.snapToArray(snapshot)
-      })
+      this.notes = this.parse.user_notes = this.custom.snapToArray(snapshot)
       this.sortNotes()
     })
   }
@@ -114,14 +120,9 @@ export class HomePage implements OnInit {
     this.router.navigateByUrl('/add')
   }
 
-  async details(countDownId) {
-    this.parse.countDownId = countDownId
-    for (let countdown of this.parse.user_countdowns) {
-      if (countdown.id == countDownId) {
-        console.log("Count down found")
-        this.parse.details_countdown = countdown
-      }
-    }
+  async detailsPage(countdown: CountDown) {
+    this.parse.details_countdown = countdown
+
     await this.router.navigate(['/details'])
   }
 
@@ -145,6 +146,12 @@ export class HomePage implements OnInit {
 
   sortCountdowns() {
     if (this.parse.user_countdowns.length > 0) this.parse.user_countdowns.sort((a, b) => (a.isStarred && !(b.isStarred) ? -1 : 1))
+
+    this.countdowns.forEach(countdown => {
+      if (countdown.datetime < moment().format()) {
+        countdown.isFinished = true
+      }
+    })
   }
 
   sortNotes() {
@@ -154,15 +161,24 @@ export class HomePage implements OnInit {
   logout() {
     this.fireauth.auth.signOut()
     this.popCtrl.dismiss()
-    this.storage.remove('loggedInfo')
     this.router.navigateByUrl('/login')
     this.custom.toast("Successfully Logged Out!", "top")
   }
 
-  deleteCountdown(countDownId) {
-    this.firestore.collection("countdowns").doc(countDownId).delete().then(() => {
-      this.custom.toast("Countdown Deleted", "top")
-    })
+  deleteCountdown(countdown: CountDown) {
+    if (countdown.owner == this.profile.id) {
+      this.firestore.collection("countdowns").doc(countdown.id).delete().then(() => {
+        this.custom.toast("Countdown Deleted", "top")
+      })
+    } else {
+      this.firestore.collection("countdowns").doc(countdown.id).update({
+        sharedWith: firebase.firestore.FieldValue.arrayRemove(this.profile.id)
+      }).then(() => {
+        this.custom.toast("Shared Countdown Removed", "top")
+      }).catch(e => {
+        console.log(e)
+      })
+    }
   }
 
   deleteNote(note: Note) {
@@ -173,19 +189,28 @@ export class HomePage implements OnInit {
     })
   }
 
-  async pop2(poper) {
-    return await poper.present()
+  // async pop2(poper) {
+  //   return await poper.present()
+  // }
+
+  // pop(pop_event) {
+  //   const popover = this.popCtrl
+  //     .create({
+  //       component: PopComponent,
+  //       mode: 'ios',
+  //       event: pop_event
+  //     })
+  //     .then(output => {
+  //       this.pop2(output)
+  //     });
+  // }
+
+  profilePage() {
+    this.router.navigateByUrl('/profile')
   }
 
-  pop(pop_event) {
-    const popover = this.popCtrl
-      .create({
-        component: PopComponent,
-        mode: 'ios',
-        event: pop_event
-      })
-      .then(output => {
-        this.pop2(output)
-      });
+  swipeEventHandler(e) {
+    console.log(e)
   }
+
 }

@@ -1,8 +1,8 @@
 {
-  "name": "CountIt",
+  "name": "Countr",
   "integrations": {
     "cordova": {}
   },
   "type": "angular",
-  "id": "68301b0f"
+  "id": "b11ea398"
 }

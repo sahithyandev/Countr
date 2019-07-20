@@ -1,8 +1,8 @@
-import { Category } from "./category";
-
 export interface User {
+  id?,
   name: string
   email: string
-  categories: Array<Category>
-  getEmailNotifications: boolean
+  categories?: Array<String>
+  photoURL?: String
+  accept_sharing: Boolean
 }
