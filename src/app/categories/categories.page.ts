@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core'
-import { AngularFirestore } from '@angular/fire/firestore'
-import { AngularFireAuth } from '@angular/fire/auth'
+// import { AngularFirestore } from '@angular/fire/firestore'
+// import { AngularFireAuth } from '@angular/fire/auth'
 import { AddCategoryComponent } from '../add-category/add-category.component'
 import { PopoverController, AlertController } from '@ionic/angular'
 import { DataService } from '../data.service'
 import { Router } from '@angular/router'
 import { CustomService } from '../custom.service'
-import { CountDown } from '../modals/countdown'
+import { Countdown } from '../modals/countdown'
 import * as firebase from 'firebase'
 
 @Component({
@@ -20,8 +20,6 @@ export class CategoriesPage implements OnInit {
   newCategory: String 
 
   constructor(
-    public firestore: AngularFirestore,
-    public fireauth: AngularFireAuth,
     public router: Router,
     public parse: DataService,
     public alertCtrl: AlertController,
@@ -29,12 +27,12 @@ export class CategoriesPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.uid = this.fireauth.auth.currentUser.uid
+    // this.uid = this.fireauth.auth.currentUser.uid
 
-    this.firestore.collection("users").doc(this.uid).ref.onSnapshot(snapshot => {
-      this.categories = this.parse.user.categories = snapshot.get("categories")
-      console.log(this.categories)
-    }, e => { console.log("Error " + e) })
+    // this.firestore.collection("users").doc(this.uid).ref.onSnapshot(snapshot => {
+    //   this.categories = this.parse.user.categories = snapshot.get("categories")
+    //   console.log(this.categories)
+    // }, e => { console.log("Error " + e) })
   }
 
   goCategoryPage(category) {
@@ -51,13 +49,13 @@ export class CategoriesPage implements OnInit {
 
       if (verified) {
 
-        let countdownlist: Array<CountDown> = this.parse.user_countdowns
+        let countdownlist: Array<Countdown> = this.parse.countdowns
 
         for (let countdown of countdownlist) {
           if (countdown.category == item) {
-            this.firestore.collection("countdowns").doc(countdown.id).update({
-              category: "__default__"
-            })
+            // this.firestore.collection("countdowns").doc(countdown.id).update({
+            //   category: "__default__"
+            // })
           }
         }
       } else {
@@ -72,13 +70,13 @@ export class CategoriesPage implements OnInit {
     newArray = this.categories = this.parse.user.categories = this.custom.removeItem(this.categories, item)
     console.log(newArray)
 
-    this.firestore.collection("users").doc(this.uid).update({
-      categories: newArray
-    })
+    // this.firestore.collection("users").doc(this.uid).update({
+    //   categories: newArray
+    // })
   }
 
   checkCategory(item): boolean {
-    let countdownlist: Array<CountDown> = this.parse.user_countdowns
+    let countdownlist: Array<Countdown> = this.parse.countdowns
 
     for (let countdown of countdownlist) {
       if (countdown.category == item) return false
@@ -125,12 +123,12 @@ export class CategoriesPage implements OnInit {
 
   addCategory() {
     // update firestore
-    this.firestore.collection("users").doc(this.uid).ref.update({
-      categories: firebase.firestore.FieldValue.arrayUnion(this.newCategory)
-    }).then(() => {this.newCategory = ""}).catch(e => {
-      console.log(e)
-      this.custom.toast("Category not added", "top")
-    })
+    // this.firestore.collection("users").doc(this.uid).ref.update({
+    //   categories: firebase.firestore.FieldValue.arrayUnion(this.newCategory)
+    // }).then(() => {this.newCategory = ""}).catch(e => {
+    //   console.log(e)
+    //   this.custom.toast("Category not added", "top")
+    // })
     
   }
 }

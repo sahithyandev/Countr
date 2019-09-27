@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core'
 import { AlertController, ToastController, LoadingController } from '@ionic/angular'
-import { AngularFireAuth } from '@angular/fire/auth'
 import { Storage } from "@ionic/storage"
 import { Router } from '@angular/router'
 import { LoadingService } from './loading.service'
-import { AngularFirestore } from '@angular/fire/firestore'
-import { CountDown } from './modals/countdown'
+import { Countdown } from './modals/countdown'
 import { auth } from 'firebase'
-import { User } from './modals/user';
+import { User } from './modals/user'
+import { isComponentInstance } from '@angular/core/src/render3/context_discovery'
 
 @Injectable({
   providedIn: "root"
@@ -20,8 +19,6 @@ export class CustomService {
   constructor(
     public alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private fireauth: AngularFireAuth,
-    private firestore: AngularFirestore,
     private storage: Storage,
     private loading: LoadingService,
     private loadCtrl: LoadingController,
@@ -103,30 +100,5 @@ export class CustomService {
       this.alert_dismiss("Info", "This countdown will be repeated every years")
       this.isInfoShown = true
     }
-  }
-
-  private syncWithFirestore(countdown: CountDown) {
-    let obj = {
-      title: countdown.title,
-      datetime: countdown.datetime,
-      isStarred: countdown.isStarred,
-      category: countdown.category,
-      description: countdown.description,
-      isRepeat: countdown.isRepeat,
-      owner: countdown.owner
-    }
-    
-    this.firestore.collection("countdowns").doc(countdown.id).update(obj).then(() => {
-      return "success"
-    }).catch(e => {
-      return e
-    })
-  }
-
-  public updateUser(user: auth.UserCredential) {
-    this.firestore.collection("users").doc(user.user.uid).update({
-      name: user.user.displayName,
-      email: user.user.email
-    })
   }
 }

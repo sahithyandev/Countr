@@ -9,10 +9,19 @@ import { HomePage } from './home.page'
 
 const routes: Routes = [
   {
+    path: 'home',
+    component: HomePage,
+    children: [
+        { path: 'countdowns', loadChildren: './countdowns/countdowns.module#CountdownsPageModule' },
+        { path: 'notes', loadChildren: './notes/notes.module#NotesPageModule' },
+      ]
+  },
+  {
     path: '',
-    component: HomePage
+    redirectTo: 'home/countdowns',
+    pathMatch: 'full'
   }
-];
+]
 
 @NgModule({
   imports: [

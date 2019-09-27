@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from "../modals/user";
+import { Component, OnInit } from '@angular/core'
+import { User } from "../modals/user"
 
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { CustomService } from '../custom.service';
-import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
-import { DataService } from '../data.service';
+import { CustomService } from '../custom.service'
+import { Router } from '@angular/router'
+import { Platform } from '@ionic/angular'
+import { DataService } from '../data.service'
 
 @Component({
   selector: "app-signup",
@@ -20,8 +18,6 @@ export class SignupPage implements OnInit {
 
   constructor(
     public platform: Platform,
-    public fireauth: AngularFireAuth,
-    public firestore: AngularFirestore,
     public router: Router,
     public parse: DataService,
     public custom: CustomService
@@ -35,10 +31,6 @@ export class SignupPage implements OnInit {
   }
 
   ngOnInit() {
-    if ("desktop" == this.platform.platforms()[0]) { // if the platform is desktop, so we have to add 'enter' key recognition
-      document.body.addEventListener("keyup", this.listener)
-      console.log("sign in page listener added")
-    }
   }
 
   check() {
@@ -49,50 +41,48 @@ export class SignupPage implements OnInit {
         this.custom.alert_dismiss("Passwords are not Same", "Re-Check them")
       } else {
         this.user.email.toLowerCase()
-        this.create()
+        // this.create()
       }
     }
   }
 
-  async create(): Promise<any> {
-    var setemail = this.user.email
-    this.user.accept_sharing = true
-    this.user.photoURL = `https://via.placeholder.com/75?text=${this.user.name.slice(0, 1).toUpperCase()}`
-    var setpassword = this.password
+  // async create(): Promise<any> {
+  //   var setemail = this.user.email
+  //   var setpassword = this.password
 
-    try {
-      const result = await this.fireauth.auth
-        .createUserWithEmailAndPassword(setemail, setpassword)
-        .then(newUser => {
-          this.firestore.collection("users").doc(newUser.user.uid).set(this.user);
-        });
-      this.custom.email = this.user.email
-      this.custom.password = this.password
+  //   try {
+  //     const result = await this.fireauth.auth
+  //       .createUserWithEmailAndPassword(setemail, setpassword)
+  //       .then(newUser => {
+  //         this.firestore.collection("users").doc(newUser.user.uid).set(this.user);
+  //       });
+  //     this.custom.email = this.user.email
+  //     this.custom.password = this.password
 
-      this.custom.alert_dismiss(
-        "Successfully Registered",
-        "Add your Count Downs now.."
-      );
+  //     this.custom.alert_dismiss(
+  //       "Successfully Registered",
+  //       "Add your Count Downs now.."
+  //     );
 
-      this.custom.alertCtrl.dismiss()
+  //     this.custom.alertCtrl.dismiss()
 
-    } catch (e) {
-      if (e.code == "auth/weak-password") {
-        this.custom.alert_dismiss(
-          "Weak Password",
-          "Try a different password.<br>This password is <b>Weak</b>"
-        )
-      }
-      else if (e.code == "auth/email-already-in-use") {
-        this.custom.alert_dismiss(
-          "Already Registered",
-          "Log In instead of Sign Up"
-        );
-      } else {
-        console.log(e.code)
-      }
-    }
-  }
+  //   } catch (e) {
+  //     if (e.code == "auth/weak-password") {
+  //       this.custom.alert_dismiss(
+  //         "Weak Password",
+  //         "Try a different password.<br>This password is <b>Weak</b>"
+  //       )
+  //     }
+  //     else if (e.code == "auth/email-already-in-use") {
+  //       this.custom.alert_dismiss(
+  //         "Already Registered",
+  //         "Log In instead of Sign Up"
+  //       );
+  //     } else {
+  //       console.log(e.code)
+  //     }
+  //   }
+  // }
 
   login() {
     if (this.platform.platforms()[0] == "desktop") {

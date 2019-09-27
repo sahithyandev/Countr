@@ -4,10 +4,10 @@ $header-height: 5vw;
 $desktop-breakpoint: 800px;
 $sidebar-width: 48px;
 
-@font-face {
-    font-family: OpenSans Regular;
-    src: url("src/assets/fonts/OpenSans-Regular.ttf");
-}
+// @font-face {
+//     font-family: OpenSans Regular;
+//     src: url("src/assets/fonts/OpenSans-Regular.ttf");
+// }
 
 #logout-button-home {
     font-size: 16px;
@@ -49,39 +49,12 @@ $sidebar-width: 48px;
 //     margin-top: 5px;
 //     margin-bottom: 5px;
 // }
-
-.add-notes-container {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    // right: 0; left: 0;
-    margin: 0; padding: 0;
-    padding-bottom: 15px;
-
-    .add-notes {
-        width: 100%;
-        padding-top: .5vh;
-        background-color: rgb(146, 243, 89);
-
-        @include desktop {
-            padding: .5vh;
-            width: 50vw;
-        }
-    }
-}
    
 #header {
-    @include desktop {
-        width: 100%;
-        height: $header-height;
-        position: fixed;
-        top: 0;
-        background-color: aqua;
-    }
 
     span#title {
         
         font-size: 44px;
-        font-family: "OpenSans Regular" !important;
+        font-family: "OpenSans" !important;
     }
 }

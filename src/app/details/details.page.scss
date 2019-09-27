@@ -8,7 +8,7 @@ $background-color: hsl(0, 0%, 99%); // 2 refs
 
 ion-content {
     // --ion-background-color: -webkit-linear-gradient(-45deg,#cc13441F, #12cb9a3F) !important;
-    --ion-background-color: hsl(0, 0%, 99%); 
+    --ion-background-color: hsl(0, 0%, 99%);
 }
 
 ion-toolbar {
@@ -26,8 +26,79 @@ ion-title {
     text-align: center;
 }
 
-.description {
+#tools {
+    $border-radius: 12px;
+    display: grid;
+    position: absolute;
+    border-radius: $border-radius;
+    border: 1px solid rgb(26, 23, 23);
+    // right: 4vw;
+    // top: 4vw;
+    margin: 1vh 5vw;
+    // padding: 1vh 0;
+    grid-template-columns: 50%;
+    bottom: 2vh;
+    right: 0;
+    left: 0;
+    height: 5vh;
+
+    #edit {
+        grid-column: 1;
+        background-color: rgb(55, 238, 147);
+        // background-color: rgba(0, 0, 0, 0.404);
+        border-top-left-radius: $border-radius;
+        border-bottom-left-radius: $border-radius;
+    }
+
+    #delete {
+        border-top-right-radius: $border-radius;
+        border-bottom-right-radius: $border-radius;
+        background: #f53d3d;
+    }
+
+    .tool {
+        grid-row: 1;
+        padding: 1vh 0;
+        width: 100%;
+        height: inherit;
+    }
+}
+
+#description {
     white-space: pre-line;
+    background-color: rgb(204, 253, 228);
+
+    height: 28vh;
+    margin: 0 5vw;
+    padding: 2vh 0;
+    border: 1px solid black;
+    border-radius: 15px;
+
+    ion-slides {
+        height: 100%;
+
+        ion-slide {
+            display: block;
+
+            span {
+                display: block;
+            }
+
+            .title-text {
+                font-size: 1em;
+            }
+
+            .important-text {
+                margin-top: 8px;
+                font-size: 1.2em;
+                font-weight: 600;
+            }
+
+            #category {
+                font-size: 2em;
+            }
+        }
+    }
 }
 
 .minus-timer {
@@ -40,21 +111,12 @@ ion-title {
 }
 
 .timer-digit {
-    font-size: 30.0vw; // fluid font size // change this ! Its too big in desktop view.
+    font-size: 40.0vw; // fluid font size // change this ! Its too big in desktop view.
     display: inline-block;
     // font-size: 50px;
     // font-size: $timer-font-size;
     // background-color: brown;
-    font-family: "Oxygen Mono", monospace !important;
-}
-
-.timer-digit-desktop {
-    font-size: 10.0vw; // fluid font size // change this ! Its too big in desktop view.
-    display: inline-block;
-    // font-size: 50px;
-    // font-size: $timer-font-size;
-    // background-color: brown;
-    font-family: "Oxygen Mono", monospace !important;
+    // font-family: "Open Mono", monospace !important;
 }
 
 .timer-descriptor {
@@ -95,7 +157,7 @@ ion-title {
     color: rgb(247, 247, 247);
 }
 
-#editButton, #shareButton {
+#editButton {
     width: 80%;
     position: relative;
     right: 0;

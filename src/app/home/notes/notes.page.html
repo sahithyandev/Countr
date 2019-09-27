@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Notes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div align="center" class="add-notes-container">
+    <ion-item lines="none" class="add-notes">
+      <ion-input class="add-notes-input" type="text" placeholder="Add a note" [(ngModel)]="newNote.text"></ion-input>
+      <ion-buttons slot='end' (click)="saveNote()">
+        <ion-button id='save-note' small>
+          <ion-icon name="checkmark"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let note of parse.notes" lines="full">
+      <ion-buttons (click)="starNote(note)" slot="start">
+        <ion-button id="star" color="dark" small>
+          <ion-icon *ngIf="note.isStarred" mode="ios" name="star"></ion-icon>
+          <ion-icon *ngIf="!(note.isStarred)" mode="ios" name="star-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+  
+      {{note.text}}
+  
+      <ion-buttons slot='end'>
+        <ion-button (click)='deleteNote(note);$event.stopPropagation()' id='delete' color='danger' small>
+          <ion-icon name='trash'></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

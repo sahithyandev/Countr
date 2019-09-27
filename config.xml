@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="4" id="app.sahithyan.countr" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="5" id="app.sahithyan.countr" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Countr</name>
-    <description>A Cloud based (Countdown + Todo) app.</description>
+    <description>A "Countdowns focused" reminder app.</description>
     <author email="sahithyan2701@gmail" href="sahithyan2701@gmail.com">Sahithyan</author>
     <content src="index.html" />
     <access origin="*" />
@@ -14,7 +14,7 @@
     <preference name="orientation" value="portrait" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="21" />
-    <preference name="android-targetSdkVersion" value="21" />
+    <preference name="android-targetSdkVersion" value="28" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="false" />

@@ -5,9 +5,7 @@ export const sendMail = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         
         const emailjs = require('emailjs/email')
-        
         const feedback = request.body
-        
         const server = emailjs.server.connect({
             user: "feed.sahithyan@gmail.com",
             password: "SahithyanSupport",

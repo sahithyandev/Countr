@@ -7,7 +7,6 @@ import { DataService } from './data.service'
 import { Router } from '@angular/router'
 import { Storage } from "@ionic/storage"
 import { CustomService } from './custom.service'
-import { AngularFireAuth } from '@angular/fire/auth'
 import { LoadingService } from './loading.service'
 import { ConnectionService } from 'ng-connection-service'
 import { timer } from "rxjs/observable/timer"
@@ -17,14 +16,13 @@ import { timer } from "rxjs/observable/timer"
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-  showSplash: Boolean = true
+  showSplash: Boolean = false
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusbar: StatusBar,
     public router: Router,
-    public fireauth: AngularFireAuth,
     public storage: Storage,
     public loading: LoadingService,
     public connection: ConnectionService,
@@ -35,34 +33,20 @@ export class AppComponent {
     this.initializeApp()
   }
 
-  determineHomepage() {
-    if (navigator.onLine) {
-      this.router.navigateByUrl('/login')
-    } else {
-      this.router.navigateByUrl('/noInternet')
-    }
-  }
-
   initializeApp() {
     this.splashScreen.hide()
     this.platform.ready().then(() => {
+      console.log(this.storage.get('firstRun'))
       // this.loading.present()
       console.log(this.showSplash)
-      this.fireauth.auth.setPersistence('local')
 
-      this.router.navigateByUrl('/')
-      // this.determineHomepage()
-
-      this.connection.monitor().subscribe(isOnline => {
-        console.log(navigator.onLine)
-        this.determineHomepage()
-      })
+      this.router.navigateByUrl('/intro')
       
-      timer(3000).subscribe(() => {
-        console.log("3 sec")
-        this.showSplash = false
-        // this.router.navigateByUrl('/')
-      })
+      // timer(3000).subscribe(() => {
+      //   console.log("3 sec")
+      //   this.showSplash = false
+      //   // this.router.navigateByUrl('/')
+      // })
     })
   }
 }

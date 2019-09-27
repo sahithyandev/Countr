@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Log In</ion-title>
+    <ion-title>Countr</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
   <h1 align='center' class='h-title'>
-    <font id='special-header'>Countr</font>
+    <font id='special-header'>Login</font>
   </h1>
 
   <main>
@@ -26,12 +26,12 @@
     <hr id="divider"/>
 
     <div id="services-login" align="center">
-      <ion-button class="service-login-button" (click)="googleSignin()" color="light">
+      <ion-button class="service-login-button" (click)="serviceLogin('google')" color="light" mode="ios">
         <img class="service-logo" src="./../../assets/pics/google.png" width="32px" height="32px"/>
         Sign In With Google
       </ion-button>
 
-      <ion-button class="service-login-button" (click)="facebookSignin()" color="light">
+      <ion-button class="service-login-button" (click)="serviceLogin('facebook')" color="light" mode="ios">
         <img class="service-logo" src="./../../assets/pics/facebook.png" width="24px" height="24px"/>
         Sign In With Facebook
       </ion-button>

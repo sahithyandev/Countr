@@ -1,0 +1,41 @@
+ion-slides {
+    height: 100vh;
+    width: 100vw;
+
+    ion-slide {
+        background-color: rgb(255, 255, 255);
+        // color: rgb(54, 114, 243);
+        display: flex;
+        align-content: center;
+        justify-content: center;
+
+        div#text-container {
+            grid-row: 2;
+            width: 80%;
+            display: block;
+
+            h2 {
+                margin-top: 20px;
+            }
+
+            img#logo {
+                $width: 200px;
+                width: $width;
+                height: $width;
+            }
+        }
+
+        .button {
+            cursor: pointer;
+        }
+
+        .button#get-started {
+            border-radius: 15px;
+            background-color: #FF7098;
+            border: 0px;
+            position: absolute;
+            bottom: 5vh;
+            padding: 8px 20%;
+        }
+    }
+}

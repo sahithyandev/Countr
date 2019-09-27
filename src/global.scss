@@ -12,12 +12,12 @@
 @import './splash.scss';
 
 @font-face {
-font-family: Oxygen Regular;
-// src: url("../src/assets/fonts/OpenSans-Regular.ttf");
-src: url("src/assets/fonts/Oxygen-Regular.ttf");
+// font-family: Oxygen Regular;
+font-family: "OpenSans";
+src: url("src/assets/fonts/OpenSans-Regular.ttf");
+// src: url("src/assets/fonts/Roboto-Mono.ttf");
+// src: url("src/assets/fonts/Oxygen-Regular.ttf");
 }
-
-$desktop-breakpoint: 800px;
 
 .ion-color-aple {
 --ion-color-base: var(--ion-color-aple) !important;
@@ -28,19 +28,14 @@ $desktop-breakpoint: 800px;
 --ion-color-tint: var(--ion-color-aple-tint) !important;
 }
 
-@mixin desktop {
-    @media (min-width: #{$desktop-breakpoint}) {
-        @content;
-    }
-}
-
 body {
     padding: 35px;
 }
 
 // changing the global elements
 * {
-    font-family: "Oxygen Regular" !important;
+    // font-family: "Oxygen Regular" !important;
+    font-family: "OpenSans" !important;
     font-weight: bold;
 }
 //

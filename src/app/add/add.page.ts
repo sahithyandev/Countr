@@ -1,10 +1,9 @@
 import { Component, OnInit, ElementRef } from '@angular/core'
-import { AngularFireAuth } from '@angular/fire/auth'
 import { Router } from '@angular/router'
 import * as moment from "moment"
+
 import { CustomService } from '../custom.service'
-import { AngularFirestore, Query } from '@angular/fire/firestore'
-import { CountDown } from '../modals/countdown'
+import { Countdown } from '../modals/countdown'
 import { DataService } from '../data.service'
 
 @Component({
@@ -14,16 +13,11 @@ import { DataService } from '../data.service'
 })
 export class AddPage implements OnInit {
   countDownId
-  categories = Array<String>()
-  // title: string
-  // description: string = ''
   false_time: boolean = false
   username: string
 
   newCountdown = {
-    id: "",
     title: "",
-    owner: this.parse.user.id,
     isStarred: false,
     isRepeat: false,
     isFinished: false,
@@ -34,7 +28,7 @@ export class AddPage implements OnInit {
       .seconds(0)
       .milliseconds(0)
       .format()
-  } as CountDown
+  } as Countdown
 
   max_time: string = moment()
     .year(moment().year() + 2)
@@ -49,14 +43,11 @@ export class AddPage implements OnInit {
   //   .format()
 
   notify_time: string
-  countdownRef : Query
 
   public count_downs
 
   constructor(
-    public fireauth: AngularFireAuth,
     public router: Router,
-    public firestore: AngularFirestore,
     public custom: CustomService,
     public parse: DataService,
     public element: ElementRef
@@ -89,29 +80,17 @@ export class AddPage implements OnInit {
   }
 
   ngOnInit() {
-    this.categories = this.parse.user.categories
-    this.newCountdown.owner = this.fireauth.auth.currentUser.uid
-    this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.newCountdown.owner)
-    this.firestore.collection("users").doc(this.newCountdown.owner).ref.get().then(user => {
-      this.username = user.get("name")
-    })
+    // this.categories = this.parse.categories
+    // this.newCountdown.owner = this.fireauth.auth.currentUser.uid
+    // this.countdownRef = this.firestore.collection("countdowns").ref.where("owner", "==", this.newCountdown.owner)
+    // this.firestore.collection("users").doc(this.newCountdown.owner).ref.get().then(user => {
+    //   this.username = user.get("name")
+    // })
   }
 
   saveItem() {
     console.log(this.newCountdown)
-
-    this.firestore.collection("countdowns").add({
-      title: this.newCountdown.title,
-      datetime: this.newCountdown.datetime,
-      description: this.newCountdown.description,
-      owner: this.newCountdown.owner,
-      category: this.newCountdown.category,
-      isStarred: this.newCountdown.isStarred,
-      isRepeat: this.newCountdown.isRepeat
-    } as CountDown).then(date => {
-      console.log("added successfully")
-    })
-
+    this.parse.addCountdown(this.newCountdown)
     this.router.navigateByUrl('/home')
   }
 }

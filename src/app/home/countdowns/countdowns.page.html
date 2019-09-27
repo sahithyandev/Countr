@@ -1,36 +1,40 @@
 <ion-header>
   <ion-toolbar>
-    
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+    <ion-title>Countdowns</ion-title>
+    <ion-buttons slot="end">
+      <ion-button id='add' (click)='addPage()' small>
+        <ion-icon name='add'></ion-icon>
+      </ion-button>
     </ion-buttons>
-
-    <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content (swipe)="swipeEventHandler($event)" (swipeLeft)="swipeEventHandler($event);$event.stopPropagation()">
+  <ion-list lines="inset">
+    <ion-item *ngFor='let item of parse.countdowns' (click)='detailsPage(item)' detail>
 
-  <ion-list>
-    <ion-item *ngFor='let item of category_countdowns' (click)='details(item)'>
       <ion-buttons (click)="starCountdown(item);$event.stopPropagation()" slot="start">
         <ion-button id="star" color="dark" small>
           <ion-icon *ngIf="item.isStarred" mode="ios" name="star"></ion-icon>
           <ion-icon *ngIf="!(item.isStarred)" mode="ios" name="star-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
-      
+
       <div class="container">
         {{item.title}} <ion-icon *ngIf="item.isFinished" name="checkmark-circle-outline"></ion-icon>
         <br>
         <span class="category" *ngIf="item.category != '__default__'"> {{item.category}}</span>
+        <ion-chip *ngIf="item.category != '__default__'" color="primary">
+          <ion-label>{{item.category}}</ion-label>
+        </ion-chip>
       </div>
-      
-      <ion-buttons (click)='deleteCountdown(item.id);$event.stopPropagation()' slot='end'>
-        <ion-button id='delete' color='danger' small>
+
+      <ion-buttons slot='end'>
+        <ion-button id='delete' color='danger' (click)='deleteCountdown(item);$event.stopPropagation()' small>
           <ion-icon name='trash'></ion-icon>
         </ion-button>
       </ion-buttons>
+
     </ion-item>
   </ion-list>
 

@@ -1,13 +1,11 @@
 import { Component, OnInit, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
-import { AngularFireAuth } from '@angular/fire/auth'
 
 import * as moment from "moment"
 
 import { Feedback } from "./../modals/feedback"
 import { CustomService } from '../custom.service'
 import { HttpHeaders, HttpClient } from "@angular/common/http"
-import { AngularFirestore } from '@angular/fire/firestore'
 
 @Component({
   selector: 'app-feedback',
@@ -18,12 +16,10 @@ export class FeedbackPage implements OnInit {
   feedback = {} as Feedback
 
   constructor(
-    public fireauth: AngularFireAuth,
     public custom: CustomService,
     public http: HttpClient,
     public router: Router,
-    public element: ElementRef,
-    public firestore: AngularFirestore
+    public element: ElementRef
   ) { }
 
   resize() {
@@ -37,10 +33,10 @@ export class FeedbackPage implements OnInit {
 
   ngOnInit() {
     this.feedback.category = 'error_bug'
-    this.feedback.uid = this.fireauth.auth.currentUser.uid
-    this.firestore.collection('users').doc(this.feedback.uid).ref.get().then(snapshot => {
-      this.feedback.username = snapshot.get("name")
-    })
+    // this.feedback.uid = this.fireauth.auth.currentUser.uid
+    // this.firestore.collection('users').doc(this.feedback.uid).ref.get().then(snapshot => {
+    //   this.feedback.username = snapshot.get("name")
+    // })
   }
 
   send_http_request() {
@@ -66,11 +62,11 @@ export class FeedbackPage implements OnInit {
   send_feedback() {
     this.feedback.postTime = moment().format();
 
-    this.firestore.collection("feedbacks").add(this.feedback).then(() => {
-      this.send_http_request();
-      this.custom.alert_dismiss('Feedback Sent', 'Thank you for your feedback!.<br>Your feedback will be helpful to improve our app.');
-      this.router.navigateByUrl('/home');
-    })
+    // this.firestore.collection("feedbacks").add(this.feedback).then(() => {
+    //   this.send_http_request();
+    //   this.custom.alert_dismiss('Feedback Sent', 'Thank you for your feedback!.<br>Your feedback will be helpful to improve our app.');
+    //   this.router.navigateByUrl('/home');
+    // })
   }
 
 }

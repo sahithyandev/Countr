@@ -37,7 +37,7 @@
       <ion-label position='stacked'>Category </ion-label>
       <ion-select placeholder="Select Category" [(ngModel)]='newCountdown.category'>
         <ion-select-option value="__default__">Default</ion-select-option>
-        <ion-select-option *ngFor="let item of categories" value="{{item}}">
+        <ion-select-option *ngFor="let item of parse.categories" value="{{item}}">
           {{item}}
         </ion-select-option>
       </ion-select>

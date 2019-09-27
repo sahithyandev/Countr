@@ -1,13 +1,11 @@
+import { Platform } from '@ionic/angular'
 import { Component, OnInit } from '@angular/core'
-import { AngularFireAuth } from '@angular/fire/auth'
-import { DataService } from '../data.service'
-import { CountDown } from '../modals/countdown'
 import { Router, ActivatedRoute } from '@angular/router'
-import { CustomService } from '../custom.service'
-import { AngularFirestore, Query } from '@angular/fire/firestore'
 import * as moment from "moment"
+import { CustomService } from '../custom.service'
+import { DataService } from '../data.service'
+import { Countdown } from '../modals/countdown'
 import { CountdownOutput } from '../modals/countdownOutput'
-import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-details',
@@ -15,12 +13,15 @@ import { Platform } from '@ionic/angular';
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
-  isDesktop: Boolean
+  slideOptions = {
+    initialSlide: 1,
+    speed: 400
+  }
   minusTimer: Boolean = false
 
 	timer
   stop_time
-  countdown = {} as CountDown
+  countdown = {} as Countdown
   output = {} as CountdownOutput
 
 	uid
@@ -29,23 +30,19 @@ export class DetailsPage implements OnInit {
 
 	temp: Array<object> = []
   user_temp: Array<object> = []
-  countdownRef : Query
+  // countdownRef : Query
 
   constructor(
-    public firestore: AngularFirestore,
-    public fireauth: AngularFireAuth,
     public router: Router,
     public route: ActivatedRoute,
     public platform: Platform,
     public custom: CustomService,
     public parse: DataService
-  ) {
-    this.isDesktop = this.platform.platforms().includes('desktop') || this.platform.platforms().includes('tablet')
-   }
+  ) {}
 
   ngOnInit() {
     this.countdown = this.parse.details_countdown
-    this.uid = this.fireauth.auth.currentUser.uid
+    // this.uid = this.fireauth.auth.currentUser.uid
     this.startCountdown()
   }
 
@@ -54,7 +51,7 @@ export class DetailsPage implements OnInit {
     this.counting(this.countdown, this)
   }
 
-  counting(countdown: CountDown, page) {
+  counting(countdown: Countdown, page) {
     // page.ex_time = next;
     var output = {} as CountdownOutput;
     var stop = new Date(countdown.datetime).getTime()
@@ -108,12 +105,17 @@ export class DetailsPage implements OnInit {
     }, 1)
   }
 
+  tool(action) {
+    if (action == "delete") this.delete()
+    if (action == "edit") this.editPage()
+  }
+
   delete() {
-    this.firestore.collection("countdowns").doc(this.countdown.id).delete().then(after => { 
-      this.router.navigateByUrl('/home') 
-    }).catch(e => {
-      console.log(e)
-    })
+    // this.firestore.collection("countdowns").doc(this.countdown.id).delete().then(after => { 
+    //   this.router.navigateByUrl('/home') 
+    // }).catch(e => {
+    //   console.log(e)
+    // })
     this.custom.toast('Deleted', 'top')
   }
 
@@ -125,10 +127,5 @@ export class DetailsPage implements OnInit {
   categoryPage() {
     this.parse.selectedCategory = this.countdown.category
     this.router.navigateByUrl('/category-countdowns')
-  }
-
-  sharePage() {
-    this.parse.countdownToShare = this.countdown
-    this.router.navigateByUrl('/share-countdown')
   }
 }

@@ -3,6 +3,4 @@ export interface User {
   name: string
   email: string
   categories?: Array<String>
-  photoURL?: String
-  accept_sharing: Boolean
 }

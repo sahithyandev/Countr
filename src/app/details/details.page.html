@@ -4,11 +4,11 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <ion-button id='delete' (click)='delete()' color='danger' small>
         <ion-icon name='trash'></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
     <ion-title>Countr</ion-title>
   </ion-toolbar>
 
@@ -22,20 +22,20 @@
   
   <div align="center" [class.minus-timer]="minusTimer">
     <div id="days-container" *ngIf="output.days">
-      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.days}}</div>
-      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Days</div>
+      <div class="timer-digit">{{output.days}}</div>
+      <div class="timer-descr">Days</div>
     </div>
     <div id="hours-container" *ngIf="!(output.days) && output.hours">
-      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.hours}}</div>
-      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Hours</div>
+      <div class="timer-digit">{{output.hours}}</div>
+      <div class="timer-descr">Hours</div>
     </div>
     <div id="minutes-container" *ngIf="!(output.days || output.hours) && output.minutes">
-      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.minutes}}</div>
-      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Minutes</div>
+      <div class="timer-digit">{{output.minutes}}</div>
+      <div class="timer-descr">Minutes</div>
     </div>
     <div id="seconds-container" *ngIf="!(output.days || output.hours || output.minutes) && output.seconds">
-      <div [class.timer-digit]="!isDesktop" [class.timer-digit-desktop]="isDesktop">{{output.seconds}}</div>
-      <div [class.timer-descriptor]="!isDesktop" [class.timer-descriptor-desktop]="isDesktop">Seconds</div>
+      <div class="timer-digit">{{output.seconds}}</div>
+      <div class="timer-descr">Seconds</div>
     </div>
   </div>
 
@@ -60,27 +60,44 @@
 
   <br /><br />
 
-  <div align='center' class='description'>
-    <span *ngIf="countdown.description">
-      {{countdown.description}}<br />
-      <br />
-    </span>
-    {{stop_time}}<br />
-    <br />
-    <a *ngIf="countdown.category != '__default__'">
-      <ion-chip (click)="categoryPage()" color="primary">
-        <ion-label class="category-name">{{countdown.category}}</ion-label>
-      </ion-chip>
-    </a>
+  <div align='center' id='description'>
+    <ion-slides [options]="slideOptions" pager="true">
+      <ion-slide *ngIf="countdown.description">
+        <span class="title-text">Description</span>
+        <span class="important-text">{{countdown.description}}</span>
+      </ion-slide>
+      <ion-slide>
+        <span class="title-text">Finishes on</span>
+        <span class="important-text">{{stop_time}}</span>
+      </ion-slide>
+      <ion-slide *ngIf="countdown.category != '__default__'">
+        <span class="title-text">Category</span>
+        <span class="important-text" id="category">
+          <a *ngIf="countdown.category != '__default__'">
+            <ion-chip (click)="categoryPage()" color="primary">
+              <ion-label class="category-name">{{countdown.category}}</ion-label>
+            </ion-chip>
+          </a>
+        </span>
+      </ion-slide>
+    </ion-slides>
   </div>
 
-  <div id="countdown-button-container" align="center" *ngIf="countdown.owner == fireauth.auth.currentUser.uid">
+  <div id="tools">
+    <span class="tool" id="edit" (click)="tool('edit')">
+      Edit
+      <!-- <ion-icon name="create" size="large" (click)="tool('edit')"></ion-icon> -->
+    </span>
+    <span class="tool" id="delete" (click)="tool('delete')">
+      Delete
+      <!-- <ion-icon name="trash" size="large" color="danger" (click)="tool('delete')"></ion-icon> -->
+    </span>
+  </div>
+
+  <!-- <div id="countdown-button-container" align="center" *ngIf="countdown.owner == fireauth.auth.currentUser.uid">
     <ion-button id='editButton' (click)='editPage()' color="secondary">
       Edit
     </ion-button>
-    <ion-button id="shareButton" (click)="sharePage()" color="primary">
-      Share
-    </ion-button>
-  </div>
+  </div> -->
 
 </ion-content>

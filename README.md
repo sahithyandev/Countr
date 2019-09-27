@@ -2,14 +2,20 @@
 
 This is a project started by me (*Sahithyan*) on December 2018 (Date is not in my mind when I was writing this ReadMe). It was started as a desktop app to get practice in [Electron](https://electronjs.org/ "a JavaScript framework to create Desktop apps"). But when I figured that this will be very helpful if it is on mobiles. So I have started this project on January 3rd (first commit in this repository).
 
-It helps you to create Count Downs. They are stored in Cloud (Firebase) to enable the users to access their count downs from any device.
+It helps you to create Count Downs. They are stored in Local Storage to make it privacy-first and work offline.
+
+### Special Features
+
+* Works Offline
+* No Data Collected
 
 ### Installing
 
-This app is not released in any of the official stores of Windows, Google, Apple.   
-You can ask **Developers** of this project for the installers (APK).
+Countr is available only on Google Play Store.   
 
-**Note** : This app will support iOS too. But ***iOS builds want a Mac***. And **I don't have a Mac**.
+[Countr on Play Store](http://bit.ly/Countrapp "Download Now")
+
+**Note** : This app will support iOS too. But ***iOS builds want a Mac*** and **I don't have a Mac**.
 
 ### Developers
 

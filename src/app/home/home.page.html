@@ -1,14 +1,11 @@
-
+<!-- 
 <ion-header>
   
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="profilePage()" small>
-        <ion-icon name='person' mode='md'></ion-icon>
-      </ion-button>
-      <!-- <ion-button (click)="pop($event)" small>
+      <ion-button (click)="pop($event)" small>
         <ion-icon name='menu'></ion-icon>
-      </ion-button> -->
+      </ion-button>
     </ion-buttons>
     <ion-title>Home</ion-title>
     <ion-buttons slot="end">
@@ -18,67 +15,14 @@
     </ion-buttons>
   </ion-toolbar>
   
-</ion-header>
-
-<ion-content (swipe)="swipeEventHandler($event)">
+</ion-header> -->
   
-  <!-- <div *ngIf="showWatermark" align="center" class="watermark">
-    <h2 vertical-align="middle">Nothing</h2>
-  </div> -->
-
-  <ion-list>
-    <ion-item *ngFor='let item of countdowns' (click)='detailsPage(item)' lines="full">
-
-      <ion-buttons (click)="starCountdown(item);$event.stopPropagation()" slot="start">
-        <ion-button id="star" color="dark" small>
-          <ion-icon *ngIf="item.isStarred" mode="ios" name="star"></ion-icon>
-          <ion-icon *ngIf="!(item.isStarred)" mode="ios" name="star-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-
-      <div class="container">
-        {{item.title}} <sup *ngIf="item.owner != profile.id" style="color:red;">*</sup> <ion-icon *ngIf="item.isFinished" name="checkmark-circle-outline"></ion-icon>
-        <br>
-        <span class="category" *ngIf="item.category != '__default__'"> {{item.category}}</span>
-        <!-- <ion-chip *ngIf="item.category != '__default__'" color="primary">
-          <ion-label>{{item.category}}</ion-label>
-        </ion-chip> -->
-      </div>
-
-      <ion-buttons slot='end'>
-        <ion-button id='delete' color='danger' (click)='deleteCountdown(item);$event.stopPropagation()' small>
-          <ion-icon name='trash'></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      
-    </ion-item>
-  </ion-list>
-  
-  <h5 *ngIf="notes.length > 0" align="center" style="font-weight: bold">Your Notes</h5>
-
-  <ion-list>
-    <ion-item *ngFor="let note of parse.user_notes" lines="full">
-      <ion-buttons (click)="starNote(note)" slot="start">
-        <ion-button id="star" color="dark" small>
-          <ion-icon *ngIf="note.isStarred" mode="ios" name="star"></ion-icon>
-          <ion-icon *ngIf="!(note.isStarred)" mode="ios" name="star-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-
-      {{note.text}}
-
-      <ion-buttons slot='end'>
-        <ion-button (click)='deleteNote(note);$event.stopPropagation()' id='delete' color='danger' small>
-          <ion-icon name='trash'></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-  </ion-list>
+  <!-- <h5 *ngIf="parse.notes.length > 0" align="center" style="font-weight: bold">Your Notes</h5> -->
 
   
-</ion-content>
+<!-- </ion-content> -->
 
-<div align="center" class="add-notes-container">
+<!-- <div align="center" class="add-notes-container">
   <ion-item lines="none" class="add-notes">
     <ion-input class="add-notes-input" type="text" placeholder="Add a note" [(ngModel)]="newNote.text"></ion-input>
     <ion-buttons slot='end' (click)="saveNote()">
@@ -87,4 +31,18 @@
       </ion-button>
     </ion-buttons>
   </ion-item>
-</div>
+</div> -->
+
+<ion-tabs>  
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="countdowns">
+      <ion-icon name="stopwatch"></ion-icon>
+      <ion-label>Countdowns</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="notes">
+      <ion-icon name="document"></ion-icon>
+      <ion-label>Notes</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
